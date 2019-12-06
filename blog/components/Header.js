@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-05 21:52:00
- * @LastEditTime: 2019-12-06 14:23:43
+ * @LastEditTime: 2019-12-06 16:26:45
  * @LastEditors: Xuannan
  */
 import React from 'react';
@@ -16,8 +16,8 @@ const Header = ()=>{
         <div className="header">
             <Row type='flex' justify='center'>
                 <Col  xs={24} sm={24} md={10} lg={15} xl={15}>
-                    <span className="header-logo">Metal Parts</span>
-                    <span className="header-txt">International Metal Parts Information Portal</span>
+                    <span className="header-logo">Allen</span>
+                    <span className="header-txt">全栈PM</span>
                 </Col>
                 <Col className="memu-div" xs={0} sm={0} md={14} lg={8} xl={6}>
                     <Menu  mode="horizontal">
