@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# coding=utf-8
+'''
+@Description: 
+@Author: Xuannan
+@Date: 2019-12-08 10:03:49
+@LastEditTime: 2019-12-08 19:30:58
+@LastEditors: Xuannan
+'''
 from flask_restful import Resource,reqparse,fields,marshal,abort,inputs
 from app.models import User
 from app.apis.api_constant import *

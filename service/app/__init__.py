@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime: 2019-11-26 21:27:19
+@LastEditTime: 2019-12-08 20:20:02
 @LastEditors: Xuannan
 '''
 # -*- coding: utf-8 -*- 
@@ -23,6 +23,7 @@ from app.apis.client import client_api
 from app.apis.admin import admin_api
 from app.apis.company import company_api
 from app.apis.common import common_api
+from app.apis.blog import blog_api
 
 DEFAULT_BLUEPRINT = (
     (admin,'/admin'),
@@ -36,6 +37,7 @@ def init_api(app):
     client_api.init_app(app)
     company_api.init_app(app)
     admin_api.init_app(app)
+    blog_api.init_app(app)
 
 def app_log(app):
     log_dir_name = "logs"
@@ -61,13 +63,13 @@ def config_blueprint(app):
 # def page_not_found(error):
 #     return render_template("common/404.html"),404
 
-def config_errorhandler(app):
-    # 如果在蓝本定制，则只针对蓝本的错误有效。
-    # 可以使用app_errorhandler定制全局有效的错误显示
-    # 定制全局404错误页面
-    @app.errorhandler(404)
-    def page_not_found(e):
-        return render_template('admin/404.html',e=e)
+# def config_errorhandler(app):
+#     # 如果在蓝本定制，则只针对蓝本的错误有效。
+#     # 可以使用app_errorhandler定制全局有效的错误显示
+#     # 定制全局404错误页面
+#     @app.errorhandler(404)
+#     def page_not_found(e):
+#         return render_template('admin/404.html',e=e)
 
 # 将创建app的动作封装成一个函数
 def create_app(env):
@@ -86,8 +88,8 @@ def create_app(env):
     config_blueprint(app)
 
 
-    # 配置全局错误处理
-    config_errorhandler(app)
+    # # 配置全局错误处理
+    # config_errorhandler(app)
 
     # 返回app实例对象
     return app

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-06 22:01:20
- * @LastEditTime: 2019-12-07 16:12:40
+ * @LastEditTime: 2019-12-08 19:18:44
  * @LastEditors: Xuannan
  */
 /*
@@ -15,7 +15,7 @@
 import React ,{ useState } from 'react';
 import { Row,Col,Menu,Icon, Input ,Button,Drawer} from 'antd';
 import '../static/style/components/header.less'
-
+import './webconfig'
 const { Search } = Input;
 
 
@@ -25,8 +25,8 @@ function Header(props){
         <div className ={props.isdown?'header isdown':'header'} >
             <Row type='flex' justify='center'>
                 <Col  xs={12} sm={12} md={6} lg={6} xl={6}>
-                    <div className="header-logo">全栈PM</div>
-                    <div className="header-txt">我的全栈产品经理之路</div> 
+                    <div className="header-logo">{webcongfig.name}</div>
+                    <div className="header-txt">{webcongfig.slogan}</div> 
                 </Col>
                 <Col className="header-menu" xs={0} sm={0} md={9} lg={9} xl={9}>
                     <Menu  mode="horizontal" className="f-right">

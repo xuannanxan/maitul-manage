@@ -9,6 +9,8 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static/uploads')
 # 水印
 WATER_MARK = os.path.join(BASE_DIR, 'static/admin/img/watermark.png')
+# 每页的数量
+PAGINATE_NUM = 10
 # 通用配置
 class config:
     DEBUG = False

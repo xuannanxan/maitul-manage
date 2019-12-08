@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:57:46
-@LastEditTime: 2019-11-25 13:11:30
+@LastEditTime: 2019-12-08 22:02:40
 @LastEditors: Xuannan
 '''
 
@@ -24,6 +24,8 @@ def object_to_dict(obj):
         del data["password"]
     if "_password" in data:
         del data["_password"]
+    if "is_del" in data:
+        del data["is_del"]
     return data
 
 def object_to_json(obj):
