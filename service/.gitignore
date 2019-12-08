@@ -1,0 +1,7 @@
+.vscode
+Pipfile.lock
+__pycache__
+secret.py
+init_data.py
+uploads
+migrations
