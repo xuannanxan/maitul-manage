@@ -1,0 +1,40 @@
+新增博客分类
+---
+parameters:
+  - name: name
+    in: path
+    type: string
+    required: true
+  - name: sort
+    in: path
+    type: integer
+    required: false
+responses:
+  201:
+    description: 创建成功
+    schema:
+      properties:
+        msg:
+          type: string
+        data:
+          type: object
+          properties:
+            name:
+              type: string
+            sort:
+              type: integer
+            id:
+              type: string
+  400:
+    description: 创建失败
+    schema:
+      properties:
+        msg:
+          type: string
+  403:
+    description: 分类已存在
+    schema:
+      properties:
+        msg:
+          type: string
+

@@ -4,12 +4,13 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:57:46
-@LastEditTime: 2019-12-08 22:02:40
+@LastEditTime: 2019-12-13 00:13:19
 @LastEditors: Xuannan
 '''
 
-import json
+import json ,random,time
 from collections import defaultdict
+from datetime import datetime, date
 
 def object_to_dict(obj):
     """
@@ -57,3 +58,25 @@ def rows_by_date(data,name):
         rows_date[row[name]].append(row)    
     return rows_date
 
+def diyId():
+    id = time.strftime('%Y%m%d%H%M%S') + '%d' % random.randint(100,999)
+    return id
+
+def mysql_to_json(data):
+    return json.loads(json.dumps(data, cls=JsonToDatetime))
+
+class JsonToDatetime(json.JSONEncoder):
+    """
+    JSONEncoder不知道怎么去把这个数据转换成json字符串的时候，
+    它就会调用default()函数，default()函数默认会抛出异常。
+    所以，重写default()函数来处理datetime类型的数据。
+
+    """
+
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.strftime('%Y-%m-%d %H: %M: %S')
+        elif isinstance(obj, date):
+            return obj.strftime('%Y-%m-%d')
+        else:
+            return json.JSONEncoder.default(self, obj)

@@ -1,0 +1,30 @@
+删除单个博客标签信息
+---
+parameters:
+  - name: id
+    in: path
+    type: string
+    description: 单个标签的ID
+    required: true
+ 
+responses:
+  200:
+    description: 删除成功
+    schema:
+      properties:
+        msg:
+          type: string
+
+  404:
+    description: 标签不存在
+    schema:
+      properties:
+        msg:
+          type: string
+  400:
+    description: 删除失败
+    schema:
+      properties:
+        msg:
+          type: string
+

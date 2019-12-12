@@ -4,7 +4,7 @@
 @Autor: Allen
 @Date: 2019-11-13 17:29:28
 @LastEditors: Xuannan
-@LastEditTime: 2019-12-08 19:38:00
+@LastEditTime: 2019-12-12 21:06:19
 '''
 
 
@@ -22,10 +22,10 @@ class BlogTag(BaseModel):
         return '<BlogTag %r>' % self.name
 
 # 关联的标签
-class BlogTagRelation(BaseModel):
+class BlogTagRelation(db.Model):
     __tablename__ = "blog_tag_relation"
-    relation_id = db.Column(db.String(32), primary_key=True)  # 关联id
-    tag_id = db.Column(db.Integer, primary_key=True)
+    content_id = db.Column(db.String(32), primary_key=True)  # 关联内容id
+    tag_id = db.Column(db.String(32), primary_key=True)
 
     def __repr__(self):
-        return '<BlogTagRelation %r>' % self.relation_id
+        return '<BlogTagRelation %r>' % self.content_id

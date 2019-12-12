@@ -1,22 +1,14 @@
-标签列表
+获取内容
 ---
 parameters:
-  - name: page
+  - name: category_id
     in: path
-    type: integer
-    description: 页码
-    required: false
-    default: 1
-  - name: paginate
-    in: path
-    type: integer
-    description: 分页，每页的数量
-    required: false
-    default: 10
- 
+    type: string
+    description: 分类id
+    required: true
 responses:
   200:
-    description: 返回标签列表
+    description: 返回内容列表
     schema:
       properties:
         paginate:
@@ -44,7 +36,7 @@ responses:
                 type: string
 
   400:
-    description: 站无数据
+    description: 暂无数据
     schema:
       properties:
         msg:

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-13 17:29:28
-@LastEditTime: 2019-12-08 12:23:51
+@LastEditTime: 2019-12-11 21:20:54
 @LastEditors: Xuannan
 '''
 
@@ -15,10 +15,10 @@ class BlogCategory(BaseModel):
     __tablename__ = "blog_category"
     name = db.Column(db.String(200),nullable=False)
     keywords = db.Column(db.String(255))
-    info = db.Column(db.Text)
+    description = db.Column(db.String(255))
     icon = db.Column(db.String(100))
     cover = db.Column(db.String(255))
-    pid = db.Column(db.Integer, default=0)  # 上级分类,0为最上级
+    pid = db.Column(db.String(32), default=0)  # 上级分类,0为最上级
     sort = db.Column(db.Integer, default=0)  # 排序
    
 

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 19:28:32
-@LastEditTime: 2019-12-09 22:10:29
+@LastEditTime: 2019-12-12 22:22:27
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -32,13 +32,38 @@ sing_tag_fields = {
     'data':fields.Nested(tag_fields)
 }
 def getTag(id):
-    tag = BlogTag.query.filter_by(id = id , is_del = '0').first_or_404()
+    tag = BlogTag.query.filter_by(id = id , is_del = '0').first()
+    if not tag :
+        abort(RET.NotFound,msg='标签不存在')
     return tag
 
-class BlogTagsList(Resource):
+class BlogTagAdd(Resource):
+    def post(self):
+        """
+        file: yml/tag/add.yml
+        """
+        args = parse_base.parse_args()
+        name = args.get('name')
+        sort = args.get('sort')
+        tag = BlogTag.query.filter_by(name = name,is_del = '0').first()
+        if tag:
+            abort(RET.Forbidden,msg='标签已存在')
+        blog_tag = BlogTag()
+        blog_tag.name = name
+        blog_tag.sort = sort
+        if blog_tag.add():
+            data = {
+                    'status':RET.Created,
+                    'msg':'添加成功',
+                    'data':blog_tag
+            }
+            return marshal(data,sing_tag_fields)
+        abort(RET.BadRequest,msg='添加失败，请重试')
+
+class BlogTagList(Resource):
     def get(self):
         '''
-        file: yml/tag_list.yml
+        file: yml/tag/list.yml
         '''
         args = parse_page.parse_args()
         page = 1
@@ -61,40 +86,22 @@ class BlogTagsList(Resource):
             }
         return data 
 
-    def post(self):
-        """
-        file: yml/tag_add.yml
-        """
-        args = parse_base.parse_args()
-        name = args.get('name')
-        sort = args.get('sort')
-        tag = BlogTag.query.filter_by(name = name,is_del = '0').first()
-        if tag:
-            abort(RET.BadRequest,msg='标签已存在')
-        blog_tag = BlogTag()
-        blog_tag.name = name
-        blog_tag.sort = sort
-        if blog_tag.add():
-            data = {
-                    'status':RET.Created,
-                    'msg':'添加成功',
-                    'data':blog_tag
-            }
-            return marshal(data,sing_tag_fields)
-        abort(RET.BadRequest,msg='添加失败，请重试')
+    
 
-class BlogTags(Resource):
+class BlogTagResource(Resource):
     def get(self,id):
         '''
-        获取单个数据
+        file: yml/tag/get.yml
         '''
-       
-        return object_to_json(getTag(id))
+        return {
+                    'status':RET.OK,
+                    'data':object_to_json(getTag(id))
+            } 
     
         
     def put(self,id):
         '''
-        修改
+        file: yml/tag/put.yml
         '''
         blog_tag = getTag(id)
         args = parse_base.parse_args()
@@ -103,7 +110,7 @@ class BlogTags(Resource):
         # 如果名称存在，并且ID不是当前ID
         tag = BlogTag.query.filter(BlogTag.id != id , BlogTag.is_del == '0',BlogTag.name == name).first()
         if tag:
-            abort(RET.BadRequest,msg='标签已存在')
+            abort(RET.Forbidden,msg='标签已存在')
         blog_tag.name = name
         if sort:
             blog_tag.sort = sort
@@ -119,7 +126,7 @@ class BlogTags(Resource):
 
     def delete(self,id):
         '''
-        逻辑删除
+        file: yml/tag/del.yml
         '''
         tag = getTag(id)
         tag.is_del = tag.id
