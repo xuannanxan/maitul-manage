@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime: 2019-12-12 22:21:43
+@LastEditTime: 2019-12-13 13:11:18
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -83,7 +83,7 @@ class BlogCategoryTree(Resource):
         '''
         file: yml/category/list.yml
         '''
-        cate_list = BlogCategory.query.filter_by(is_del = '0').order_by('sort').all()
+        cate_list = BlogCategory.query.filter_by(is_del = '0').order_by(BlogCategory.sort.desc()).all()
         if not cate_list:
             abort(RET.BadRequest,msg='暂无数据')
         data = {

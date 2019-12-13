@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 19:28:32
-@LastEditTime: 2019-12-12 22:22:27
+@LastEditTime: 2019-12-13 13:11:57
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -72,7 +72,7 @@ class BlogTagList(Resource):
             page = int(args.get('page'))
         if args.get('paginate'):
             paginate = int(args.get('paginate'))
-        tag_list = BlogTag.query.filter_by(is_del = '0').order_by('sort').paginate(page, paginate, False)
+        tag_list = BlogTag.query.filter_by(is_del = '0').order_by(BlogTag.sort.desc()).paginate(page, paginate, False)
         if not tag_list:
             abort(RET.BadRequest,msg='暂无数据')
         data = {
