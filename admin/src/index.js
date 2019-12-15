@@ -2,12 +2,12 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-05 10:31:45
- * @LastEditTime: 2019-12-13 17:26:14
+ * @LastEditTime: 2019-12-13 22:09:10
  * @LastEditors: Xuannan
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Login from './pages/login'
+import Main from './pages/Main'
 
 
-ReactDOM.render(<Login/>, document.getElementById('root'));
+ReactDOM.render(<Main/>, document.getElementById('root'));

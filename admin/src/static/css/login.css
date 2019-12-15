@@ -1,0 +1,24 @@
+
+.login{
+    left: 50%;
+    top:50%;
+    width: 400px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    overflow: hidden;  
+}
+.captcha_img{
+    height: 36px;
+    width:100px;
+}
+.login-form {
+    max-width: 300px;
+  }
+.login-form-button {
+    width: 100%;
+  }
+
+body{
+    background-color: #f0f0f0;
+    position: relative;
+}
