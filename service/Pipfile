@@ -26,6 +26,7 @@ flask-session = "*"
 redis = "*"
 setuptools = "*"
 flasgger = "*"
+pyjwt = "*"
 
 [requires]
 python_version = "3.7"

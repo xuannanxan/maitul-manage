@@ -4,13 +4,19 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime: 2019-12-15 23:11:07
+@LastEditTime: 2019-12-16 17:24:15
 @LastEditors: Xuannan
 '''
 from app.models.admin import Admin
-from flask import request,g
-from flask_restful import abort
+from flask import g
+from flask_restful import abort,reqparse
 from app.ext import cache
+from app.apis.common.auth import Auth
+from app.apis.api_constant import *
+import datetime
+
+parse_authorization = reqparse.RequestParser()
+parse_authorization.add_argument('Authorization', type=str, location='headers')
 
 def get_admin(ident):
     '''
@@ -27,15 +33,27 @@ def get_admin(ident):
     return None
 
 def _verify():
-    token = request.args.get('token')
+    args_authorization = parse_authorization.parse_args()
+    auth_header = args_authorization.get('Authorization')
+    token = Auth.header_to_token(auth_header)
     if not token:
-        abort(401,msg='请登录')
-    user_id = cache.get(token)
-    if not user_id:
-        abort(401,msg='请重新登录')
-    user = get_user(user_id)
+        abort(RET.Unauthorized,msg='请登录')    
+    # cache 记录的id
+    cache_id = cache.get(token)
+    if not cache_id:
+        abort(RET.Unauthorized,msg='请重新登录')
+    token_data = Auth.decode_auth_token(token)
+    token_id = token_data['data']['id']
+    token_time = token_data['data']['login_time']
+    # token被篡改
+    if cache_id != token_id:
+        abort(RET.Unauthorized,msg='请勿非法操作')
+    # 超时生成新的token
+    now_time = datetime.datetime.now()
+    print (now_time-datetime)
+    user = get_admin(cache_id)
     if not user:
-        abort(401,msg='请重新登录')
+        abort(RET.Unauthorized,msg='请重新登录')
     g.user = user
     g.auth = token    
 
@@ -63,5 +81,7 @@ def logout():
     '''
     登出
     '''
-    token = request.args.get('token')
+    args_authorization = parse_authorization.parse_args()
+    auth_header = args_authorization.get('Authorization')
+    token = Auth.header_to_token(auth_header)
     cache.delete(token) 

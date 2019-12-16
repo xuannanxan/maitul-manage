@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-14 17:40:02
- * @LastEditTime: 2019-12-15 20:08:11
+ * @LastEditTime: 2019-12-16 09:08:56
  * @LastEditors: Xuannan
  */
 import React, { useState } from 'react';
@@ -74,7 +74,7 @@ function AddForm(props){
                                     {getFieldDecorator('content', {
                                     })(
                                         <TextArea 
-                                        rows={18}
+                                        rows={35}
                                         className="markdown-content"   
                                         placeholder="请输入内容..."
                                         onChange={changeContent}

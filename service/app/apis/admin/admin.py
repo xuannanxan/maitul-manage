@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime: 2019-12-15 23:09:14
+@LastEditTime: 2019-12-16 17:09:55
 @LastEditors: Xuannan
 '''
 
@@ -13,10 +13,12 @@ from flask_restful import Resource,reqparse,fields,marshal,abort,inputs
 from app.models.admin import Admin
 from app.apis.api_constant import *
 from .common import get_admin,login_required,logout
-import uuid
+import uuid,datetime
 from app.ext import cache
 from flask import g
 from app.utils import object_to_json
+from app.apis.common.auth import Auth
+
 
 # 新增
 parse_register = reqparse.RequestParser()
@@ -59,13 +61,13 @@ class AdminLogin(Resource):
         args_login = parse_login.parse_args()
         password = args_login.get('password')
         username = args_login.get('username').lower()
-        user = get_admin(username) 
-        if not user:
+        admin = get_admin(username) 
+        if not admin:
             abort(RET.BadRequest,msg='用户名或密码错误')
-        if (not user.check_pwd(password)) or user.is_del != '0':
+        if (not admin.check_pwd(password)) or admin.is_del != '0':
             abort(RET.Unauthorized,msg='用户名或密码错误')
-        token = uuid.uuid4().hex
-        cache.set(token,user.id,timeout=60*60*7)
+        token = Auth.encode_auth_token(admin.id)
+        cache.set(token,admin.id,timeout=60*60*7)
         data = {
             'status':RET.OK,
             'msg':'登录成功',
