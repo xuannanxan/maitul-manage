@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-21 22:03:43
-@LastEditTime: 2019-11-27 22:05:13
+@LastEditTime: 2019-12-17 01:15:34
 @LastEditors: Xuannan
 '''
 
@@ -55,6 +55,7 @@ class RET:
     ServiceUnavailable=503
     GatewayTimeout=504
     HTTPVersionNotSupported=505
+    RESETOKEN = 1500
 
 
 error_map = {
@@ -98,7 +99,8 @@ error_map = {
     RET.BadGateway:'充当网关或代理的服务器，从远端服务器接收到了一个无效的请求',
     RET.ServiceUnavailable:'由于超载或系统维护，服务器暂时的无法处理客户端的请求。延时的长度可包含在服务器的Retry-After头信息中',
     RET.GatewayTimeout:'充当网关或代理的服务器，未及时从远端服务器获取请求',
-    RET.HTTPVersionNotSupported:'服务器不支持请求的HTTP协议的版本，无法完成处理 ',	
+    RET.HTTPVersionNotSupported:'服务器不支持请求的HTTP协议的版本，无法完成处理 ',
+    RET.RESETOKEN:'重置token ',		
 }
 		
 	

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime: 2019-12-16 17:09:55
+@LastEditTime: 2019-12-17 01:22:21
 @LastEditors: Xuannan
 '''
 
@@ -112,10 +112,10 @@ class AdminAdd(Resource):
         '''
         获取用户信息
         '''
-        if g.user:
+        if g.admin:
             data = {
                     'status':RET.OK,
-                    'data':object_to_json(g.user)
+                    'data':object_to_json(g.admin)
                 }
             return data
         abort(RET.BadRequest,msg='请勿非法操作')

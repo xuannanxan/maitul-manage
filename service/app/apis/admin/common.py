@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime: 2019-12-16 17:24:15
+@LastEditTime: 2019-12-17 01:24:55
 @LastEditors: Xuannan
 '''
 from app.models.admin import Admin
@@ -14,6 +14,7 @@ from app.ext import cache
 from app.apis.common.auth import Auth
 from app.apis.api_constant import *
 import datetime
+
 
 parse_authorization = reqparse.RequestParser()
 parse_authorization.add_argument('Authorization', type=str, location='headers')
@@ -37,32 +38,45 @@ def _verify():
     auth_header = args_authorization.get('Authorization')
     token = Auth.header_to_token(auth_header)
     if not token:
-        abort(RET.Unauthorized,msg='请登录')    
+        abort(RET.Forbidden,msg='请登录')    
     # cache 记录的id
     cache_id = cache.get(token)
     if not cache_id:
-        abort(RET.Unauthorized,msg='请重新登录')
+        abort(RET.Forbidden,msg='请重新登录!')
     token_data = Auth.decode_auth_token(token)
     token_id = token_data['data']['id']
     token_time = token_data['data']['login_time']
     # token被篡改
     if cache_id != token_id:
-        abort(RET.Unauthorized,msg='请勿非法操作')
+        abort(RET.Forbidden,msg='请勿非法操作')
+    # 用户是否存在
+    admin = get_admin(cache_id)
+    if not admin:
+        abort(RET.Forbidden,msg='请重新登录')
     # 超时生成新的token
     now_time = datetime.datetime.now()
-    print (now_time-datetime)
-    user = get_admin(cache_id)
-    if not user:
-        abort(RET.Unauthorized,msg='请重新登录')
-    g.user = user
-    g.auth = token    
+    g.admin = admin
+    g.auth = token
+    # 超过15分钟就要重新获取token
+    if (datetime.datetime.strptime(token_time, "%Y-%m-%d %H:%M:%S")+datetime.timedelta(minutes=15))<now_time:
+        cache.delete(token) 
+        new_token = Auth.encode_auth_token(admin.id)
+        cache.set(new_token,admin.id,timeout=60*60*7)
+        data = {
+            'status':RET.RESETOKEN,
+            'token':new_token
+        }
+        return data
+    
 
 def login_required(fun):
     '''
     登录的装饰器，需要登录才能进行访问
     '''
     def wrapper(*args,**kwargs):
-        _verify()
+        data = _verify()
+        if data :
+            return data
         return fun(*args,**kwargs)
     return wrapper
 
