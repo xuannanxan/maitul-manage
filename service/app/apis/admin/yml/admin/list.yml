@@ -1,16 +1,10 @@
-获取内容列表
+获取管理员列表
 ---
 tags:
-  - 博客内容
-parameters:
-  - name: category_id
-    in: path
-    type: string
-    description: 分类id
-    required: true
+  - 系统管理员
 responses:
   200:
-    description: 返回内容列表
+    description: 管理员列表
     schema:
       properties:
         paginate:
@@ -26,15 +20,21 @@ responses:
           type: array
           items:
             properties:
-              sort:
-                type: integer
+              username:
+                type: string
               create_time:
                 type: string
               name:
                 type: string
+              email:
+                type: string
+              phone:
+                type: string
               update_time:
                 type: string
               id:
+                type: string
+              is_super:
                 type: string
 
   400:

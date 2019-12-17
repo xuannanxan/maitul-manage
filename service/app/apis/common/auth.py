@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-16 12:42:17
-@LastEditTime: 2019-12-16 16:44:28
+@LastEditTime: 2019-12-17 12:34:03
 @LastEditors: Xuannan
 '''
 import jwt, datetime, time
@@ -65,6 +65,8 @@ class Auth():
 
     @staticmethod
     def header_to_token(auth_header):
+        if not auth_header:
+            abort(RET.Forbidden,msg='请登陆!')
         auth_tokenArr = auth_header.split(" ")
         if (not auth_tokenArr or auth_tokenArr[0] != 'JWT' or len(auth_tokenArr) != 2):
             abort(RET.Forbidden,msg='Token验证头错误')

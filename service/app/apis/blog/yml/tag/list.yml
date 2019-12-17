@@ -1,5 +1,7 @@
 博客标签列表
 ---
+tags:
+  - 博客标签
 parameters:
   - name: page
     in: path

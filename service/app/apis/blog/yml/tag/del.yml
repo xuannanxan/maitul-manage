@@ -1,5 +1,7 @@
 删除单个博客标签信息
 ---
+tags:
+  - 博客标签
 parameters:
   - name: id
     in: path

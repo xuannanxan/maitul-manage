@@ -1,12 +1,12 @@
 删除单个博客分类信息
 ---
 tags:
-  - 博客内容分类
+  - 系统管理员
 parameters:
   - name: id
     in: path
     type: string
-    description: 单个分类的ID
+    description: 管理员的ID
     required: true
  
 responses:
@@ -18,7 +18,7 @@ responses:
           type: string
 
   404:
-    description: 分类不存在
+    description: 用户不存在
     schema:
       properties:
         msg:

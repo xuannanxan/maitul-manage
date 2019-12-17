@@ -1,5 +1,7 @@
 新增博客分类
 ---
+tags:
+  - 博客内容分类
 parameters:
   - name: name
     in: path

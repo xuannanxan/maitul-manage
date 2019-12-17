@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime: 2019-12-13 13:11:18
+@LastEditTime: 2019-12-17 17:22:08
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -12,6 +12,8 @@ from app.apis.api_constant import *
 from app.models.blog import BlogCategory
 from app.utils import object_to_json
 from app.utils.tree import build_tree
+from app.apis.admin.common import login_required
+from flasgger import swag_from
 
 parse_base = reqparse.RequestParser()
 parse_base.add_argument('pid')
@@ -45,10 +47,8 @@ def getCategory(id):
     return category
 
 class BlogCategoryAdd(Resource):
+    @login_required
     def post(self):
-        """
-        file: yml/category/add.yml
-        """
         args = parse_base.parse_args()
         pid = args.get('pid')
         name = args.get('name')
@@ -104,7 +104,7 @@ class BlogCategoryResource(Resource):
                     'data':object_to_json(getCategory(id))
             } 
     
-        
+    @login_required    
     def put(self,id):
         '''
         file: yml/category/put.yml
@@ -138,7 +138,8 @@ class BlogCategoryResource(Resource):
             }
             return marshal(data,sing_cate_fields)
         abort(RET.BadRequest,msg='修改失败，请重试')
-
+        
+    @login_required
     def delete(self,id):
         '''
         file: yml/category/del.yml

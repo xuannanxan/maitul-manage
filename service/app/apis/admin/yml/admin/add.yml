@@ -1,24 +1,31 @@
-修改博客分类信息
+新增管理员
 ---
 tags:
-  - 博客内容分类
+  - 系统管理员
 parameters:
-  - name: id
+  - name: username
     in: path
     type: string
-    description: 单个分类的ID
+    required: true
+  - name: password
+    in: path
+    type: string
+    required: true
+  - name: email
+    in: path
+    type: string
     required: true
   - name: name
     in: path
     type: string
     required: true
-  - name: sort
+  - name: phone
     in: path
-    type: integer
-    required: false
+    type: string
+    required: true
 responses:
-  200:
-    description: 修改成功
+  201:
+    description: 新增管理员成功
     schema:
       properties:
         msg:
@@ -26,34 +33,24 @@ responses:
         data:
           type: object
           properties:
-            id:
+            username:
               type: string
             name:
               type: string
-            sort:
+            email:
               type: integer
-            create_time:
+            phone:
               type: string
-            update_time:
-              type: string
-
-  404:
-    description: 分类不存在
+  400:
+    description: 创建失败
     schema:
       properties:
         msg:
           type: string
   403:
-    description: 分类已存在
+    description: 管理员已存在
     schema:
       properties:
         msg:
           type: string
-  400:
-    description: 修改失败
-    schema:
-      properties:
-        msg:
-          type: string
-
 

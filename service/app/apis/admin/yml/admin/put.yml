@@ -1,32 +1,28 @@
-删除单个内容
+重置密码
 ---
 tags:
-  - 博客内容
+  - 系统管理员
 parameters:
   - name: id
     in: path
     type: string
-    description: 单个内容的ID
+    description: 单个管理员的ID
     required: true
- 
 responses:
   200:
-    description: 删除成功
+    description: 重置密码成功
     schema:
       properties:
         msg:
           type: string
+       
 
-  404:
-    description: 内容不存在
-    schema:
-      properties:
-        msg:
-          type: string
   400:
-    description: 删除失败
+    description: 重置密码失败
     schema:
       properties:
         msg:
           type: string
+ 
+
 

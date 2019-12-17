@@ -4,7 +4,7 @@
 @Autor: Allen
 @Date: 2019-11-18 17:04:48
 @LastEditors: Xuannan
-@LastEditTime: 2019-12-15 23:03:20
+@LastEditTime: 2019-12-17 14:05:52
 '''
 __author__ = 'Allen xu'
 from werkzeug.security import check_password_hash,generate_password_hash
@@ -14,7 +14,7 @@ from app.models.base import db,BaseModel
 # 管理员
 class Admin(BaseModel):
     __tablename__ = "admin"
-    username = db.Column(db.String(64), unique=True,nullable=False)
+    username = db.Column(db.String(64), nullable=False)
     _password = db.Column('password',db.String(128),nullable=False)
     is_super = db.Column(db.SmallInteger, default=0)  # 是否超级管理员 1为是 0为否
     name = db.Column(db.String(20))

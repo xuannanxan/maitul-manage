@@ -1,5 +1,7 @@
 获取博客分类树
 ---
+tags:
+  - 博客内容分类
 responses:
   200:
     description: 返回分类树

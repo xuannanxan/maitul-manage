@@ -1,14 +1,7 @@
-获取内容信息
+获取当前登陆用户信息
 ---
 tags:
-  - 博客内容
-parameters:
-  - name: id
-    in: path
-    type: string
-    description: 单个内容的ID
-    required: true
- 
+  - 系统管理员
 responses:
   200:
     description: 获取成功
@@ -19,17 +12,23 @@ responses:
           properties:
             id:
               type: string
+            username:
+              type: string
+            password:
+              type: string
             name:
               type: string
-            sort:
-              type: integer
+            email:
+              type: string
+            phone:
+              type: string
             create_time:
               type: string
             update_time:
               type: string
 
   404:
-    description: 内容不存在
+    description: 非法操作，没有登陆
     schema:
       properties:
         msg:

@@ -1,5 +1,7 @@
 获取单个博客分类信息
 ---
+tags:
+  - 博客内容分类
 parameters:
   - name: id
     in: path

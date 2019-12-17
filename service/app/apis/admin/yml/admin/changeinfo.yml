@@ -1,0 +1,36 @@
+修改用户信息
+---
+tags:
+  - 系统管理员
+parameters:
+  - name: name
+    in: path
+    type: string
+    description: 姓名
+    required: true
+  - name: email
+    in: path
+    type: string
+    description: 邮箱
+    required: true
+  - name: phone
+    in: path
+    type: string
+    description: 电话
+    required: true
+ 
+responses:
+  200:
+    description: 修改成功
+    schema:
+      properties:
+        msg:
+          type: string
+
+  404:
+    description: 修改失败
+    schema:
+      properties:
+        msg:
+          type: string
+

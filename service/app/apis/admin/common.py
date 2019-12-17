@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime: 2019-12-17 01:24:55
+@LastEditTime: 2019-12-17 14:57:56
 @LastEditors: Xuannan
 '''
 from app.models.admin import Admin
@@ -26,31 +26,26 @@ def get_admin(ident):
     if not ident:
         return None
     admin = Admin.query.get(ident)
-    if admin:
-        return admin
-    admin = Admin.query.filter(Admin.username == ident).first()
-    if admin:
+    if admin and admin.is_del=='0':
         return admin
     return None
 
 def _verify():
-    args_authorization = parse_authorization.parse_args()
-    auth_header = args_authorization.get('Authorization')
-    token = Auth.header_to_token(auth_header)
+    token = get_token()
     if not token:
         abort(RET.Forbidden,msg='请登录')    
-    # cache 记录的id
-    cache_id = cache.get(token)
-    if not cache_id:
-        abort(RET.Forbidden,msg='请重新登录!')
     token_data = Auth.decode_auth_token(token)
     token_id = token_data['data']['id']
     token_time = token_data['data']['login_time']
-    # token被篡改
-    if cache_id != token_id:
-        abort(RET.Forbidden,msg='请勿非法操作')
+    # cache 记录的token
+    cache_token = cache.get(token_id)
+    if not cache_token:
+        abort(RET.Forbidden,msg='请重新登录!')
+    # 其他用户异地登录
+    if cache_token != token:
+        abort(RET.Forbidden,msg='当前账户在其他地方登录，您已被强制下线！')
     # 用户是否存在
-    admin = get_admin(cache_id)
+    admin = get_admin(token_id)
     if not admin:
         abort(RET.Forbidden,msg='请重新登录')
     # 超时生成新的token
@@ -61,7 +56,7 @@ def _verify():
     if (datetime.datetime.strptime(token_time, "%Y-%m-%d %H:%M:%S")+datetime.timedelta(minutes=15))<now_time:
         cache.delete(token) 
         new_token = Auth.encode_auth_token(admin.id)
-        cache.set(new_token,admin.id,timeout=60*60*7)
+        cache.set(admin.id,new_token,timeout=60*60*7)
         data = {
             'status':RET.RESETOKEN,
             'token':new_token
@@ -95,7 +90,12 @@ def logout():
     '''
     登出
     '''
+    token = get_token()
+    token_data = Auth.decode_auth_token(token)
+    token_id = token_data['data']['id']
+    cache.delete(token_id) 
+
+def get_token():
     args_authorization = parse_authorization.parse_args()
     auth_header = args_authorization.get('Authorization')
-    token = Auth.header_to_token(auth_header)
-    cache.delete(token) 
+    return Auth.header_to_token(auth_header)

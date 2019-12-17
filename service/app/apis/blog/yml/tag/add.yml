@@ -1,5 +1,7 @@
 新增博客标签
 ---
+tags:
+  - 博客标签
 parameters:
   - name: name
     in: path

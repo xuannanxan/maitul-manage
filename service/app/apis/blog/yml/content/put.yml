@@ -1,5 +1,7 @@
 修改内容信息
 ---
+tags:
+  - 博客内容
 parameters:
   - name: id
     in: path

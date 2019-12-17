@@ -1,5 +1,7 @@
 新增内容
 ---
+tags:
+  - 博客内容
 parameters:
   - name: name
     in: path
