@@ -98,4 +98,4 @@ def logout():
 def get_token():
     args_authorization = parse_authorization.parse_args()
     auth_header = args_authorization.get('Authorization')
-    return Auth.header_to_token(auth_header)
+    return Auth.header_to_token(auth_header,'JWT')

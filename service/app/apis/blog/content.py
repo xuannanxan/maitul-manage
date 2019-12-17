@@ -56,7 +56,7 @@ def getContent(id):
 class BlogContentAdd(Resource):
     def post(self):
         """
-        file: yml/content/add.yml
+        添加内容
         """
         args = parse_base.parse_args()
         title = args.get('title')
@@ -95,7 +95,7 @@ class BlogContentAdd(Resource):
 class BlogContentList(Resource):
     def get(self):
         '''
-        file: yml/content/list.yml
+        内容列表
         '''
         args = parse_page.parse_args()
         page = 1
@@ -148,7 +148,7 @@ class BlogContentList(Resource):
 class BlogContentResource(Resource):
     def get(self,id):
         '''
-        file: yml/content/get.yml
+        单个内容
         '''
         sql='''
         SELECT c.*,GROUP_CONCAT(t.name SEPARATOR ',') as tags
@@ -169,7 +169,7 @@ class BlogContentResource(Resource):
         
     def put(self,id):
         '''
-        file: yml/content/put.yml
+        修改内容
         '''
         blog_content = getContent(id)
         args = parse_base.parse_args()
@@ -209,7 +209,7 @@ class BlogContentResource(Resource):
 
     def delete(self,id):
         '''
-        file: yml/content/del.yml
+        删除内容
         '''
         blog_content = getContent(id)
         blog_content.is_del = blog_content.id

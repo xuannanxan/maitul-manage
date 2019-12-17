@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime: 2019-12-17 17:21:08
+@LastEditTime: 2019-12-17 22:08:26
 @LastEditors: Xuannan
 '''
 import os
@@ -16,7 +16,6 @@ from flask_mail import Mail
 from flask_cache import Cache
 from app.apis import api_blueprint
 
-
 # 创建对象
 db = SQLAlchemy()
 migrate = Migrate()
@@ -27,7 +26,7 @@ csrf = CSRFProtect()
 cache = Cache(with_jinja2_ext=False)
 csrf.exempt(api_blueprint)
 
-env = os.environ.get('FLASK_ENV','dev')
+
 # 初始化拓展包
 def init_ext(app):
     db.init_app(app)
@@ -39,7 +38,7 @@ def init_ext(app):
     mail.init_app(app)
     csrf.init_app(app)
     # 只有开发环境可以生产接口文档
-    if env == 'dev':
+    if app.config['DEBUG']:
         from flasgger import Swagger
         Swagger(app)
 

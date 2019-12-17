@@ -4,18 +4,16 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-16 12:42:17
-@LastEditTime: 2019-12-17 12:34:03
+@LastEditTime: 2019-12-17 22:07:48
 @LastEditors: Xuannan
 '''
 import jwt, datetime, time
 from flask import jsonify
-from app.config import envs
-from app.ext import env
 from flask_restful import abort
 from app.apis.api_constant import *
+from flask import current_app
 
 
-SECRET_KEY = (envs.get(env)).SECRET_KEY
 class Auth():
     @staticmethod
     def encode_auth_token(user_id):
@@ -36,7 +34,7 @@ class Auth():
             }
             token = jwt.encode(
                 payload,
-                SECRET_KEY,
+                current_app.config['SECRET_KEY'],
                 algorithm='HS256'
             )
             return str(token,'utf-8')
@@ -53,7 +51,7 @@ class Auth():
         try:
             # payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'), leeway=datetime.timedelta(seconds=10))
             # 取消过期时间验证
-            payload = jwt.decode(auth_token, SECRET_KEY, options={'verify_exp': False})
+            payload = jwt.decode(auth_token, current_app.config['SECRET_KEY'], options={'verify_exp': False})
             if ('data' in payload and 'id' in payload['data']):
                 return payload
             else:
@@ -64,11 +62,11 @@ class Auth():
             abort(RET.Forbidden,msg='无效Token')
 
     @staticmethod
-    def header_to_token(auth_header):
+    def header_to_token(auth_header,prefix):
         if not auth_header:
             abort(RET.Forbidden,msg='请登陆!')
         auth_tokenArr = auth_header.split(" ")
-        if (not auth_tokenArr or auth_tokenArr[0] != 'JWT' or len(auth_tokenArr) != 2):
+        if (not auth_tokenArr or auth_tokenArr[0] != prefix or len(auth_tokenArr) != 2):
             abort(RET.Forbidden,msg='Token验证头错误')
         else:
             return auth_tokenArr[1]

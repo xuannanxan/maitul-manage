@@ -18,7 +18,7 @@ parse.add_argument('image_code',type=str,required=True,help='请传入image_code
 class CaptchaResource(Resource):
     def get(self):
         """
-        file: yml/captcha.yml
+        验证码
         """
         args = parse.parse_args()
         image_code = args.get('image_code')

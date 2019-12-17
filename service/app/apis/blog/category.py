@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime: 2019-12-17 17:22:08
+@LastEditTime: 2019-12-18 00:40:18
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -49,6 +49,9 @@ def getCategory(id):
 class BlogCategoryAdd(Resource):
     @login_required
     def post(self):
+        '''
+        添加分类
+        '''
         args = parse_base.parse_args()
         pid = args.get('pid')
         name = args.get('name')
@@ -81,7 +84,7 @@ class BlogCategoryAdd(Resource):
 class BlogCategoryTree(Resource):
     def get(self):
         '''
-        file: yml/category/list.yml
+        获取分类树
         '''
         cate_list = BlogCategory.query.filter_by(is_del = '0').order_by(BlogCategory.sort.desc()).all()
         if not cate_list:
@@ -97,7 +100,7 @@ class BlogCategoryTree(Resource):
 class BlogCategoryResource(Resource):
     def get(self,id):
         '''
-        file: yml/category/get.yml
+        单个分类
         '''
         return {
                     'status':RET.OK,
@@ -107,7 +110,7 @@ class BlogCategoryResource(Resource):
     @login_required    
     def put(self,id):
         '''
-        file: yml/category/put.yml
+        修改分类
         '''
         blog_cate = getCategory(id)
         args = parse_base.parse_args()
@@ -142,7 +145,7 @@ class BlogCategoryResource(Resource):
     @login_required
     def delete(self,id):
         '''
-        file: yml/category/del.yml
+        删除分类
         '''
         cate = getCategory(id)
         cate.is_del = cate.id

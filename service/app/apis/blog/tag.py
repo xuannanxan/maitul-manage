@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 19:28:32
-@LastEditTime: 2019-12-16 14:32:44
+@LastEditTime: 2019-12-18 00:42:14
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -40,7 +40,7 @@ def getTag(id):
 class BlogTagAdd(Resource):
     def post(self):
         """
-        file: yml/tag/add.yml
+        添加标签
         """
         args = parse_base.parse_args()
         name = args.get('name')
@@ -63,7 +63,7 @@ class BlogTagAdd(Resource):
 class BlogTagList(Resource):
     def get(self):
         '''
-        file: yml/tag/list.yml
+        标签列表
         '''
         args = parse_page.parse_args()
         page = 1
@@ -91,7 +91,7 @@ class BlogTagList(Resource):
 class BlogTagResource(Resource):
     def get(self,id):
         '''
-        file: yml/tag/get.yml
+        单个标签
         '''
         return {
                     'status':RET.OK,
@@ -101,7 +101,7 @@ class BlogTagResource(Resource):
         
     def put(self,id):
         '''
-        file: yml/tag/put.yml
+        修改标签
         '''
         blog_tag = getTag(id)
         args = parse_base.parse_args()
@@ -126,7 +126,7 @@ class BlogTagResource(Resource):
 
     def delete(self,id):
         '''
-        file: yml/tag/del.yml
+        删除标签
         '''
         tag = getTag(id)
         tag.is_del = tag.id

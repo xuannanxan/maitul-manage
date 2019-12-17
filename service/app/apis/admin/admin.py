@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime: 2019-12-17 15:50:41
+@LastEditTime: 2019-12-18 00:44:26
 @LastEditors: Xuannan
 '''
 
@@ -19,6 +19,13 @@ from flask import g
 from app.utils import object_to_json
 from app.apis.common.auth import Auth
 from app.config import PAGINATE_NUM
+
+from app.utils.api_doc import Apidoc
+from app.api_docs.admin import admin_doc
+
+api = Apidoc('系统管理员')
+
+
 
 # 新增
 parse_register = reqparse.RequestParser()
@@ -61,10 +68,11 @@ sing_user_fields = {
 
 class AdminCurrent(Resource):    
     # 当前用户信息    
+    @api.doc(api_doc=admin_doc.get_admin)
     @login_required
     def get(self):
         '''
-        file: yml/admin/login.yml
+        获取当前登录用户的信息
         '''
         if g.admin:
             data = {
@@ -75,11 +83,9 @@ class AdminCurrent(Resource):
         abort(RET.BadRequest,msg='请勿非法操作')
 
     # 修改密码
+    @api.doc(api_doc=admin_doc.change_pwd)
     @login_required
     def put(self):
-        '''
-        file: yml/admin/changepwd.yml
-        '''
         args = parse_change_pwd.parse_args()
         password = args.get('password')
         new_password = args.get('new_password')
@@ -99,7 +105,7 @@ class AdminCurrent(Resource):
     @login_required
     def post(self):
         '''
-        file: yml/admin/changeinfo.yml
+        修改用户信息
         '''
         args = parse_info.parse_args()
         name = args.get('name')
@@ -121,7 +127,7 @@ class AdminList(Resource):
     @login_required
     def get(self):
         '''
-        file: yml/admin/list.yml
+        获取用户列表
         '''
         args = parse_page.parse_args()
         page = 1
@@ -149,7 +155,7 @@ class AdminAdd(Resource):
     @login_required
     def post(self):
         '''
-        file: yml/admin/add.yml
+        添加用户
         '''
         args_register = parse_register.parse_args()
         password = args_register.get('password')
@@ -180,7 +186,7 @@ class AdminResource(Resource):
     @login_required
     def get(self,id):
         '''
-        file: yml/admin/get.yml
+        获取单个用户
         '''
         admin = get_admin(id)
         if not admin:
@@ -195,7 +201,7 @@ class AdminResource(Resource):
     @login_required   
     def put(self,id):
         '''
-        file: yml/admin/put.yml
+        重置密码
         '''
         admin = get_admin(id)
         admin.password = '123456a'
@@ -212,7 +218,7 @@ class AdminResource(Resource):
     @login_required 
     def delete(self,id):
         '''
-        file: yml/admin/del.yml
+        删除用户
         '''
         admin = get_admin(id)
         if not admin:
@@ -233,7 +239,7 @@ class AdminResource(Resource):
 class AdminLogin(Resource):
     def post(self):
         '''
-        file: yml/admin/login.yml
+        登录
         '''
         args_login = parse_login.parse_args()
         password = args_login.get('password')

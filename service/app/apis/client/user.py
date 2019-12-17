@@ -47,7 +47,7 @@ sing_user_fields = {
 class UsersResource(Resource):
     def post(self):
         """
-        file: yml/register.yml
+        注册
         """
         args = parse_base.parse_args()
         password = args.get('password')
