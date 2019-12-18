@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-17 22:23:06
-@LastEditTime: 2019-12-17 22:23:13
+@LastEditTime: 2019-12-18 11:57:02
 @LastEditors: Xuannan
 '''
 
@@ -18,16 +18,18 @@ class ParamFiled:
 		self.default = default
 
 	@property
-	def data(self):
-		return {
-			"name": self.name,
-			"in": self.site,
-			"type": self.type,
-			"description": self.description,
-			"enum": self.enum,
-			"required": self.required,
-			"default": self.default
-		}
+	def data(self):	
+			param ={
+				"name": self.name,
+				"in": self.site,
+				"type": self.type,
+				"description": self.description,
+				"required": self.required,
+				"default": self.default
+			}
+			if self.enum:
+				param['enum']=self.enum
+			return param
 
 
 class IntegerQueryFiled(ParamFiled):
@@ -55,7 +57,7 @@ class StringPathFiled(ParamFiled):
 	def __init__(self, name, description, enum=None, required=None, default=None):
 		self.type = 'string'
 		self.site = 'path'
-		super().__init__(name, description, enum, required, default)
+		super().__init__(name, description,enum, required, default)
 
 
 class BooleanQueryFiled(ParamFiled):

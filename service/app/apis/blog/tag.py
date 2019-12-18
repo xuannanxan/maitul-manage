@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 19:28:32
-@LastEditTime: 2019-12-18 00:42:14
+@LastEditTime: 2019-12-18 16:47:59
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -12,6 +12,12 @@ from app.apis.api_constant import *
 from app.models.blog import BlogTag
 from app.utils import object_to_json
 from app.config import PAGINATE_NUM
+from app.apis.admin.common import login_required
+from app.utils.api_doc import Apidoc
+from app.api_docs.blog import tag_doc
+from flask import g
+
+api = Apidoc('博客标签')
 
 parse_base = reqparse.RequestParser()
 parse_base.add_argument('name',type=str,required=True,help='请输入标签名称')
@@ -38,6 +44,8 @@ def getTag(id):
     return tag
 
 class BlogTagAdd(Resource):
+    @api.doc(api_doc=tag_doc.add)
+    @login_required
     def post(self):
         """
         添加标签
@@ -51,6 +59,7 @@ class BlogTagAdd(Resource):
         blog_tag = BlogTag()
         blog_tag.name = name
         blog_tag.sort = sort
+        blog_tag.last_editor = g.admin.username
         if blog_tag.add():
             data = {
                     'status':RET.Created,
@@ -61,6 +70,7 @@ class BlogTagAdd(Resource):
         abort(RET.BadRequest,msg='添加失败，请重试')
 
 class BlogTagList(Resource):
+    @api.doc(api_doc=tag_doc.lst)
     def get(self):
         '''
         标签列表
@@ -89,6 +99,7 @@ class BlogTagList(Resource):
     
 
 class BlogTagResource(Resource):
+    @api.doc(api_doc=tag_doc.get)
     def get(self,id):
         '''
         单个标签
@@ -98,7 +109,8 @@ class BlogTagResource(Resource):
                     'data':object_to_json(getTag(id))
             } 
     
-        
+    @api.doc(api_doc=tag_doc.put)
+    @login_required    
     def put(self,id):
         '''
         修改标签
@@ -111,9 +123,11 @@ class BlogTagResource(Resource):
         tag = BlogTag.query.filter(BlogTag.id != id , BlogTag.is_del == '0',BlogTag.name == name).first()
         if tag:
             abort(RET.Forbidden,msg='标签已存在')
-        blog_tag.name = name
+        if name:
+            blog_tag.name = name
         if sort:
             blog_tag.sort = sort
+        blog_tag.last_editor = g.admin.username
         result = BlogTag().updata()
         if result:
             data =  {
@@ -124,12 +138,15 @@ class BlogTagResource(Resource):
             return marshal(data,sing_tag_fields)
         abort(RET.BadRequest,msg='修改失败，请重试')
 
+    @api.doc(api_doc=tag_doc.delete)
+    @login_required
     def delete(self,id):
         '''
         删除标签
         '''
         tag = getTag(id)
         tag.is_del = tag.id
+        tag.last_editor = g.admin.username
         result = BlogTag().updata()
         if result:
             return {

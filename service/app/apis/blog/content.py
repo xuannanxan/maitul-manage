@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 19:28:32
-@LastEditTime: 2019-12-13 16:34:31
+@LastEditTime: 2019-12-18 16:57:26
 @LastEditors: Xuannan
 '''
 
@@ -14,6 +14,12 @@ from app.models.blog import BlogContent,BlogTagRelation
 from app.models.base import Crud
 from app.utils import object_to_json,mysql_to_json
 from app.config import PAGINATE_NUM
+from app.apis.admin.common import login_required
+from app.utils.api_doc import Apidoc
+from app.api_docs.blog import content_doc
+from flask import g
+
+api = Apidoc('博客内容')
 
 parse_base = reqparse.RequestParser()
 parse_base.add_argument('title',type=str,required=True,help='请输入标题')
@@ -29,7 +35,7 @@ parse_page = reqparse.RequestParser()
 parse_page.add_argument('page',type=int,help='页码只能是数字')
 parse_page.add_argument('paginate',type=int,help='每页数量只能是数字')
 parse_page.add_argument('tag')
-parse_page.add_argument('category')
+parse_page.add_argument('category_id')
 parse_page.add_argument('search')
 
 content_fields = {
@@ -54,6 +60,8 @@ def getContent(id):
 
 
 class BlogContentAdd(Resource):
+    @api.doc(api_doc=content_doc.add)
+    @login_required
     def post(self):
         """
         添加内容
@@ -76,6 +84,8 @@ class BlogContentAdd(Resource):
         blog_content.cover = cover
         blog_content.category_id = category_id
         blog_content.sort = sort
+        blog_content.author = g.admin.username
+        blog_content.last_editor = g.admin.username
         if blog_content.add():
             data = {
                     'status':RET.Created,
@@ -93,6 +103,7 @@ class BlogContentAdd(Resource):
 
         
 class BlogContentList(Resource):
+    @api.doc(api_doc=content_doc.lst)
     def get(self):
         '''
         内容列表
@@ -105,12 +116,12 @@ class BlogContentList(Resource):
         if args.get('paginate'):
             paginate = int(args.get('paginate'))
         tag = args.get('tag')
-        category = args.get('category')
+        category_id = args.get('category_id')
         search = args.get('search')
         # 开始拼接查询语句
         query = '{0}{1}{2}'.format(
             't.name = "%s" and '%tag if tag else '',
-            'c.category_id = %s and '%category if category else '',
+            'c.category_id = %s and '%category_id if category_id else '',
             '(c.title like "%{0}%" or c.content like "%{0}%") and '.format(search) if search else ''
         )
         sql = '''
@@ -146,6 +157,7 @@ class BlogContentList(Resource):
     
 
 class BlogContentResource(Resource):
+    @api.doc(api_doc=content_doc.get)
     def get(self,id):
         '''
         单个内容
@@ -166,7 +178,8 @@ class BlogContentResource(Resource):
                     'data':mysql_to_json(dict(data))
             } 
     
-        
+    @api.doc(api_doc=content_doc.put)
+    @login_required    
     def put(self,id):
         '''
         修改内容
@@ -186,6 +199,7 @@ class BlogContentResource(Resource):
         blog_content.content = content if content else blog_content.content
         blog_content.cover = cover if cover else blog_content.cover
         blog_content.category_id = category_id if category_id else blog_content.category_id
+        blog_content.last_editor = g.admin.username
         result = BlogContent().updata()
         if result:
             data =  {
@@ -206,13 +220,16 @@ class BlogContentResource(Resource):
                 Crud.add_all(new_tag_data)
             return marshal(data,sing_content_fields)
         abort(RET.BadRequest,msg='修改失败，请重试')
-
+        
+    @api.doc(api_doc=content_doc.put)
+    @login_required
     def delete(self,id):
         '''
         删除内容
         '''
         blog_content = getContent(id)
         blog_content.is_del = blog_content.id
+        blog_content.last_editor = g.admin.username
         result = BlogContent().updata()
         if result:
             return {

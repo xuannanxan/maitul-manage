@@ -4,7 +4,7 @@
 @Autor: Allen
 @Date: 2019-11-13 17:29:28
 @LastEditors: Xuannan
-@LastEditTime: 2019-12-11 21:43:28
+@LastEditTime: 2019-12-18 15:56:18
 '''
 __author__ = 'Allen xu'
 from app.models.base import db,BaseModel
@@ -18,7 +18,8 @@ class BlogContent(BaseModel):
     cover = db.Column(db.String(255))
     click = db.Column(db.BigInteger, default=0)  # 点击数
     sort = db.Column(db.Integer, default=1)  # 排序
-    admin_id = db.Column(db.String(255))  # 发布用户
+    author = db.Column(db.String(20))  # 发布用户
+    last_editor =  db.Column(db.String(20))
     category_id = db.Column(db.String(32),nullable=False)  # 所属分类
 
     def __repr__(self):

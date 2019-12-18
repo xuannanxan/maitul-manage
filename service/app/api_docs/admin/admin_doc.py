@@ -4,24 +4,58 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-17 22:20:20
-@LastEditTime: 2019-12-18 00:35:33
+@LastEditTime: 2019-12-18 13:49:34
 @LastEditors: Xuannan
 '''
 from app.utils.swagger_filed import IntegerQueryFiled, StringQueryFiled, IntegerPathFiled, StringPathFiled
 
 
-uid_in_path = StringPathFiled(name='uid',
-							  description="用户ID",
-							  enum=['0000aef0774f11e8ba9500163e0ce7e6',
-									'00171b62791711e889ad00163e0ce7e6',
-									'0017be56959511e8b34700163e0ce7e6',
-									'001aa40c61c111e8a8a600163e0ce7e6',
-									'001ea0984fa111e8a3d400163e0ce7e6'],
-							  default='0000aef0774f11e8ba9500163e0ce7e6',
-							  required=True).data
-
+username = StringQueryFiled(	name='username',
+								description="用户名",
+								default='',
+								required=True).data
+password = StringQueryFiled(	name='password',
+								description="密码",
+								default='',
+								required=True).data		
+new_password = StringQueryFiled(	name='new_password',
+									description="新密码",
+									default='',
+									required=True).data		
+name = StringQueryFiled(name='name',
+						description="姓名",
+						default='',
+						required=True).data						
+email = StringQueryFiled(name='email',
+						description="邮箱地址",
+						default='',
+						required=True).data	
+phone = StringQueryFiled(name='phone',
+						description="手机号码",
+						default='',
+						required=True).data	
+page = IntegerPathFiled(name='page',
+						description="页码",
+						default=1).data	
+paginate = IntegerPathFiled(name='paginate',
+							description="每页数量",
+							default=10).data
+id = StringPathFiled(	name='id',
+						description="id",
+						default='',
+						required=True).data		
+user_fields = {
+						'name':{"type": "string",},
+						'email':{"type": "string",},
+						'phone':{"type": "string",},
+						'createtime':{"type": "string",},
+						'updatatime':{"type": "string",},
+						'is_super':{"type": "integer",},
+						'id':{"type": "string",},
+						}
 get_admin = {
-	"parameters": [],
+	"description": "用户获取自身信息",
+	"parameters": [ ],
 	"security": [
 		{
 			"Authorization": ''
@@ -29,21 +63,75 @@ get_admin = {
 	],
 	"responses": {
 		"200": {
-			"description": "用户获取自身信息",
+			"description": "获取成功",
 			"examples": {
 			},
 			"properties":{
 				'data':{
-					'properties':{
-						'name':'',
-						'email':'',
-						'phone':'',
-						'createtime':'',
-						'updatatime':'',
-						'is_super':'',
-						'id':'',
-						}
-					
+					'properties':user_fields
+				}
+			}
+		}
+	}
+}
+
+
+
+get_admin_by_id = {
+	"description": "根据id获取用户信息",
+	"parameters": [ id],
+	"security": [
+		{
+			"Authorization": ''
+		}
+	],
+	"responses": {
+		"200": {
+			"description": "获取成功",
+			"examples": {
+			},
+			"properties":{
+				'data':{
+					'properties':user_fields
+				}
+			}
+		}
+	}
+}
+
+reset_pwd = {
+	"description": "重置用户密码为123456a",
+	"parameters": [ id],
+	"security": [
+		{
+			"Authorization": ''
+		}
+	],
+	"responses": {
+		"200": {
+			"description": "重置密码成功",
+			"properties":{
+				'msg':{
+					'type':'string'
+				}
+			}
+		}
+	}
+}
+del_admin = {
+	"description": "删除指定用户",
+	"parameters": [ id],
+	"security": [
+		{
+			"Authorization": ''
+		}
+	],
+	"responses": {
+		"200": {
+			"description": "删除成功",
+			"properties":{
+				'msg':{
+					'type':'string'
 				}
 			}
 		}
@@ -51,21 +139,9 @@ get_admin = {
 }
 
 change_pwd = {
+	"description": "用户自行修改密码",
 	"parameters": [
-		{
-			"name": "password",
-			"in": "path",
-			"type": "string",
-			"required": "true",
-			"default": ""
-		},
-		{
-			"name": "new_password",
-			"in": "path",
-			"type": "string",
-			"required": "true",
-			"default": ""
-		},
+		password,new_password
 	],
 	"security": [
 		{
@@ -77,13 +153,20 @@ change_pwd = {
 			"description": "密码修改成功，请重新登录",
 			"examples": {
 				'msg':'密码修改成功，请重新登录'
+			},
+			"properties":{
+				'msg':{
+					"type": "string"	
+				}
 			}
 		}
 	}
 }
-
-delete_user = {
-	"parameters": [],
+change_info = {
+	"description": "用户自行修改个人资料",
+	"parameters": [
+		name,email,phone
+	],
 	"security": [
 		{
 			"Authorization": ''
@@ -91,8 +174,109 @@ delete_user = {
 	],
 	"responses": {
 		"200": {
-			"description": "用户注销",
+			"description": "修改成功",
 			"examples": {
+				'msg':'修改成功'
+			},
+			"properties":{
+				'msg':{
+					"type": "string"	
+				}
+			}
+		}
+	}
+}
+admin_list = {
+	"description": "用户列表",
+	"parameters": [
+		page,paginate
+	],
+	"security": [
+		{
+			"Authorization": ''
+		}
+	],
+	"responses": {
+		"200": {
+			"description": "获取成功",
+			"properties":{
+				'data':{
+					'properties':user_fields
+				},
+				'paginate':{
+					'properties':{
+						'page':{"type": "integer"	},
+						'per_page':{"type": "integer"	},
+						'total':{"type": "integer"	}
+					}
+				}
+			}
+		}
+	}
+}
+
+admin_add = {
+	"description": "添加用户",
+	"parameters": [
+		username,password,name,email,phone
+	],
+	"security": [
+		{
+			"Authorization": ''
+		}
+	],
+	"responses": {
+		"201": {
+			"description": "新增管理员成功",
+			"properties":{
+				'data':{
+					'properties':user_fields
+				},
+				'msg':{"type": "string"
+					}
+			}
+		}
+	}
+}
+
+
+login = {
+	"description": "登陆",
+	"parameters": [
+		username,password
+	],
+	"responses": {
+		"200": {
+			"description": "登陆成功",
+			"examples": {
+				'msg':'登陆成功'
+			},
+			"properties":{
+				'msg':{
+					"type": "string"	
+				}
+			}
+		}
+	}
+}
+
+logout = {
+	"description": "登出",
+	"parameters": [ ],
+	"security": [
+		{
+			"Authorization": ''
+		}
+	],
+	"responses": {
+		"200": {
+			"description": "已退出",
+			"examples": {
+			},
+			"properties":{
+				'msg':{
+					'type':'string'
+				}
 			}
 		}
 	}

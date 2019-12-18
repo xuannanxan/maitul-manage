@@ -4,18 +4,18 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime: 2019-12-18 00:44:26
+@LastEditTime: 2019-12-18 17:32:13
 @LastEditors: Xuannan
 '''
 
 
 from flask_restful import Resource,reqparse,fields,marshal,abort,inputs
-from app.models.admin import Admin
+from app.models.admin import Admin,AdminLog
 from app.apis.api_constant import *
 from .common import get_admin,login_required,logout
 import uuid,datetime
 from app.ext import cache
-from flask import g
+from flask import g,request
 from app.utils import object_to_json
 from app.apis.common.auth import Auth
 from app.config import PAGINATE_NUM
@@ -102,6 +102,7 @@ class AdminCurrent(Resource):
         abort(RET.BadRequest,msg='修改密码失败')
 
     # 修改用户信息
+    @api.doc(api_doc=admin_doc.change_info)
     @login_required
     def post(self):
         '''
@@ -124,6 +125,7 @@ class AdminCurrent(Resource):
 
        
 class AdminList(Resource):
+    @api.doc(api_doc=admin_doc.admin_list)
     @login_required
     def get(self):
         '''
@@ -152,6 +154,7 @@ class AdminList(Resource):
 
 
 class AdminAdd(Resource):
+    @api.doc(api_doc=admin_doc.admin_add)
     @login_required
     def post(self):
         '''
@@ -183,6 +186,7 @@ class AdminAdd(Resource):
         
             
 class AdminResource(Resource):
+    @api.doc(api_doc=admin_doc.get_admin_by_id)
     @login_required
     def get(self,id):
         '''
@@ -198,6 +202,7 @@ class AdminResource(Resource):
         return data
        
     # 重置密码
+    @api.doc(api_doc=admin_doc.reset_pwd)
     @login_required   
     def put(self,id):
         '''
@@ -214,7 +219,7 @@ class AdminResource(Resource):
                 }
         abort(RET.BadRequest,msg='重置密码失败')
 
-        
+    @api.doc(api_doc=admin_doc.del_admin)      
     @login_required 
     def delete(self,id):
         '''
@@ -237,6 +242,7 @@ class AdminResource(Resource):
         abort(RET.BadRequest,msg='删除失败，请重试')
         
 class AdminLogin(Resource):
+    @api.doc(api_doc=admin_doc.login) 
     def post(self):
         '''
         登录
@@ -251,9 +257,27 @@ class AdminLogin(Resource):
             abort(RET.Unauthorized,msg='用户名或密码错误')
         token = Auth.encode_auth_token(admin.id)
         cache.set(admin.id,token,timeout=60*60*7)
+        # 记录登陆日志
+        admin_log = AdminLog()
+        admin_log.username = admin.username
+        admin_log.ip = request.remote_addr
+        admin_log.add()
         data = {
             'status':RET.OK,
             'msg':'登录成功',
             'token':token
         }
         return data
+
+    @api.doc(api_doc=admin_doc.logout)      
+    @login_required 
+    def delete(self):
+        '''
+        登出
+        '''
+        admin = g.admin
+        cache.delete(admin.id) 
+        return {
+            'status':RET.OK,
+            'msg':'已退出'
+        }

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime: 2019-12-18 00:40:18
+@LastEditTime: 2019-12-18 16:47:08
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -13,10 +13,15 @@ from app.models.blog import BlogCategory
 from app.utils import object_to_json
 from app.utils.tree import build_tree
 from app.apis.admin.common import login_required
-from flasgger import swag_from
+from app.utils.api_doc import Apidoc
+from app.api_docs.blog import category_doc
+from flask import g
+
+api = Apidoc('博客分类')
+
 
 parse_base = reqparse.RequestParser()
-parse_base.add_argument('pid')
+parse_base.add_argument('pid',type=str,required=True,help='请选择上级分类')
 parse_base.add_argument('name',type=str,required=True,help='请输入分类名称')
 parse_base.add_argument('keywords')
 parse_base.add_argument('description')
@@ -47,6 +52,7 @@ def getCategory(id):
     return category
 
 class BlogCategoryAdd(Resource):
+    @api.doc(api_doc=category_doc.add)
     @login_required
     def post(self):
         '''
@@ -71,6 +77,7 @@ class BlogCategoryAdd(Resource):
         blog_cate.icon = icon
         blog_cate.cover = cover
         blog_cate.sort = sort
+        blog_cate.last_editor = g.admin.username
         if blog_cate.add():
             data = {
                     'status':RET.Created,
@@ -82,6 +89,7 @@ class BlogCategoryAdd(Resource):
 
         
 class BlogCategoryTree(Resource):
+    @api.doc(api_doc=category_doc.lst)
     def get(self):
         '''
         获取分类树
@@ -98,6 +106,7 @@ class BlogCategoryTree(Resource):
     
 
 class BlogCategoryResource(Resource):
+    @api.doc(api_doc=category_doc.get)
     def get(self,id):
         '''
         单个分类
@@ -107,7 +116,8 @@ class BlogCategoryResource(Resource):
                     'data':object_to_json(getCategory(id))
             } 
     
-    @login_required    
+    @api.doc(api_doc=category_doc.put)
+    @login_required  
     def put(self,id):
         '''
         修改分类
@@ -132,6 +142,7 @@ class BlogCategoryResource(Resource):
         blog_cate.icon = icon if icon else blog_cate.icon
         blog_cate.cover = cover if cover else blog_cate.cover
         blog_cate.sort = sort if sort else blog_cate.sort
+        blog_cate.last_editor = g.admin.username
         result = BlogCategory().updata()
         if result:
             data =  {
@@ -142,6 +153,7 @@ class BlogCategoryResource(Resource):
             return marshal(data,sing_cate_fields)
         abort(RET.BadRequest,msg='修改失败，请重试')
         
+    @api.doc(api_doc=category_doc.delete)
     @login_required
     def delete(self,id):
         '''
@@ -149,6 +161,7 @@ class BlogCategoryResource(Resource):
         '''
         cate = getCategory(id)
         cate.is_del = cate.id
+        cate.last_editor = g.admin.username
         result = BlogCategory().updata()
         if result:
             return {

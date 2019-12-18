@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-17 22:24:30
-@LastEditTime: 2019-12-18 00:16:17
+@LastEditTime: 2019-12-18 12:27:30
 @LastEditors: Xuannan
 '''
 
@@ -27,7 +27,6 @@ class Apidoc:
 				# 对f.__doc__处理
 				if f.__doc__ and '\n\t' in f.__doc__:
 					f.__doc__ = f.__doc__.split('\n\t')[0]
-
 				@swag_from(specs=specs)
 				@wraps(f)
 				def wrapper(*args, **kwargs):
