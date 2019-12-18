@@ -2,23 +2,31 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-13 17:25:03
- * @LastEditTime: 2019-12-14 21:34:33
- * @LastEditors: Xuannan
+ * @LastEditTime : 2019-12-19 00:14:17
+ * @LastEditors  : Xuannan
  */
 import React , {useState} from 'react';
 import 'antd/dist/antd.css';
-import { Card, Input, Icon,Button ,Spin ,Checkbox,Form} from 'antd';
+import { Card, Input, Icon,Button ,Spin ,Checkbox,Form,message} from 'antd';
 import '../static/css/login.css'
+import {_login} from '../utils/api'
 
 function LoginForm(props){
     const { getFieldDecorator } = props.form;
     const [isLoading, setIsLoading] = useState(false)
 
-    const checkLogin = (e)=>{
+    const login = async (username,password)=>{
+       return await _login(username,password);
+    }
+    const checkLogin =  (e)=>{
         e.preventDefault();
         props.form.validateFields((err, values) => {
         if (!err) {
-            console.log('Received values of form: ', values);
+            _login(values.username,values.password).then(val=>{
+                localStorage.setItem('jwToken',val.data.token)
+                console.log(val.data.token);
+            })
+            
         }
         });
         setIsLoading(true)

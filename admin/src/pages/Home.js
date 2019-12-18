@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime: 2019-12-14 19:47:23
- * @LastEditors: Xuannan
+ * @LastEditTime : 2019-12-18 22:20:55
+ * @LastEditors  : Xuannan
  */
 
 
@@ -12,6 +12,7 @@ import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 import '../static/css/home.css'
 import {Route} from 'react-router-dom'
 import AddContent from './Content/Add'
+
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -22,6 +23,10 @@ function Home(){
     const onCollapse = collapsed => {
       setCollapsed(collapsed)
     };
+
+
+ 
+
     return(
         <Layout style={{ minHeight: '100vh' }}>
         <Sider  collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ background: '#fff' }}>

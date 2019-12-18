@@ -2,18 +2,45 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-14 17:40:02
- * @LastEditTime: 2019-12-16 09:08:56
- * @LastEditors: Xuannan
+ * @LastEditTime : 2019-12-19 01:25:57
+ * @LastEditors  : Xuannan
  */
+
 import React, { useState } from 'react';
 import marked from 'marked'
-import { Row, Col, Input, Icon ,Select,Form ,Spin,Button,InputNumber} from 'antd';
+import { Row, Col, Input, Icon ,Select,Form ,Spin,Button,InputNumber,TreeSelect} from 'antd';
 import '../../static/css/content/add.css'
+
+
+const treeData = [
+    {
+      title: 'Node1',
+      value: '0-0',
+      key: '0-0',
+      children: [
+        {
+          title: 'Child Node1',
+          value: '0-0-1',
+          key: '0-0-1',
+        },
+        {
+          title: 'Child Node2',
+          value: '0-0-2',
+          key: '0-0-2',
+        },
+      ],
+    },
+    {
+      title: 'Node2',
+      value: '0-1',
+      key: '0-1',
+    },
+  ];
+
 
 const { Option } = Select;
 const { TextArea } = Input
 marked.setOptions({
-    
     gfm: true,
     pedantic: false,
     sanitize: false,
@@ -41,10 +68,16 @@ function AddForm(props){
     const categorySelector = getFieldDecorator('category_id', {
         rules: [{ required: true, message: '请选择分类!' }],
       })(
-        <Select placeholder="请选择分类..." size='large' style={{ width: '200px' }}>
-            <Option value="1">1212</Option>
-            <Option value="2">12.S.A</Option>
-        </Select>,
+        <TreeSelect
+        showSearch
+        style={{ width: '200px' }}
+        treeData={treeData}
+        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+        placeholder="选择分类"
+        allowClear
+        treeDefaultExpandAll
+        size='large'
+      ></TreeSelect>,
       );
   
     const changeContent = (e)=>{

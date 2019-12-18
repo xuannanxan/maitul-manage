@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime: 2019-12-18 17:32:13
-@LastEditors: Xuannan
+@LastEditTime : 2019-12-19 01:05:19
+@LastEditors  : Xuannan
 '''
 
 
@@ -155,7 +155,7 @@ class AdminList(Resource):
 
 class AdminAdd(Resource):
     @api.doc(api_doc=admin_doc.admin_add)
-    @login_required
+    # @login_required
     def post(self):
         '''
         添加用户
