@@ -25,12 +25,12 @@ export const Method = {
  * 模块说明:有api_token的请求
  */
 export const request = (api, method = Method.GET, params = {}, config = {}) => {
-  const apiToken = localStorage.getItem('jwToken');
+  const apiToken = localStorage.getItem('jwToken')?`JWT ${localStorage.getItem('jwToken')}`:'';
   const data = (method === 'GET') ? 'params' : 'data';
   let headers = {
     'X-Requested-With': 'XMLHttpRequest',
     'Content-Type': 'application/json',
-    'Authorization': `JWT ${apiToken}`,
+    'Authorization': apiToken,
   };
   if (config.headers) {
     headers = {
@@ -44,11 +44,13 @@ export const request = (api, method = Method.GET, params = {}, config = {}) => {
       method,
       [data]: params,
       headers,
-    }).then(resolve=>{
+    }).then(res=>{
       // 重新获取token
-      if(resolve.response.data.status === 1500){
+      if(res.data.status === 1500){
         localStorage.removeItem('jwToken')
-        localStorage.setItem('jwToken',resolve.response.data.token)
+        localStorage.setItem('jwToken',res.data.token)
+      }else{
+        resolve(res);
       }
     })
       .catch(error => {

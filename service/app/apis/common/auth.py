@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-16 12:42:17
-@LastEditTime: 2019-12-17 22:07:48
-@LastEditors: Xuannan
+@LastEditTime : 2019-12-19 21:39:48
+@LastEditors  : Xuannan
 '''
 import jwt, datetime, time
 from flask import jsonify
@@ -57,17 +57,17 @@ class Auth():
             else:
                 raise jwt.InvalidTokenError
         except jwt.ExpiredSignatureError:
-            abort(RET.Forbidden,msg='Token已过期')
+            abort(RET.Forbidden,msg='Token已过期',status=RET.REENTRY)
         except jwt.InvalidTokenError:
-            abort(RET.Forbidden,msg='无效Token')
+            abort(RET.Forbidden,msg='无效Token',status=RET.REENTRY)
 
     @staticmethod
     def header_to_token(auth_header,prefix):
         if not auth_header:
-            abort(RET.Forbidden,msg='请登陆!')
+            abort(RET.Forbidden,msg='请登陆!',status=RET.REENTRY)
         auth_tokenArr = auth_header.split(" ")
         if (not auth_tokenArr or auth_tokenArr[0] != prefix or len(auth_tokenArr) != 2):
-            abort(RET.Forbidden,msg='Token验证头错误')
+            abort(RET.Forbidden,msg='Token验证头错误',status=RET.REENTRY)
         else:
             return auth_tokenArr[1]
            

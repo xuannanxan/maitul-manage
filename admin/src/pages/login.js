@@ -5,28 +5,36 @@
  * @LastEditTime : 2019-12-19 00:14:17
  * @LastEditors  : Xuannan
  */
-import React , {useState} from 'react';
+import React , {useState,useEffect} from 'react';
 import 'antd/dist/antd.css';
 import { Card, Input, Icon,Button ,Spin ,Checkbox,Form,message} from 'antd';
 import '../static/css/login.css'
-import {_login} from '../utils/api'
+import {_login,_captcha} from '../utils/api'
 
 function LoginForm(props){
+    const image_code = ''
     const { getFieldDecorator } = props.form;
     const [isLoading, setIsLoading] = useState(false)
-
-    const login = async (username,password)=>{
-       return await _login(username,password);
+    const [imageCode,setImageCode]= useState('')
+    const [captcha,setCaptcha]= useState('')
+    const getCaptcha = ()=>{
+        const image_code = Math.random().toString(36).substr(2, 15);
+        setImageCode(image_code)
+        _captcha(image_code).then(res=>{
+            setCaptcha('data:image/jpeg;base64,'+res.data.data)
+        })
     }
+    useEffect(()=>{
+        getCaptcha()
+      },[])
     const checkLogin =  (e)=>{
         e.preventDefault();
         props.form.validateFields((err, values) => {
         if (!err) {
-            _login(values.username,values.password).then(val=>{
-                localStorage.setItem('jwToken',val.data.token)
-                console.log(val.data.token);
+            _login(values.username,values.password,values.captcha,imageCode).then(res=>{
+                localStorage.setItem('jwToken',res.data.token)
+                props.history.push('/home') 
             })
-            
         }
         });
         setIsLoading(true)
@@ -70,7 +78,7 @@ function LoginForm(props){
                             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                             placeholder="验证码"
                             size='large'
-                            suffix={<img alt="验证码" src='http://blogimages.jspang.com/blogtouxiang1.jpg' className='captcha_img'></img>}
+                            suffix={<img alt="验证码" src={captcha} onClick={getCaptcha} className='captcha_img'></img>}
                             />,
                         )}
                         </Form.Item>

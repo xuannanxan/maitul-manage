@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime: 2019-12-17 14:57:56
-@LastEditors: Xuannan
+@LastEditTime : 2019-12-19 22:49:51
+@LastEditors  : Xuannan
 '''
 from app.models.admin import Admin
 from flask import g
@@ -53,7 +53,7 @@ def _verify():
     g.admin = admin
     g.auth = token
     # 超过15分钟就要重新获取token
-    if (datetime.datetime.strptime(token_time, "%Y-%m-%d %H:%M:%S")+datetime.timedelta(minutes=15))<now_time:
+    if (datetime.datetime.strptime(token_time, "%Y-%m-%d %H:%M:%S")+datetime.timedelta(minutes=30))<now_time:
         cache.delete(token) 
         new_token = Auth.encode_auth_token(admin.id)
         cache.set(admin.id,new_token,timeout=60*60*7)

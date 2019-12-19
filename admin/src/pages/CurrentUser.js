@@ -5,37 +5,46 @@
  * @LastEditTime : 2019-12-19 17:09:44
  * @LastEditors  : Xuannan
  */
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { Menu, Dropdown, Icon } from 'antd';
-
-const menu = (
-  <Menu>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-        修改资料
-      </a>
-    </Menu.Item>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-        修改密码
-      </a>
-    </Menu.Item>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-        退出
-      </a>
-    </Menu.Item>
-  </Menu>
-);
+import {_currentUser} from '../utils/api'
 
 
 function CurrentUser(){
-
+    const [user,setuser] = useState({})
+    const getCurrentUser = ()=>{
+      _currentUser().then(res=>{
+        setuser(res.data.data)
+      })
+    }
+    useEffect(()=>{
+      getCurrentUser()
+    },[])
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+            修改资料
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+            修改密码
+          </a>
+        </Menu.Item>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+            退出
+          </a>
+        </Menu.Item>
+      </Menu>
+    );
+    
     return (
         <div>
             <Dropdown overlay={menu}>
             <a className="ant-dropdown-link" href="#">
-            Hover me <Icon type="down" />
+            {user.name} <Icon type="down" />
             </a>
             </Dropdown>
 
