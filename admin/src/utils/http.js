@@ -9,7 +9,10 @@
 import axios from 'axios';
 import {message} from 'antd';
 
-let baseUrl = "http://127.0.0.1:5000";
+
+
+
+
 export const Method = {
   GET: 'GET',
   POST: 'POST',
@@ -41,10 +44,21 @@ export const request = (api, method = Method.GET, params = {}, config = {}) => {
       method,
       [data]: params,
       headers,
-    }).then(resolve)
+    }).then(resolve=>{
+      // 重新获取token
+      if(resolve.response.data.status === 1500){
+        localStorage.removeItem('jwToken')
+        localStorage.setItem('jwToken',resolve.response.data.token)
+      }
+    })
       .catch(error => {
         console.dir(error);
         message.error(error.response.data.msg ? error.response.data.msg : JSON.stringify(error.response.data));
+        //如果没有登录或被T，跳回登录页面
+        if(error.response.data.status === 1403){
+          localStorage.removeItem('jwToken')
+          window.location = '/login';
+        }
         reject(error);
       });
   });

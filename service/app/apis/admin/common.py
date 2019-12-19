@@ -33,21 +33,21 @@ def get_admin(ident):
 def _verify():
     token = get_token()
     if not token:
-        abort(RET.Forbidden,msg='请登录')    
+        abort(RET.Forbidden,msg='请登录',status=RET.REENTRY)    
     token_data = Auth.decode_auth_token(token)
     token_id = token_data['data']['id']
     token_time = token_data['data']['login_time']
     # cache 记录的token
     cache_token = cache.get(token_id)
     if not cache_token:
-        abort(RET.Forbidden,msg='请重新登录!')
+        abort(RET.Forbidden,msg='请重新登录!',status=RET.REENTRY)
     # 其他用户异地登录
     if cache_token != token:
-        abort(RET.Forbidden,msg='当前账户在其他地方登录，您已被强制下线！')
+        abort(RET.Forbidden,msg='当前账户在其他地方登录，您已被强制下线！',status=RET.REENTRY)
     # 用户是否存在
     admin = get_admin(token_id)
     if not admin:
-        abort(RET.Forbidden,msg='请重新登录')
+        abort(RET.Forbidden,msg='请重新登录',status=RET.REENTRY)
     # 超时生成新的token
     now_time = datetime.datetime.now()
     g.admin = admin

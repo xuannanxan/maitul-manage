@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-21 22:03:43
-@LastEditTime: 2019-12-17 10:30:37
-@LastEditors: Xuannan
+@LastEditTime : 2019-12-19 14:52:56
+@LastEditors  : Xuannan
 '''
 
 USER_ACTION_LOGIN = 'login'
@@ -56,6 +56,7 @@ class RET:
     GatewayTimeout=504
     HTTPVersionNotSupported=505
     RESETOKEN = 1500
+    REENTRY = 1403
 
 
 error_map = {
@@ -100,7 +101,8 @@ error_map = {
     RET.ServiceUnavailable:'由于超载或系统维护，服务器暂时的无法处理客户端的请求。延时的长度可包含在服务器的Retry-After头信息中',
     RET.GatewayTimeout:'充当网关或代理的服务器，未及时从远端服务器获取请求',
     RET.HTTPVersionNotSupported:'服务器不支持请求的HTTP协议的版本，无法完成处理 ',
-    RET.RESETOKEN:'重置token ',		
+    RET.RESETOKEN:'重置token ',	
+    RET.REENTRY:'重新登录',	
 }
 		
 	

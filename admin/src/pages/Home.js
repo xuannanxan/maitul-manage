@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
  * @LastEditTime : 2019-12-18 22:20:55
@@ -8,11 +8,11 @@
 
 
 import React,{useState} from 'react';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon ,Col,Row} from 'antd';
 import '../static/css/home.css'
 import {Route} from 'react-router-dom'
 import AddContent from './Content/Add'
-
+import CurrentUser from './CurrentUser'
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -23,9 +23,6 @@ function Home(){
     const onCollapse = collapsed => {
       setCollapsed(collapsed)
     };
-
-
- 
 
     return(
         <Layout style={{ minHeight: '100vh' }}>
@@ -61,17 +58,26 @@ function Home(){
           </Menu>
         </Sider>
         <Layout>
-            <Header style={{ background: '#fff', padding: 0 }} >
-            <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={['2']}
-            style={{ lineHeight: '64px' }}
-            >
-                <Menu.Item key="1">nav 1</Menu.Item>
-                <Menu.Item key="2">nav 2</Menu.Item>
-                <Menu.Item key="3">nav 3</Menu.Item>
-            </Menu>
+          <Header style={{ background: '#001529', padding: 0 }} >
+              <Row>
+                <Col span={20}>
+                  <Menu
+                  theme="dark"
+                  mode="horizontal"
+                  defaultSelectedKeys={['2']}
+                  style={{ lineHeight: '64px' }}
+                  >
+                      <Menu.Item key="1">nav 1</Menu.Item>
+                      <Menu.Item key="2">nav 2</Menu.Item>
+                      <Menu.Item key="3">nav 3</Menu.Item>
+                  </Menu>
+                </Col>
+                <Col span={4}>
+                  <CurrentUser/>
+                </Col>
+              </Row>
+            
+            
           </Header>
           <Content style={{ margin: '0 16px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>

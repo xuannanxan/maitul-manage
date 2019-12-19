@@ -96,7 +96,7 @@ class AdminCurrent(Resource):
         if admin.updata():
             logout()
             return  {
-                'status':RET.OK,
+                'status':RET.REENTRY,
                 'msg':'密码修改成功，请重新登录',
                 }
         abort(RET.BadRequest,msg='修改密码失败')
@@ -155,7 +155,7 @@ class AdminList(Resource):
 
 class AdminAdd(Resource):
     @api.doc(api_doc=admin_doc.admin_add)
-    # @login_required
+    @login_required
     def post(self):
         '''
         添加用户
@@ -252,7 +252,7 @@ class AdminLogin(Resource):
         username = args_login.get('username').lower()
         admin = Admin.query.filter_by(username = username,is_del='0').first()
         if not admin:
-            abort(RET.BadRequest,msg='用户名或密码错误')
+            abort(RET.BadRequest,msg='用户名或密码错误',status=RET.REENTRY)
         if not admin.check_pwd(password):
             abort(RET.Unauthorized,msg='用户名或密码错误')
         token = Auth.encode_auth_token(admin.id)
@@ -278,6 +278,6 @@ class AdminLogin(Resource):
         admin = g.admin
         cache.delete(admin.id) 
         return {
-            'status':RET.OK,
+            'status':RET.REENTRY,
             'msg':'已退出'
         }
