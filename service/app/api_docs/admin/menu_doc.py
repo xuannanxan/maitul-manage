@@ -3,43 +3,46 @@
 '''
 @Description: 
 @Author: Xuannan
-@Date: 2019-12-18 20:47:10
-@LastEditTime: 2019-12-20 17:57:49
-@LastEditors: Xuannan
+@Date: 2019-12-17 22:20:20
+@LastEditTime : 2019-12-20 18:31:43
+@LastEditors  : Xuannan
 '''
-
 from app.utils.swagger_filed import IntegerQueryFiled, StringQueryFiled, IntegerPathFiled, StringPathFiled
 
 
-
+pid = StringQueryFiled(name='pid',
+						description="上级分类",
+						default='',
+						required=True).data	
+url = StringQueryFiled(name='url',
+						description="链接",
+						default='').data	
+icon = StringQueryFiled(name='icon',
+						description="图标",
+						default='').data	
 name = StringQueryFiled(name='name',
-						description="姓名",
+						description="名称",
 						default='',
 						required=True).data						
 sort = IntegerQueryFiled(name='sort',
 						description="排序号",
-						default='',
-						required=True).data	
-page = IntegerPathFiled(name='page',
-						description="页码",
-						default=1).data	
-paginate = IntegerPathFiled(name='paginate',
-							description="每页数量",
-							default=10).data
+						default='').data	
 id = StringPathFiled(	name='id',
 						description="id",
 						default='',
 						required=True).data		
 data_fields = {
+						'pid':{"type": "string",},
 						'name':{"type": "string",},
+						'url':{"type": "string",},
+						'icon':{"type": "string",},
 						'sort':{"type": "integer",},
 						'id':{"type": "string",},
 						}
 
 lst = {
-	"description": "列表",
+	"description": "菜单树",
 	"parameters": [
-		page,paginate
 	],
 	"responses": {
 		"200": {
@@ -127,7 +130,7 @@ put = {
 add = {
 	"description": "添加",
 	"parameters": [
-		name,sort
+		pid,name,url,icon,sort
 	],
 	"security": [
 		{

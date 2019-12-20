@@ -4,7 +4,7 @@
 @Description: 后台菜单
 @Author: Xuannan
 @Date: 2019-12-13 10:35:39
-@LastEditTime : 2019-12-20 11:50:05
+@LastEditTime : 2019-12-20 19:29:13
 @LastEditors  : Xuannan
 '''
 
@@ -16,8 +16,9 @@ class Menu(BaseModel):
     name = db.Column(db.String(100),nullable=False)
     icon = db.Column(db.String(100))
     url = db.Column(db.String(255))
-    pid = db.Column(db.Integer)  # 上级菜单
+    pid = db.Column(db.String(32), default=0)  # 上级分类,0为最上级
     sort = db.Column(db.Integer, default=0)  # 排序
+    last_editor =  db.Column(db.String(20))
 
     def __repr__(self):
         return '<Menu %r>' % self.name

@@ -4,21 +4,25 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-26 09:05:26
-@LastEditTime: 2019-11-27 22:14:27
-@LastEditors: Xuannan
+@LastEditTime : 2019-12-20 18:03:25
+@LastEditors  : Xuannan
 '''
 from flask_restful import Resource,reqparse,abort
 from app.utils.captcha import Captcha
 from flask import make_response,current_app
 from app.ext import cache
 from app.apis.api_constant import *
+from app.utils.api_doc import Apidoc
+from app.api_docs.common import captcha_doc
+api = Apidoc('通用接口')
 
 parse = reqparse.RequestParser()
 parse.add_argument('image_code',type=str,required=True,help='请传入image_code')
 class CaptchaResource(Resource):
+    @api.doc(api_doc=captcha_doc)
     def get(self):
         """
-        验证码
+        图片验证码
         """
         args = parse.parse_args()
         image_code = args.get('image_code')

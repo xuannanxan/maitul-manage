@@ -4,22 +4,34 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-18 20:47:10
-@LastEditTime: 2019-12-20 17:57:49
-@LastEditors: Xuannan
+@LastEditTime : 2019-12-20 22:13:52
+@LastEditors  : Xuannan
 '''
 
 from app.utils.swagger_filed import IntegerQueryFiled, StringQueryFiled, IntegerPathFiled, StringPathFiled
 
 
-
+space_id = StringQueryFiled(name='space_id',
+						description="所属广告位",
+						default='',
+						required=True).data	
 name = StringQueryFiled(name='name',
-						description="姓名",
+						description="广告名称",
 						default='',
 						required=True).data						
 sort = IntegerQueryFiled(name='sort',
 						description="排序号",
 						default='',
 						required=True).data	
+url = IntegerPathFiled(name='url',
+						description="链接地址",
+						default='').data	
+info = IntegerPathFiled(name='info',
+						description="描述",
+						default='').data	
+img = IntegerPathFiled(name='img',
+						description="图片",
+						default='').data	
 page = IntegerPathFiled(name='page',
 						description="页码",
 						default=1).data	
@@ -32,6 +44,9 @@ id = StringPathFiled(	name='id',
 						required=True).data		
 data_fields = {
 						'name':{"type": "string",},
+						'url':{"type": "string",},
+						'info':{"type": "string",},
+						'img':{"type": "string",},
 						'sort':{"type": "integer",},
 						'id':{"type": "string",},
 						}
@@ -127,7 +142,7 @@ put = {
 add = {
 	"description": "添加",
 	"parameters": [
-		name,sort
+		name,sort,info,img,url,space_id
 	],
 	"security": [
 		{
