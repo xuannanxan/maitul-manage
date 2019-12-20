@@ -17,6 +17,12 @@ export const _login = async (username,password,captcha,image_code)=>{
     image_code
   })
 };
+
+//登出
+export const _logout = async ()=>{
+  return await Http.request('/api/login', Method.DELETE)
+};
+
 //图片验证码
 export const _captcha = async (image_code)=>{
   return await Http.request('/api/captcha', Method.GET, {

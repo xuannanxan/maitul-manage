@@ -38,6 +38,8 @@ parse_register.add_argument('phone',type=inputs.regex(r'1[35789]\d{9}'),required
 parse_login = reqparse.RequestParser()
 parse_login.add_argument('username',type=str,required=True,help='请输入用户名!')
 parse_login.add_argument('password',type=str,required=True,help='请输入密码!')
+parse_login.add_argument('captcha')
+parse_login.add_argument('image_code')
 # 修改密码
 parse_change_pwd = reqparse.RequestParser()
 parse_change_pwd.add_argument('password',type=str,required=True,help='请输入原密码!')
@@ -250,6 +252,10 @@ class AdminLogin(Resource):
         args_login = parse_login.parse_args()
         password = args_login.get('password')
         username = args_login.get('username').lower()
+        captcha = args_login.get('captcha')
+        text = cache.get('image_code_%s'%args_login.get('image_code'))
+        if captcha.lower() != text.lower():
+            abort(RET.Forbidden,msg='验证码错误')
         admin = Admin.query.filter_by(username = username,is_del='0').first()
         if not admin:
             abort(RET.BadRequest,msg='用户名或密码错误',status=RET.REENTRY)
@@ -277,7 +283,4 @@ class AdminLogin(Resource):
         '''
         admin = g.admin
         cache.delete(admin.id) 
-        return {
-            'status':RET.REENTRY,
-            'msg':'已退出'
-        }
+        abort(RET.BadRequest,msg='已退出',status=RET.REENTRY)

@@ -1,7 +1,14 @@
-# -*- coding: utf-8 -*- 
-# Created by xuannan on 2019-01-26.
-__author__ = 'Allen xu'
-from  app.models import db
+#!/usr/bin/env python
+# coding=utf-8
+'''
+@Description: 后台菜单
+@Author: Xuannan
+@Date: 2019-12-13 10:35:39
+@LastEditTime : 2019-12-20 11:50:05
+@LastEditors  : Xuannan
+'''
+
+from  app.models.base import db,BaseModel
 
 # 菜单
 class Menu(BaseModel):

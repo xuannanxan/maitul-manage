@@ -7,7 +7,7 @@
  */
 import React,{useState,useEffect} from 'react';
 import { Menu, Dropdown, Icon } from 'antd';
-import {_currentUser} from '../utils/api'
+import {_currentUser,_logout} from '../utils/api'
 
 
 function CurrentUser(){
@@ -16,6 +16,9 @@ function CurrentUser(){
       _currentUser().then(res=>{
         setuser(res.data.data)
       })
+    }
+    const logout=()=>{
+      _logout()
     }
     useEffect(()=>{
       getCurrentUser()
@@ -33,7 +36,7 @@ function CurrentUser(){
           </a>
         </Menu.Item>
         <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+          <a target="_blank" rel="noopener noreferrer" onClick={logout}>
             退出
           </a>
         </Menu.Item>

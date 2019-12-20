@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 21:48:37
-@LastEditTime: 2019-11-26 22:25:30
-@LastEditors: Xuannan
+@LastEditTime : 2019-12-20 09:46:14
+@LastEditors  : Xuannan
 '''
 import random
 import string
@@ -60,12 +60,11 @@ class Captcha(object):
     @classmethod
     def __gene_random_font(cls):
         fonts = [ 
-            'swissck.ttf',
-            'swissko.ttf',
             'times.ttf',
             'verdana.ttf',
         ]
         font = random.choice(fonts)
+        print(font,'-'*80)
         return 'utils/captcha/' + font
 
     # 用来随机生成一个字符串
