@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-17 22:20:20
-@LastEditTime: 2019-12-18 13:49:34
-@LastEditors: Xuannan
+@LastEditTime : 2019-12-20 13:43:03
+@LastEditors  : Xuannan
 '''
 from app.utils.swagger_filed import IntegerQueryFiled, StringQueryFiled, IntegerPathFiled, StringPathFiled
 
@@ -22,6 +22,12 @@ new_password = StringQueryFiled(	name='new_password',
 									description="新密码",
 									default='',
 									required=True).data		
+captcha = StringQueryFiled(name='captcha',
+						description="验证码",
+						default='').data		
+image_code = StringQueryFiled(name='image_code',
+						description="验证码的图片编号",
+						default='').data	
 name = StringQueryFiled(name='name',
 						description="姓名",
 						default='',
