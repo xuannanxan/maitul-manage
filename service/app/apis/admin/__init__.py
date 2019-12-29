@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-13 10:35:39
-@LastEditTime : 2019-12-20 22:26:54
+@LastEditTime : 2019-12-28 22:05:16
 @LastEditors  : Xuannan
 '''
 from flask_restful import Api
@@ -12,7 +12,9 @@ from app.apis.admin.admin import AdminResource,AdminLogin,AdminList,AdminCurrent
 from app.apis.admin.menu import MenuResource,MenuAdd,MenuTree
 from app.apis.admin.ad_space import AdSpaceAdd,AdSpaceList,AdSpaceResource
 from app.apis.admin.ad import AdAdd,AdList,AdResource
+from app.apis.admin.uploads import UploadResource
 from app.apis import api_blueprint
+
 
 admin_api = Api(api_blueprint)
 # 用户和登录
@@ -36,3 +38,5 @@ admin_api.add_resource(AdSpaceResource,'/admin/adspace/<id>')
 admin_api.add_resource(AdList,'/admin/ad/list')
 admin_api.add_resource(AdAdd,'/admin/ad')
 admin_api.add_resource(AdResource,'/admin/ad/<id>')
+# 上传
+admin_api.add_resource(UploadResource,'/upload')

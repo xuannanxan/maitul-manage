@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 10:34:07
-@LastEditTime: 2019-11-25 13:11:23
-@LastEditors: Xuannan
+@LastEditTime : 2019-12-28 20:54:18
+@LastEditors  : Xuannan
 '''
 
 
@@ -14,42 +14,82 @@ import os, time, random,re,requests
 from io import BytesIO
 from datetime import datetime
 from pathlib import Path
-from app.config import UPLOAD_FOLDER
+from app.config import UPLOAD_FOLDER,WATER_MARK
+from flask import request
 
-#下载图片并替换HTML中的图片链接
-def replaceSrc(content,url):
-    etree = html.etree
-    selector = etree.HTML(content)
-     #将页面上图片的链接加入list
-    imgs = selector.xpath("//img/@src")
-    for img in imgs:
-        src = full_url(url,img)
-        new_src = downImage(src)
-        content = content.replace(img,new_src)
-    return content
-#是否为<class 'lxml.etree._Element'>
-def isEtreeElement(obj):
-    if str(type(obj))=="<class 'lxml.etree._Element'>":
-        return True
-    else:
+
+class FileUpload():
+    def __init__(self,file,max_width = 800,max_height = 0,watermark = None,thumb = False):
+        self.file = file
+        self.max_width = max_width if max_width else 800
+        self.max_height = max_height if max_height else 0
+        self.watermark = WATER_MARK if watermark else None
+        self.thumb = thumb
+        self.file_name = self.file_name()
+        self.file_path = self.file_path()
+        self.file_size = self.file_size()
+        self.full_path = self.full_path()
+        
+        
+    def file_name(self):
+        max_width = int(self.max_width)
+        max_height = int(self.max_height)
+       
+        file = self.file
+        filename = file.filename
+        # 文件扩展名
+        ext = os.path.splitext(filename)[1]
+        if ext.lower() in {'.jpg','.bmp','.png','.jpeg','.rgb','.tif'}:
+        # 打开一个jpg图像文件，注意是当前路径:
+            im = Image.open(file)
+            # 获得图像尺寸:
+            w, h = im.size
+            # 如果宽度大于最大宽度，就压缩到最大宽度:
+            if w > max_width and max_height == 0:
+                im = resizeImg(im,max_width)
+                # 如果设定了高度，说明要进行裁剪:
+            if max_height > 0 and w > max_width and h > max_height:
+                im = clipResizeImg(im,max_width,max_height)
+            if self.watermark:
+                im = logo_watermark(im,self.watermark)
+            if self.thumb:
+                im = thumb_image(im,max_width,max_height)
+        else:
+            im = file
+        # 文件目录
+        path = time.strftime('%Y%m%d')
+        d = UPLOAD_FOLDER+'/'+path
+        if not os.path.exists(d):
+            os.makedirs(d)
+        # 定义文件名，年月日时分秒随机数
+        fn = time.strftime('%Y%m%d%H%M%S')
+        fn = fn + '%d' % random.randint(100,999)
+        # 重写合成文件名
+        im.save(os.path.join(d, fn + ext))
+        return fn + ext
+        
+    def file_path(self):
+        return '/'+(self.file_name)[:8]+'/'+self.file_name
+
+    def full_path(self):
+        '''获取全路径'''
+        return request.host_url+'static/uploads'+self.file_path
+        
+
+    def file_size(self):
+        '''获取文件的大小,结果保留两位小数，单位为MB'''
+        fsize = os.path.getsize(UPLOAD_FOLDER+self.file_path)
+        fsize = fsize / float(1024 * 1024)
+        return round(fsize, 2)
+
+    def delete_file(filename):
+        path = UPLOAD_FOLDER+'/'+filename[:8]+'/'+filename
+        if os.path.exists(path): # 如果文件存在
+        #删除文件，可使用以下两种方法。
+            os.remove(path) # 则删除
+            return True
+        #os.unlink(my_file)
         return False
-#下载图片
-def downImage(src):
-    response = requests.get(src)
-    im = Image.open(BytesIO(response.content))
-    # 文件目录
-    path = time.strftime('%Y%m%d')
-    d = UPLOAD_FOLDER+'/'+path
-    if not os.path.exists(d):
-        os.makedirs(d)
-    # 文件扩展名
-    ext = os.path.splitext(src)[1]
-    # 定义文件名，年月日时分秒随机数
-    fn = time.strftime('%Y%m%d%H%M%S')
-    fn = fn + '_%d' % random.randint(100,999)
-    # 重写合成文件名
-    im.save(os.path.join(d, fn + ext))
-    return '/static/uploads/'+path+'/'+fn + ext
 
 def thumb_image(img, w=128, h=128):
     '''
@@ -196,10 +236,9 @@ def delete_file(filename):
     if os.path.exists(path): # 如果文件存在
     #删除文件，可使用以下两种方法。
         os.remove(path) # 则删除
-        return {"code":1,'msg':"删除成功！"}
+        return True
     #os.unlink(my_file)
-    else:
-        return {"code":2,'msg':"文件不存在！"}
+    return False
 
 def get_FileSize(filePath):
     '''获取文件的大小,结果保留两位小数，单位为MB'''

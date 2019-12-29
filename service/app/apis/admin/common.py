@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2019-12-19 22:49:51
+@LastEditTime : 2019-12-29 22:19:12
 @LastEditors  : Xuannan
 '''
 from app.models.admin import Admin
@@ -37,13 +37,10 @@ def _verify():
     token_data = Auth.decode_auth_token(token)
     token_id = token_data['data']['id']
     token_time = token_data['data']['login_time']
-    # cache 记录的token
+    # cache 记录的token，如果cache中没有这个token
     cache_token = cache.get(token_id)
     if not cache_token:
         abort(RET.Forbidden,msg='请重新登录!',status=RET.REENTRY)
-    # 其他用户异地登录
-    if cache_token != token:
-        abort(RET.Forbidden,msg='当前账户在其他地方登录，您已被强制下线！',status=RET.REENTRY)
     # 用户是否存在
     admin = get_admin(token_id)
     if not admin:
@@ -51,8 +48,8 @@ def _verify():
     # 超时生成新的token
     now_time = datetime.datetime.now()
     g.admin = admin
-    g.auth = token
-    # 超过15分钟就要重新获取token
+    # g.auth = token
+    # 超过30分钟就要重新获取token
     if (datetime.datetime.strptime(token_time, "%Y-%m-%d %H:%M:%S")+datetime.timedelta(minutes=30))<now_time:
         cache.delete(token) 
         new_token = Auth.encode_auth_token(admin.id)
@@ -62,6 +59,11 @@ def _verify():
             'token':new_token
         }
         return data
+    # 其他用户异地登录
+    if cache_token != token:
+        abort(RET.Forbidden,msg='当前账户在其他地方登录，您已被强制下线！',status=RET.REENTRY)
+
+    
     
 
 def login_required(fun):

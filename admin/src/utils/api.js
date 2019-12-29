@@ -2,10 +2,11 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2019-12-19 21:17:31
+ * @LastEditTime : 2019-12-28 22:37:41
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
+
 
 const Http = require('./http');
 //登录
@@ -35,7 +36,7 @@ export const _currentUser = async ()=>{
   return await Http.request('/api/admin/current_user', Method.GET)
 };
 
-//获取内容列表
+//获取博客内容列表
 export const _contentList = async (page,paginate,tag,category_id,search)=>{
   return await Http.request('/api/blog/content/list', Method.GET, {
     page,
@@ -44,4 +45,15 @@ export const _contentList = async (page,paginate,tag,category_id,search)=>{
     category_id,
     search
   })
+};
+
+//文件上传
+export const _fileUpload = async (formData)=>{
+  return await Http.request('/api/upload', Method.POST,formData,{headers: {'Content-Type': 'multipart/form-data'}
+  })
+}
+
+// 后台菜单树 /api/admin/menu/tree
+export const _menuTree = async ()=>{
+  return await Http.request('/api/admin/menu/tree', Method.GET)
 };

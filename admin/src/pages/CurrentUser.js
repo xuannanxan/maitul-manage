@@ -2,7 +2,7 @@
  * @Description: 当前用户，包含用户资料修改，密码修改等功能
  * @Author: Xuannan
  * @Date: 2019-12-19 17:06:47
- * @LastEditTime : 2019-12-19 17:09:44
+ * @LastEditTime : 2019-12-29 22:27:40
  * @LastEditors  : Xuannan
  */
 import React,{useState,useEffect} from 'react';
@@ -11,10 +11,10 @@ import {_currentUser,_logout} from '../utils/api'
 
 
 function CurrentUser(){
-    const [user,setuser] = useState({})
+    const [user,setUser] = useState({})
     const getCurrentUser = ()=>{
       _currentUser().then(res=>{
-        setuser(res.data.data)
+        setUser(res.data.data)
       })
     }
     const logout=()=>{

@@ -2,15 +2,15 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-14 17:40:02
- * @LastEditTime : 2019-12-19 01:25:57
+ * @LastEditTime : 2019-12-28 21:07:49
  * @LastEditors  : Xuannan
  */
 
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import marked from 'marked'
 import { Row, Col, Input, Icon ,Select,Form ,Spin,Button,InputNumber,TreeSelect} from 'antd';
 import '../../static/css/content/add.css'
-
+import Editor from '../components/Editor'
 
 const treeData = [
     {
@@ -84,9 +84,11 @@ function AddForm(props){
         let html=marked(e.target.value)
         setMarkdownContent(html)
     }
+    
     return (
         <div>
             <Spin tip="Loading..." spinning={isLoading}>
+                
                 <Form onSubmit={submitFormData} className="content-form">
                     <Row gutter={5}>
                         <Col span={18}>
@@ -102,25 +104,13 @@ function AddForm(props){
                             )}
                             </Form.Item>
                             <Row>
-                                <Col span={12}>
-                                    <Form.Item>
-                                    {getFieldDecorator('content', {
-                                    })(
-                                        <TextArea 
-                                        rows={35}
-                                        className="markdown-content"   
-                                        placeholder="请输入内容..."
-                                        onChange={changeContent}
-                                        />,
-                                    )}
-                                    </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                <div 
-                                    className="show-html"
-                                    dangerouslySetInnerHTML = {{__html:markdownContent}} >
-                                </div>
-                                </Col>
+                                <Form.Item hasFeedback>
+                                {getFieldDecorator('content', {
+                                     rules: [{ required: true, message: '请输入内容!' }],
+                                })(
+                                    <Editor/>,
+                                )}
+                                </Form.Item>
                             </Row>
                             
                         </Col>

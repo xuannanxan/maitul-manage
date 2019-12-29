@@ -42,3 +42,39 @@ def getReptileContent(url,content_obj):
 
 def full_url(url,relative_url):
     return parse.urljoin(url, relative_url)
+
+
+#下载图片并替换HTML中的图片链接
+def replaceSrc(content,url):
+    etree = html.etree
+    selector = etree.HTML(content)
+     #将页面上图片的链接加入list
+    imgs = selector.xpath("//img/@src")
+    for img in imgs:
+        src = full_url(url,img)
+        new_src = downImage(src)
+        content = content.replace(img,new_src)
+    return content
+#是否为<class 'lxml.etree._Element'>
+def isEtreeElement(obj):
+    if str(type(obj))=="<class 'lxml.etree._Element'>":
+        return True
+    else:
+        return False
+#下载图片
+def downImage(src):
+    response = requests.get(src)
+    im = Image.open(BytesIO(response.content))
+    # 文件目录
+    path = time.strftime('%Y%m%d')
+    d = UPLOAD_FOLDER+'/'+path
+    if not os.path.exists(d):
+        os.makedirs(d)
+    # 文件扩展名
+    ext = os.path.splitext(src)[1]
+    # 定义文件名，年月日时分秒随机数
+    fn = time.strftime('%Y%m%d%H%M%S')
+    fn = fn + '_%d' % random.randint(100,999)
+    # 重写合成文件名
+    im.save(os.path.join(d, fn + ext))
+    return '/static/uploads/'+path+'/'+fn + ext

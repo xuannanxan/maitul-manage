@@ -2,59 +2,74 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2019-12-18 22:20:55
+ * @LastEditTime : 2019-12-29 23:13:29
  * @LastEditors  : Xuannan
  */
 
 
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { Layout, Menu, Breadcrumb, Icon ,Col,Row} from 'antd';
 import '../static/css/home.css'
 import {Route} from 'react-router-dom'
-import AddContent from './Content/Add'
+import AddContent from './content/Add'
 import CurrentUser from './CurrentUser'
+import {_menuTree} from '../utils/api'
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 function Home(){
     const [collapsed,setCollapsed] = useState(false)
-
+    const [headerMenu,setHeaderMenu] = useState([])
+    const [leftMenu,setLeftMenu] = useState([])
+    
+    const getMenuTree = ()=>{
+      _menuTree().then(res=>{
+        setHeaderMenu(res.data.data)
+      })
+    }
+    const getChildMenu = (e)=>{
+      setLeftMenu(headerMenu[e.key].children)
+    }
+    const headerMenuItem = ()=>{
+      return (
+        headerMenu.map((menu, index) => {
+          return (<Menu.Item key={index}>{menu.name}</Menu.Item>)
+        })
+      )
+    }
+    const leftMenuItem = ()=>{
+        if(leftMenu){
+          return recursion(leftMenu) 
+        }
+    }
+    const  recursion = (dataSource)=> {
+      return (
+        dataSource.map((menu, index) => {
+          if (menu.children) {
+            return (
+              <SubMenu key={menu.id} title={menu.name}>
+                {recursion(menu.children)}
+              </SubMenu>
+            )
+          } else {
+            return (<Menu.Item key={menu.id}>{menu.name}</Menu.Item>)
+          }
+        })
+      )
+    }    
     const onCollapse = collapsed => {
       setCollapsed(collapsed)
     };
-
+    useEffect(()=>{
+      getMenuTree()
+    },[])
     return(
         <Layout style={{ minHeight: '100vh' }}>
         <Sider  collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ background: '#fff' }}>
           <div className="logo">Maitul Manage</div>
           <Menu defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1">
-              <Icon type="pie-chart" />
-              <span>工作台</span>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <Icon type="desktop" />
-              <span>添加文章</span>
-            </Menu.Item>
-            <SubMenu
-              key="sub1"
-              title={
-                <span>
-                  <Icon type="user" />
-                  <span>文章管理</span>
-                </span>
-              }
-            >
-              <Menu.Item key="3">添加文章</Menu.Item>
-              <Menu.Item key="4">文章列表</Menu.Item>
-
-            </SubMenu>
-
-            <Menu.Item key="9">
-              <Icon type="file" />
-              <span>留言管理</span>
-            </Menu.Item>
+            {leftMenuItem()}
           </Menu>
         </Sider>
         <Layout>
@@ -62,14 +77,13 @@ function Home(){
               <Row>
                 <Col span={20}>
                   <Menu
+                  onClick = {getChildMenu}
                   theme="dark"
                   mode="horizontal"
-                  defaultSelectedKeys={['2']}
+                  defaultSelectedKeys={['0']}
                   style={{ lineHeight: '64px' }}
                   >
-                      <Menu.Item key="1">nav 1</Menu.Item>
-                      <Menu.Item key="2">nav 2</Menu.Item>
-                      <Menu.Item key="3">nav 3</Menu.Item>
+                      {headerMenuItem()}
                   </Menu>
                 </Col>
                 <Col span={4}>

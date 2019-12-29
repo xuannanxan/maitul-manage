@@ -2,16 +2,14 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:28
- * @LastEditTime : 2019-12-18 21:59:56
+ * @LastEditTime : 2019-12-29 22:23:24
  * @LastEditors  : Xuannan
  */
 
 import axios from 'axios';
 import {message} from 'antd';
 
-
-
-
+let isRefreshing = true;
 
 export const Method = {
   GET: 'GET',
@@ -47,8 +45,10 @@ export const request = (api, method = Method.GET, params = {}, config = {}) => {
     }).then(res=>{
       // 重新获取token
       if(res.data.status === 1500){
-        localStorage.removeItem('jwToken')
-        localStorage.setItem('jwToken',res.data.token)
+        if(isRefreshing){
+          localStorage.setItem('jwToken',res.data.token)
+        }
+        isRefreshing = false;
       }else{
         resolve(res);
       }
@@ -58,10 +58,11 @@ export const request = (api, method = Method.GET, params = {}, config = {}) => {
         message.error(error.response.data.msg ? error.response.data.msg : JSON.stringify(error.response.data));
         //如果没有登录或被T，跳回登录页面
         if(error.response.data.status === 1403){
-          localStorage.removeItem('jwToken')
+          localStorage.removeItem('jwToken') 
           window.location = '/login';
         }
         reject(error);
       });
   });
 };
+

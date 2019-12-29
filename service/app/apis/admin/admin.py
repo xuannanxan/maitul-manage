@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime : 2019-12-20 19:53:31
+@LastEditTime : 2019-12-21 19:19:25
 @LastEditors  : Xuannan
 '''
 
@@ -254,6 +254,8 @@ class AdminLogin(Resource):
         username = args_login.get('username').lower()
         captcha = args_login.get('captcha')
         text = cache.get('image_code_%s'%args_login.get('image_code'))
+        if not text:
+            abort(RET.Forbidden,msg='验证码错误')
         if captcha.lower() != text.lower():
             abort(RET.Forbidden,msg='验证码错误')
         cache.delete('image_code_%s'%args_login.get('image_code')) 

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-13 17:25:03
- * @LastEditTime : 2019-12-19 00:14:17
+ * @LastEditTime : 2019-12-28 21:25:52
  * @LastEditors  : Xuannan
  */
 import React , {useState,useEffect} from 'react';
@@ -12,7 +12,6 @@ import '../static/css/login.css'
 import {_login,_captcha} from '../utils/api'
 
 function LoginForm(props){
-    const image_code = ''
     const { getFieldDecorator } = props.form;
     const [isLoading, setIsLoading] = useState(false)
     const [imageCode,setImageCode]= useState('')
@@ -35,6 +34,10 @@ function LoginForm(props){
                 localStorage.setItem('jwToken',res.data.token)
                 props.history.push('/home') 
             })
+            .catch(error=>{
+                //登录失败重新获取验证码
+                getCaptcha()
+            })
         }
         });
         setIsLoading(true)
@@ -44,7 +47,7 @@ function LoginForm(props){
     }
     return (
         <div className='login'>
-            <Spin tip="Loading..." spinning={isLoading}>               
+            <Spin tip="Loading..." spinning={isLoading}>              
                 <Card title="Maitul Manage" bordered={true} style={{ width: 400 }} >
                     <Form onSubmit={checkLogin} className="login-form">
                         <Form.Item>
