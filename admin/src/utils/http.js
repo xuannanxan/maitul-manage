@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:28
- * @LastEditTime : 2019-12-29 22:23:24
+ * @LastEditTime : 2019-12-31 19:50:46
  * @LastEditors  : Xuannan
  */
 
@@ -49,6 +49,10 @@ export const request = (api, method = Method.GET, params = {}, config = {}) => {
           localStorage.setItem('jwToken',res.data.token)
         }
         isRefreshing = false;
+        //继续请求之前的内容
+        request(api, method, params , config).then(res2=>{
+          resolve(res2);
+        })
       }else{
         resolve(res);
       }

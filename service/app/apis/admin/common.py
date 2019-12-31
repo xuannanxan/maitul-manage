@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2019-12-29 22:19:12
+@LastEditTime : 2019-12-31 19:47:12
 @LastEditors  : Xuannan
 '''
 from app.models.admin import Admin
@@ -50,7 +50,7 @@ def _verify():
     g.admin = admin
     # g.auth = token
     # 超过30分钟就要重新获取token
-    if (datetime.datetime.strptime(token_time, "%Y-%m-%d %H:%M:%S")+datetime.timedelta(minutes=30))<now_time:
+    if (datetime.datetime.strptime(token_time, "%Y-%m-%d %H:%M:%S")+datetime.timedelta(minutes=1))<now_time:
         cache.delete(token) 
         new_token = Auth.encode_auth_token(admin.id)
         cache.set(admin.id,new_token,timeout=60*60*7)

@@ -2,15 +2,15 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2019-12-31 11:51:35
+ * @LastEditTime : 2019-12-31 20:00:34
  * @LastEditors  : Xuannan
  */
 
 
-import React,{useState,useEffect} from 'react';
-import { Layout, Menu, Breadcrumb, Icon ,Col,Row} from 'antd';
+import React,{useState,useEffect } from 'react';
+import { Layout, Menu, Breadcrumb, Icon ,Col,Row } from 'antd';
 import '../static/css/home.css'
-import {Route} from 'react-router-dom'
+import {Route,Link} from 'react-router-dom'
 import AddContent from './content/Add'
 import CurrentUser from './CurrentUser'
 import {_menuTree} from '../utils/api'
@@ -34,7 +34,7 @@ function Home(){
     const headerMenuItem = ()=>{
       return (
         headerMenu.map((menu, index) => {
-          return (<Menu.Item key={index}>{menu.name}</Menu.Item>)
+          return (<Menu.Item key={index}><Icon type={menu.icon} />{menu.name}</Menu.Item>)
         })
       )
     }
@@ -46,14 +46,17 @@ function Home(){
     const  recursion = (dataSource)=> {
       return (
         dataSource.map((menu, index) => {
-          if (menu.children) {
+          if (menu.children.length>0) {
             return (
-              <SubMenu key={menu.id} title={menu.name}>
-                {recursion(menu.children)}
+              <SubMenu key={menu.id} title={<span>
+                <Icon type={menu.icon} />
+                <span>{menu.name}</span>
+              </span>}>
+              {recursion(menu.children)}
               </SubMenu>
             )
           } else {
-            return (<Menu.Item key={menu.id}>{menu.name}</Menu.Item>)
+            return (<Menu.Item key={menu.id}><Link to={menu.url}><Icon type={menu.icon} />{menu.name}</Link></Menu.Item>)
           }
         })
       )

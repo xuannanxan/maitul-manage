@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-13 10:35:39
-@LastEditTime : 2019-12-31 17:23:35
+@LastEditTime : 2019-12-31 19:08:08
 @LastEditors  : Xuannan
 '''
 # -*- coding: utf-8 -*- 
@@ -43,9 +43,15 @@ def insert_cities(city_json):
 def insert_menus(data):
     menus = data.get('menus')
     cursor = db.cursor()
-    for k in menus:
-        
-        cursor.execute("insert into city(id,pid,city_name,city_code,short_name) values('%s','%s','%s','%s','%s');"%(id,parentId,regionName,cityCode,pinYin))
+    for v in menus:
+        id = v.get("id")
+        name = v.get("name")
+        icon = v.get("icon")
+        url = v.get("url")
+        pid = v.get("pid")
+        sort = v.get("sort")
+        is_del = v.get("is_del")
+        cursor.execute("insert into menu(id,name,icon,url,pid,sort,is_del) values('%s','%s','%s','%s','%s','%d','%d');"%(id,name,icon,url,pid,sort,is_del))
     db.commit()
 
 def init_data():
@@ -53,7 +59,9 @@ def init_data():
     if check_password_hash('pbkdf2:sha256:150000$WxouU1qd$82060dd41e04168e5650f9f2b75360142e98a8e65e14c24a053fd56e8b09f502',password):
         check = input("确认添加初始化吗？如果二次初始化，可能会导致数据重复，1为确认，其他为取消：")
         if check == '1':
+            init_json = load_data('./data/init_data.json')
             city_json = load_data('./data/cities.json')
+            insert_menus(init_json)
             insert_cities(city_json)
             print("初始化成功")
         else:
