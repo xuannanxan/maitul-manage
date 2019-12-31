@@ -68,7 +68,7 @@ class Dev(config):
     USERNAME = secret.get('DB_USERNAME')  # 用户名
     PASSWORD = secret.get('DB_PASSWORD')   # 密码
     HOST = secret.get('DB_HOST')   # 服务器
-    PORT = '3306'  # 端口
+    PORT = secret.get('DB_PORT')  # 端口
     DATABASE = secret.get('DB_DATABASE')  # 数据库名
     SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format(ENGINE, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
     MAIL_SERVER = secret.get('MAIL_SERVER') 
@@ -87,7 +87,7 @@ class Produce(config):
     USERNAME = secret.get('DB_USERNAME')  # 用户名
     PASSWORD = secret.get('DB_PASSWORD')   # 密码
     HOST = secret.get('DB_HOST')   # 服务器
-    PORT = '3306'  # 端口
+    PORT = secret.get('DB_PORT')  # 端口
     DATABASE = secret.get('DB_DATABASE')  # 数据库名
     SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format(ENGINE, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
     MAIL_SERVER = secret.get('MAIL_SERVER') 
