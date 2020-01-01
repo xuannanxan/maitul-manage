@@ -2,12 +2,12 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-14 17:40:02
- * @LastEditTime : 2019-12-28 21:07:49
+ * @LastEditTime : 2020-01-01 20:29:25
  * @LastEditors  : Xuannan
  */
 
+
 import React, { useState} from 'react';
-import marked from 'marked'
 import { Row, Col, Input, Icon ,Select,Form ,Spin,Button,InputNumber,TreeSelect} from 'antd';
 import '../../static/css/content/add.css'
 import Editor from '../components/Editor'
@@ -40,17 +40,7 @@ const treeData = [
 
 const { Option } = Select;
 const { TextArea } = Input
-marked.setOptions({
-    gfm: true,
-    pedantic: false,
-    sanitize: false,
-    tables: true,
-    breaks: false,
-    smartLists: true,
-    smartypants: false,
-  }); 
 function AddForm(props){
-    const [markdownContent, setMarkdownContent] = useState('内容预览...') //html内容
     const { getFieldDecorator } = props.form; //表单内容
     const [isLoading, setIsLoading] = useState(false)
     const submitFormData = (e)=>{
@@ -80,10 +70,6 @@ function AddForm(props){
       ></TreeSelect>,
       );
   
-    const changeContent = (e)=>{
-        let html=marked(e.target.value)
-        setMarkdownContent(html)
-    }
     
     return (
         <div>

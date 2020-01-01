@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2019-12-31 20:00:34
+ * @LastEditTime : 2020-01-01 16:30:09
  * @LastEditors  : Xuannan
  */
 
@@ -12,6 +12,7 @@ import { Layout, Menu, Breadcrumb, Icon ,Col,Row } from 'antd';
 import '../static/css/home.css'
 import {Route,Link} from 'react-router-dom'
 import AddContent from './content/Add'
+import MenuList from './menu/List'
 import CurrentUser from './CurrentUser'
 import {_menuTree} from '../utils/api'
 
@@ -102,8 +103,8 @@ function Home(){
               <Breadcrumb.Item>工作台</Breadcrumb.Item>
             </Breadcrumb>
             <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-              <div><Route path="/home/" exact  component={AddContent} /></div>
-
+              <div><Route path="/" exact  component={AddContent} /></div>
+              <div><Route path="/menu/" exact  component={MenuList}/></div>
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Maitul.com</Footer>

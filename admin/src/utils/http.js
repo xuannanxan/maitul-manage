@@ -2,14 +2,13 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:28
- * @LastEditTime : 2019-12-31 19:50:46
+ * @LastEditTime : 2020-01-01 17:38:59
  * @LastEditors  : Xuannan
  */
 
 import axios from 'axios';
 import {message} from 'antd';
 
-let isRefreshing = true;
 
 export const Method = {
   GET: 'GET',
@@ -45,10 +44,7 @@ export const request = (api, method = Method.GET, params = {}, config = {}) => {
     }).then(res=>{
       // 重新获取token
       if(res.data.status === 1500){
-        if(isRefreshing){
-          localStorage.setItem('jwToken',res.data.token)
-        }
-        isRefreshing = false;
+        localStorage.setItem('jwToken',res.data.token)
         //继续请求之前的内容
         request(api, method, params , config).then(res2=>{
           resolve(res2);
