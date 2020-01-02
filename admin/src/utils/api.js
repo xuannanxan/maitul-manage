@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2019-12-28 22:37:41
+ * @LastEditTime : 2020-01-02 16:01:47
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -56,4 +56,18 @@ export const _fileUpload = async (formData)=>{
 // 后台菜单树 /api/admin/menu/tree
 export const _menuTree = async ()=>{
   return await Http.request('/api/admin/menu/tree', Method.GET)
+};
+
+//新增菜单/api/admin/menu
+export const _menuAdd = async (formData)=>{
+  return await Http.request('/api/admin/menu', Method.POST,formData)
+};
+
+//修改菜单 /api/admin/menu
+export const _menuEdit = async (formData)=>{
+  return await Http.request('/api/admin/menu', Method.PUT,formData)
+};
+//修改菜单 /api/admin/menu
+export const _menuDelete = async (id)=>{
+  return await Http.request('/api/admin/menu/'+id, Method.DELETE)
 };

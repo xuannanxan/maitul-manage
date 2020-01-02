@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-01-01 16:30:09
+ * @LastEditTime : 2020-01-02 10:58:08
  * @LastEditors  : Xuannan
  */
 
@@ -103,8 +103,8 @@ function Home(){
               <Breadcrumb.Item>工作台</Breadcrumb.Item>
             </Breadcrumb>
             <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-              <div><Route path="/" exact  component={AddContent} /></div>
-              <div><Route path="/menu/" exact  component={MenuList}/></div>
+              <Route path="/" exact  component={MenuList}/>
+              <Route path="/menu/" exact  component={MenuList}/>
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Maitul.com</Footer>

@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime: 2019-12-28 22:14:17
-@LastEditors: Xuannan
+@LastEditTime : 2020-01-02 14:14:17
+@LastEditors  : Xuannan
 '''
 
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -22,6 +22,7 @@ api = Apidoc('后台菜单配置')
 
 
 parse_base = reqparse.RequestParser()
+parse_base.add_argument('id')
 parse_base.add_argument('pid',type=str,required=True,help='请选择上级菜单')
 parse_base.add_argument('name',type=str,required=True,help='请输入名称')
 parse_base.add_argument('url')
@@ -80,6 +81,41 @@ class MenuAdd(Resource):
             return marshal(data,sing_fields)
         abort(RET.BadRequest,msg='添加失败，请重试')
 
+    @api.doc(api_doc=doc.put)
+    @login_required  
+    def put(self):
+        '''
+        修改菜单
+        '''
+        args = parse_base.parse_args()
+        id = args.get('id')
+        if not id:
+            abort(RET.Forbidden,msg='请勿非法操作')
+        sing_data = getSingData(id)
+        pid = args.get('pid')
+        name = args.get('name')
+        url = args.get('url')
+        icon = args.get('icon')
+        sort = args.get('sort')
+        # 如果名称存在，并且ID不是当前ID
+        _data = Menu.query.filter(Menu.id != id , Menu.is_del == '0',Menu.name == name).first()
+        if _data:
+            abort(RET.Forbidden,msg='菜单已存在')
+        sing_data.name = name
+        sing_data.pid = pid if pid else sing_data.pid
+        sing_data.url = url if url else sing_data.url
+        sing_data.icon = icon if icon else sing_data.icon
+        sing_data.sort = sort if sort else sing_data.sort
+        sing_data.last_editor = g.admin.username
+        result = Menu().updata()
+        if result:
+            data =  {
+                'status':RET.OK,
+                'msg':'修改成功',
+                'data':sing_data
+            }
+            return marshal(data,sing_fields)
+        abort(RET.BadRequest,msg='修改失败，请重试')
         
 class MenuTree(Resource):
     @api.doc(api_doc=doc.lst)
@@ -110,39 +146,7 @@ class MenuResource(Resource):
                     'status':RET.OK,
                     'data':object_to_json(getSingData(id))
             } 
-    
-    @api.doc(api_doc=doc.put)
-    @login_required  
-    def put(self,id):
-        '''
-        修改菜单
-        '''
-        sing_data = getSingData(id)
-        args = parse_base.parse_args()
-        pid = args.get('pid')
-        name = args.get('name')
-        url = args.get('url')
-        icon = args.get('icon')
-        sort = args.get('sort')
-        # 如果名称存在，并且ID不是当前ID
-        _data = Menu.query.filter(Menu.id != id , Menu.is_del == '0',Menu.name == name).first()
-        if _data:
-            abort(RET.Forbidden,msg='菜单已存在')
-        sing_data.name = name
-        sing_data.pid = pid if pid else sing_data.pid
-        sing_data.url = url if url else sing_data.url
-        sing_data.icon = icon if icon else sing_data.icon
-        sing_data.sort = sort if sort else sing_data.sort
-        sing_data.last_editor = g.admin.username
-        result = Menu().updata()
-        if result:
-            data =  {
-                'status':RET.OK,
-                'msg':'修改成功',
-                'data':sing_data
-            }
-            return marshal(data,sing_fields)
-        abort(RET.BadRequest,msg='修改失败，请重试')
+
         
     @api.doc(api_doc=doc.delete)
     @login_required

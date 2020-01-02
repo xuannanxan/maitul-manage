@@ -1,58 +1,56 @@
-import React, { useState ,useEffect,useImperativeHandle} from 'react';
-import { Row, Col, Input, Icon ,Select,Form ,Button,InputNumber,TreeSelect} from 'antd';
-const { Option } = Select;
-const { TextArea } = Input
-function SubmitForm(props){
-    const { getFieldDecorator } = props.form; //表单内容
-    const [treeData,setTreeData] = useState([])
-    const submitFormData = (e)=>{
-        e.preventDefault();
-        props.form.validateFields((err, values) => {
-        if (!err) {
-            console.log('Received values of form: ', values);
-        }
-        });
-       
-    }
+import React, { useState ,useImperativeHandle} from 'react';
+import { Input ,Form ,InputNumber,TreeSelect,message} from 'antd';
+import {_menuAdd,_menuEdit} from '../../utils/api'
 
-    const initForm = ()=>{
-        props.form.setFieldsValue({
-            pid:props.params.pid,
-            name:props.params.name,
-            icon:props.params.icon,
-            url:props.params.url,
-            sort:props.params.sort
+function SubmitForm(props){
+    let { form,params,menuTree ,handleCancel,refreshMenu} = props
+    const { getFieldDecorator } = form; //表单内容
+    const [treeData,setTreeData] = useState([])
+
+    const edit= (formData) => {
+        _menuEdit(formData).then(res=>{
+            if(res.data.status === 200){
+                message.success(res.data.msg)
+                handleCancel()
+                refreshMenu()
+            }
+        })
+        
+    }
+    const add=(formData)=>{
+        _menuAdd(formData).then(res=>{
+            if(res.data.status === 201){
+                message.success(res.data.msg)
+                handleCancel()
+                refreshMenu()
+            }
         })
     }
-
     useImperativeHandle(props.cRef, () => ({
         // 暴露给父组件的方法
-        edit: () => {
-            if(props.params){
-                console.log(props.params)
-                props.form.setFieldsValue({
-                    pid:props.params.pid,
-                    name:props.params.name,
-                    icon:props.params.icon,
-                    url:props.params.url,
-                    sort:props.params.sort
-                })
-            }
-        },
-        add:()=>{
-
+        submitFormData:()=>{
+            form.validateFields((err, values) => {
+                if (!err) {
+                    if(params.id){
+                        edit(values)
+                    }else{
+                        add(values)
+                    }
+                }
+                });
         },
         init:()=>{
-            let arr = initTreeData(props.menuTree)
+            let arr = initTreeData(menuTree)
             arr.unshift({ key: 0, value: 0, title: '顶级菜单',children:[]})
             setTreeData(arr)
-            if(props.params){
+            if(params){
                 props.form.setFieldsValue({
-                    pid:props.params.pid,
-                    name:props.params.name,
-                    icon:props.params.icon,
-                    url:props.params.url,
-                    sort:props.params.sort
+                    id:params.id,
+                    pid:params.pid,
+                    name:params.name,
+                    icon:params.icon,
+                    url:params.url,
+                    sort:params.sort
                 })
             }
         }
@@ -72,7 +70,8 @@ function SubmitForm(props){
     
     return(
         <div>
-            <Form onSubmit={submitFormData} className="content-form" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+            <Form className="content-form" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+                <Form.Item  {...getFieldDecorator('id')}/>
                 <Form.Item label='上级菜单'>
                     {getFieldDecorator('pid', {
                         rules: [{ required: true, message: '请选择上级菜单!' }],
@@ -82,7 +81,8 @@ function SubmitForm(props){
                             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                             key='id'
                             treeData={treeData}
-                            placeholder="Please select"
+                            size="large"
+                            placeholder="请选择上级菜单"
                             treeDefaultExpandAll
                         />,
                     )}
@@ -117,7 +117,7 @@ function SubmitForm(props){
                 </Form.Item>
                 <Form.Item label='排序号'>
                     {getFieldDecorator('sort', {
-                        initialValue: 1 ,
+                        initialValue:1 ,
                     })(
                         <InputNumber 
                         min={1} 

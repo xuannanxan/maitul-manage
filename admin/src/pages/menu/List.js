@@ -2,14 +2,16 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-01 23:34:58
+ * @LastEditTime : 2020-01-02 16:59:58
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
-import {Table ,Divider ,Icon ,Input ,Button ,Modal} from 'antd';
-import {_menuTree} from '../../utils/api'
+import {Table ,Divider ,Icon ,Input ,Button ,Modal,message} from 'antd';
+import {_menuTree ,_menuDelete } from '../../utils/api'
 import Highlighter from 'react-highlight-words';
 import MenuForm from './Form'
+
+const { confirm } = Modal;
 
 function MenuList(props){
     const [menuTree,setMenuTree] = useState([])
@@ -93,6 +95,11 @@ function MenuList(props){
           dataIndex: 'name',
           key: 'name',
           ...getColumnSearchProps('name'),
+          render: (text, record) => (
+            <span>
+              <Icon type={record.icon}/>{record.name}
+            </span>
+          ),
         },
         {
           title: 'URL',
@@ -106,12 +113,29 @@ function MenuList(props){
               <span>
                 <a onClick={() => showFormModal(record)}><Icon type="edit" /> 修改</a>
                 <Divider type="vertical" />
-                <a><Icon type="delete" /> 删除</a>
+                <a onClick={() => deleteData(record.id)}><Icon type="delete" /> 删除</a>
               </span>
             ),
         },
     ];
-    
+    const deleteData = (id)=>{
+      confirm({
+        title: '删除确认?',
+        content: '删除后无法恢复，请谨慎操作！！',
+        onOk() {
+          _menuDelete(id).then(res=>{
+            if(res.data.status===200){
+              message.success(res.data.msg)
+              getMenuTree()
+            }
+          })
+        },
+        onCancel() {
+          //console.log('Cancel');
+        },
+      });
+      
+    }
     const showFormModal = (record)=>{
         if(record.id){
             setEditData(record)
@@ -131,7 +155,9 @@ function MenuList(props){
     }
     const handleOk = ()=>{
         setConfirmLoading(true)
-        setVisible(false)
+        formRef.current.submitFormData()
+        setConfirmLoading(false)
+        
     }
     useEffect(()=>{
         getMenuTree()
@@ -140,7 +166,7 @@ function MenuList(props){
         <div>
             <Button type="primary" onClick={showFormModal} size="large"><Icon type="plus"/> 添加</Button>
             <br /><br />
-            <Table rowKey="id" dataSource={menuTree} columns={columns} />
+            <Table rowKey="id" dataSource={menuTree} columns={columns} pagination={false}/>
             <Modal
             width={600}
             title={title}
@@ -149,7 +175,7 @@ function MenuList(props){
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             >
-            <MenuForm cRef={formRef} params={editData} menuTree={menuTree}/>
+            <MenuForm cRef={formRef} params={editData} menuTree={menuTree} handleCancel={handleCancel} refreshMenu = {getMenuTree}/>
             </Modal>
         </div>
         
