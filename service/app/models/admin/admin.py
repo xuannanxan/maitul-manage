@@ -52,3 +52,11 @@ class Admin(BaseModel):
     # 继承了flask-login的UserMixin，主键为id，无需重新定义
     # def get_id(self):
     #     return self.id
+# 账号关联角色
+class AdminRole(db.Model):
+    __tablename__ = "admin_role"
+    role_id = db.Column(db.String(32), primary_key=True)  # 关联内容id
+    admin_id = db.Column(db.String(32), primary_key=True)
+
+    def __repr__(self):
+        return '<AdminRole %r>' % self.admin_id
