@@ -19,6 +19,7 @@ class BaseModel(db.Model):
     id = db.Column(db.String(32),primary_key=True,default=diyId)
     create_time = db.Column(db.DateTime, nullable=True,default=datetime.now)
     update_time = db.Column(db.DateTime, nullable=True, default=datetime.now, onupdate=datetime.now)  # 记录的更新时间
+    last_editor =  db.Column(db.String(20))
     is_del = db.Column(db.String(32), default=0)  # 状态，0为未删除，其他为已删除
 
 
@@ -85,6 +86,7 @@ class Base(db.Model):
     create_time = db.Column(db.DateTime, nullable=True,default=datetime.now)
     update_time = db.Column(db.DateTime, nullable=True, default=datetime.now, onupdate=datetime.now)  # 记录的更新时间
     is_del = db.Column(db.String(32), default=0)  # 状态，0为未删除，其他为已删除
+    
     def set_attrs(self,attrs_dict):
         for key,value in attrs_dict.items():
             if hasattr(self,key) and key != "id":

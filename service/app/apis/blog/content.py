@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 19:28:32
-@LastEditTime: 2019-12-18 16:57:26
-@LastEditors: Xuannan
+@LastEditTime : 2020-01-03 23:56:59
+@LastEditors  : Xuannan
 '''
 
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -106,7 +106,7 @@ class BlogContentList(Resource):
     @api.doc(api_doc=content_doc.lst)
     def get(self):
         '''
-        内容列表
+        内容列表1
         '''
         args = parse_page.parse_args()
         page = 1

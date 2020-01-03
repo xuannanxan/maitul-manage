@@ -12,7 +12,7 @@ class Ad(BaseModel):
     img = db.Column(db.String(255))
     sort = db.Column(db.Integer, default=0)  # 排序
     space_id = db.Column(db.String(32))  # 关联广告位
-    last_editor =  db.Column(db.String(20))
+    
 
     def __repr__(self):
         return '<Ad %r>' % self.name

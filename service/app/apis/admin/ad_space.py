@@ -12,7 +12,11 @@ from app.config import PAGINATE_NUM
 api = Apidoc('广告位管理')
 
 
-parse_base = reqparse.RequestParser()
+# 单数据操作
+parse_id = reqparse.RequestParser()
+parse_id.add_argument('id',type=str)
+
+parse_base = parse_id.copy()
 parse_base.add_argument('name',type=str,required=True,help='请输入名称')
 parse_base.add_argument('sort',type=int,help='排序号只能是数字')
 
@@ -37,7 +41,7 @@ def getSingData(id):
         abort(RET.NotFound,msg='广告位不存在')
     return data
 
-class AdSpaceAdd(Resource):
+class AdSpaceResource(Resource):
     @api.doc(api_doc=doc.add)
     @login_required
     def post(self):
@@ -63,14 +67,49 @@ class AdSpaceAdd(Resource):
             return marshal(data,sing_fields)
         abort(RET.BadRequest,msg='添加失败，请重试')
 
-        
-class AdSpaceList(Resource):
+    @api.doc(api_doc=doc.put)
+    @login_required  
+    def put(self):
+        '''
+        修改
+        '''
+        args = parse_base.parse_args()
+        id = args.get('id')
+        if not id:
+            abort(RET.BadRequest,msg='请勿非法操作')
+        sing_data = getSingData(id)
+        name = args.get('name')
+        sort = args.get('sort')
+        # 如果名称存在，并且ID不是当前ID
+        _data = AdSpace.query.filter(AdSpace.id != id , AdSpace.is_del == '0',AdSpace.name == name).first()
+        if _data:
+            abort(RET.Forbidden,msg='广告位已存在')
+        sing_data.name = name
+        sing_data.sort = sort if sort else sing_data.sort
+        sing_data.last_editor = g.admin.username
+        result = AdSpace().updata()
+        if result:
+            data =  {
+                'status':RET.OK,
+                'msg':'修改成功',
+                'data':sing_data
+            }
+            return marshal(data,sing_fields)
+        abort(RET.BadRequest,msg='修改失败，请重试')
+
     @api.doc(api_doc=doc.lst)
     @login_required
     def get(self):
         '''
         获取列表
         '''
+        args_id = parse_id.parse_args()
+        id = args_id.get('id')
+        if id:
+            return {
+                    'status':RET.OK,
+                    'data':object_to_json(getSingData(id))
+            } 
         args = parse_page.parse_args()
         page = 1
         paginate = PAGINATE_NUM
@@ -93,52 +132,16 @@ class AdSpaceList(Resource):
         return data 
 
     
-
-class AdSpaceResource(Resource):
-    @api.doc(api_doc=doc.get)
-    @login_required
-    def get(self,id):
-        '''
-        单个
-        '''
-        return {
-                    'status':RET.OK,
-                    'data':object_to_json(getSingData(id))
-            } 
-    
-    @api.doc(api_doc=doc.put)
-    @login_required  
-    def put(self,id):
-        '''
-        修改
-        '''
-        sing_data = getSingData(id)
-        args = parse_base.parse_args()
-        name = args.get('name')
-        sort = args.get('sort')
-        # 如果名称存在，并且ID不是当前ID
-        _data = AdSpace.query.filter(AdSpace.id != id , AdSpace.is_del == '0',AdSpace.name == name).first()
-        if _data:
-            abort(RET.Forbidden,msg='广告位已存在')
-        sing_data.name = name
-        sing_data.sort = sort if sort else sing_data.sort
-        sing_data.last_editor = g.admin.username
-        result = AdSpace().updata()
-        if result:
-            data =  {
-                'status':RET.OK,
-                'msg':'修改成功',
-                'data':sing_data
-            }
-            return marshal(data,sing_fields)
-        abort(RET.BadRequest,msg='修改失败，请重试')
-        
     @api.doc(api_doc=doc.delete)
     @login_required
     def delete(self,id):
         '''
         删除
         '''
+        args = parse_id.parse_args()
+        id = args.get('id')
+        if not id:
+            abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
         sing_data.is_del = sing_data.id
         sing_data.last_editor = g.admin.username

@@ -17,7 +17,6 @@ class BlogTag(BaseModel):
     __tablename__ = "blog_tag"
     name = db.Column(db.String(100), nullable=False)
     sort = db.Column(db.Integer, default=0)  # 排序
-    last_editor =  db.Column(db.String(20))
 
     def __repr__(self):
         return '<BlogTag %r>' % self.name

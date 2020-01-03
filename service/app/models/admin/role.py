@@ -16,6 +16,7 @@ class Role(BaseModel):
     __tablename__ = "role"
     name = db.Column(db.String(100), unique=True,nullable=False)
     rule = db.Column(db.String(512))
+    
   
 
     def __repr__(self):

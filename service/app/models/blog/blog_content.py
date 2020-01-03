@@ -19,7 +19,6 @@ class BlogContent(BaseModel):
     click = db.Column(db.BigInteger, default=0)  # 点击数
     sort = db.Column(db.Integer, default=1)  # 排序
     author = db.Column(db.String(20))  # 发布用户
-    last_editor =  db.Column(db.String(20))
     category_id = db.Column(db.String(32),nullable=False)  # 所属分类
 
     def __repr__(self):

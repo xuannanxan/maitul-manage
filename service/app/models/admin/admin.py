@@ -1,12 +1,13 @@
+#!/usr/bin/env python
+# coding=utf-8
 '''
 @Description: 
-@Version: 1.0
-@Autor: Allen
-@Date: 2019-11-18 17:04:48
+@Author: Xuannan
+@Date: 2019-12-08 10:03:50
+@LastEditTime: 2020-01-03 22:17:12
 @LastEditors: Xuannan
-@LastEditTime: 2019-12-18 16:06:17
 '''
-__author__ = 'Allen xu'
+
 from werkzeug.security import check_password_hash,generate_password_hash
 from app.models.base import db,BaseModel
 
@@ -20,7 +21,7 @@ class Admin(BaseModel):
     name = db.Column(db.String(20))
     email = db.Column(db.String(100))
     phone = db.Column(db.String(20))
-    last_editor =  db.Column(db.String(20))
+   
     
     def __repr__(self):
         return '<Admin %r>' % self.username

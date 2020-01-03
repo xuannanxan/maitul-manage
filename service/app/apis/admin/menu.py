@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime : 2020-01-02 14:14:17
+@LastEditTime : 2020-01-03 23:24:01
 @LastEditors  : Xuannan
 '''
 
@@ -20,9 +20,11 @@ from flask import g
 
 api = Apidoc('后台菜单配置')
 
+# 单数据操作
+parse_id = reqparse.RequestParser()
+parse_id.add_argument('id',type=str)
 
-parse_base = reqparse.RequestParser()
-parse_base.add_argument('id')
+parse_base = parse_id.copy()
 parse_base.add_argument('pid',type=str,required=True,help='请选择上级菜单')
 parse_base.add_argument('name',type=str,required=True,help='请输入名称')
 parse_base.add_argument('url')
@@ -49,7 +51,7 @@ def getSingData(id):
         abort(RET.NotFound,msg='菜单不存在')
     return data
 
-class MenuAdd(Resource):
+class MenuResource(Resource):
     @api.doc(api_doc=doc.add)
     @login_required
     def post(self):
@@ -116,14 +118,20 @@ class MenuAdd(Resource):
             }
             return marshal(data,sing_fields)
         abort(RET.BadRequest,msg='修改失败，请重试')
-        
-class MenuTree(Resource):
+
     @api.doc(api_doc=doc.lst)
     @login_required
     def get(self):
         '''
         获取菜单树
         '''
+        args_id = parse_id.parse_args()
+        id = args_id.get('id')
+        if id:
+            return {
+                        'status':RET.OK,
+                        'data':object_to_json(getSingData(id))
+                } 
         _list = Menu.query.filter_by(is_del = '0').order_by(Menu.sort.desc()).all()
         if not _list:
             abort(RET.BadRequest,msg='暂无数据')
@@ -131,29 +139,19 @@ class MenuTree(Resource):
                     'status':RET.OK,
                     'data':build_tree(_list,'0',0)
             }
-        return data 
-
-    
-
-class MenuResource(Resource):
-    @api.doc(api_doc=doc.get)
-    @login_required
-    def get(self,id):
-        '''
-        单个菜单
-        '''
-        return {
-                    'status':RET.OK,
-                    'data':object_to_json(getSingData(id))
-            } 
+        return data    
 
         
     @api.doc(api_doc=doc.delete)
     @login_required
-    def delete(self,id):
+    def delete(self):
         '''
         删除菜单
         '''
+        args = parse_id.parse_args()
+        id = args.get('id')
+        if not id:
+            abort(RET.Forbidden,msg='请勿非法操作')
         sing_data = getSingData(id)
         sing_data.is_del = sing_data.id
         sing_data.last_editor = g.admin.username

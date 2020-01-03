@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime : 2019-12-21 19:19:25
+@LastEditTime : 2020-01-03 23:26:13
 @LastEditors  : Xuannan
 '''
 
@@ -25,7 +25,9 @@ from app.api_docs.admin import admin_doc
 
 api = Apidoc('系统管理员')
 
-
+# 单数据操作
+parse_id = reqparse.RequestParser()
+parse_id.add_argument('id',type=str)
 
 # 新增
 parse_register = reqparse.RequestParser()
@@ -126,13 +128,23 @@ class AdminCurrent(Resource):
         abort(RET.BadRequest,msg='修改失败')
 
        
-class AdminList(Resource):
+class AdminResource(Resource):
     @api.doc(api_doc=admin_doc.admin_list)
     @login_required
     def get(self):
         '''
-        获取用户列表
+        获取用户信息
         '''
+        args_id = parse_id.parse_args()
+        if args_id.get('id'):
+            admin = get_admin(id)
+            if not admin:
+                abort(RET.BadRequest,msg='用户不存在!!!')
+            data = {
+                        'status':RET.OK,
+                        'data':object_to_json(admin)
+                    }
+            return data
         args = parse_page.parse_args()
         page = 1
         paginate = PAGINATE_NUM
@@ -155,7 +167,6 @@ class AdminList(Resource):
         return data 
 
 
-class AdminAdd(Resource):
     @api.doc(api_doc=admin_doc.admin_add)
     @login_required
     def post(self):
@@ -185,31 +196,19 @@ class AdminAdd(Resource):
             }
             return marshal(data,sing_user_fields)
         abort(RET.BadRequest,msg='新增失败')
-        
-            
-class AdminResource(Resource):
-    @api.doc(api_doc=admin_doc.get_admin_by_id)
-    @login_required
-    def get(self,id):
-        '''
-        获取单个用户
-        '''
-        admin = get_admin(id)
-        if not admin:
-            abort(RET.BadRequest,msg='用户不存在!!!')
-        data = {
-                    'status':RET.OK,
-                    'data':object_to_json(admin)
-                }
-        return data
+
        
     # 重置密码
     @api.doc(api_doc=admin_doc.reset_pwd)
     @login_required   
-    def put(self,id):
+    def put(self):
         '''
         重置密码
         '''
+        args_id = parse_id.parse_args()
+        id = args_id.get('id')
+        if not id:
+            abort(RET.BadRequest,msg='请勿非法操作')
         admin = get_admin(id)
         admin.password = '123456a'
         if admin.updata():
@@ -223,10 +222,14 @@ class AdminResource(Resource):
 
     @api.doc(api_doc=admin_doc.del_admin)      
     @login_required 
-    def delete(self,id):
+    def delete(self):
         '''
         删除用户
         '''
+        args_id = parse_id.parse_args()
+        id = args_id.get('id')
+        if not id:
+            abort(RET.BadRequest,msg='请勿非法操作')
         admin = get_admin(id)
         if not admin:
             abort(RET.BadRequest,msg='用户不存在!!!')

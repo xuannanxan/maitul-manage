@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-02 16:59:58
+ * @LastEditTime : 2020-01-03 21:43:35
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -166,7 +166,14 @@ function MenuList(props){
         <div>
             <Button type="primary" onClick={showFormModal} size="large"><Icon type="plus"/> 添加</Button>
             <br /><br />
-            <Table rowKey="id" dataSource={menuTree} columns={columns} pagination={false}/>
+            {menuTree && menuTree.length? 
+            <Table rowKey="id" 
+            dataSource={menuTree} 
+            columns={columns} 
+            pagination={false} 
+            defaultExpandAllRows={true}/>
+              : '暂无数据' }
+            
             <Modal
             width={600}
             title={title}
