@@ -3,6 +3,15 @@
 '''
 @Description: 
 @Author: Xuannan
+@Date: 2019-12-11 17:28:51
+@LastEditTime : 2020-01-04 20:36:19
+@LastEditors  : Xuannan
+'''
+#!/usr/bin/env python
+# coding=utf-8
+'''
+@Description: 
+@Author: Xuannan
 @Date: 2019-12-08 19:28:32
 @LastEditTime : 2020-01-03 23:56:59
 @LastEditors  : Xuannan
@@ -10,7 +19,7 @@
 
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
-from app.models.blog import BlogContent,BlogTagRelation
+from app.models.blog import BlogContent,BlogContentTag
 from app.models.base import Crud
 from app.utils import object_to_json,mysql_to_json
 from app.config import PAGINATE_NUM
@@ -93,7 +102,7 @@ class BlogContentAdd(Resource):
                     'data':blog_content
             }
             if tags:
-                tag_data = [BlogTagRelation(
+                tag_data = [BlogContentTag(
                     content_id = blog_content.id,
                     tag_id =v
                 ) for v in tags.split(',') ]
@@ -171,7 +180,7 @@ class BlogContentResource(Resource):
         '''%(id)
         sql_data = Crud.auto_select(sql)
         data = sql_data.first()
-        if not data.id:
+        if not data:
             abort(RET.NotFound,msg='内容不存在')
         return {
                     'status':RET.OK,
@@ -208,12 +217,12 @@ class BlogContentResource(Resource):
                 'data':blog_content
             }
             # 清空原来的tags
-            old_tag_data = BlogTagRelation.query.filter_by(content_id = id ).all()
+            old_tag_data = BlogContentTag.query.filter_by(content_id = id ).all()
             if old_tag_data :
                 Crud.clean_all(old_tag_data)
             # 重新添加tags
             if tags:
-                new_tag_data = [BlogTagRelation(
+                new_tag_data = [BlogContentTag(
                         content_id = blog_content.id,
                         tag_id =v
                     ) for v in tags.split(',') ]

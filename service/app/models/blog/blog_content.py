@@ -26,3 +26,11 @@ class BlogContent(BaseModel):
 
 
 
+# 内容关联的标签
+class BlogContentTag(db.Model):
+    __tablename__ = "blog_content_tag"
+    content_id = db.Column(db.String(32), primary_key=True)  # 关联内容id
+    tag_id = db.Column(db.String(32), primary_key=True)
+
+    def __repr__(self):
+        return '<BlogContentTag %r>' % self.content_id

@@ -1,8 +1,9 @@
 
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
-from app.models.admin import Rule
-from app.utils import object_to_json
+from app.models.admin import Role,RoleRule
+from app.models.base import Crud
+from app.utils import object_to_json,mysql_to_json
 from app.apis.admin.common import login_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.admin import rule_doc as doc
@@ -17,17 +18,13 @@ parse_id.add_argument('id',type=str)
 
 parse_base = parse_id.copy()
 parse_base.add_argument('name',type=str,required=True,help='请输入名称')
-parse_base.add_argument('url',type=str,required=True,help='请输入URL')
-parse_base.add_argument('menu_id',type=str,required=True,help='所属菜单不能为空')
-parse_base.add_argument('method',type=str,required=True,help='请求方法不能为空')
+parse_base.add_argument('rules',type=str,required=True,help='请配置权限')
+
 
 
 _fields = {
     'name':fields.String,
-    'url':fields.String,
-    'menu_id':fields.String,
     'id':fields.String,
-    'method':fields.String
 }
 sing_fields = {
     'status':fields.Integer,
@@ -36,12 +33,12 @@ sing_fields = {
 }
 
 def getSingData(id):
-    data = Rule.query.filter_by(id = id , is_del = '0').first()
+    data = Role.query.filter_by(id = id , is_del = '0').first()
     if not data :
-        abort(RET.NotFound,msg='权限规则不存在')
+        abort(RET.NotFound,msg='角色不存在')
     return data
 
-class RuleResource(Resource):
+class RoleResource(Resource):
     @api.doc(api_doc=doc.add)
     @login_required
     def post(self):
@@ -50,18 +47,12 @@ class RuleResource(Resource):
         '''
         args = parse_base.parse_args()
         name = args.get('name')
-        url = args.get('url')
-        menu_id = args.get('menu_id')
-        method = args.get('method')
-        # 权限规则名称可以重复，但是URL&请求方法不能重复
-        _data = Rule.query.filter_by(url = url,method=method,is_del = '0').first()
+        rules = args.get('rules')
+        _data = Role.query.filter_by(name = name,is_del = '0').first()
         if _data:
-            abort(RET.Forbidden,msg='权限规则已存在')
-        model_data = Rule()
+            abort(RET.Forbidden,msg='当前角色已存在')
+        model_data = Role()
         model_data.name = name
-        model_data.url = url
-        model_data.menu_id = menu_id
-        model_data.method = method
         model_data.last_editor = g.admin.username
         if model_data.add():
             data = {
@@ -69,6 +60,13 @@ class RuleResource(Resource):
                     'msg':'添加成功',
                     'data':model_data
             }
+            # 如果有配置规则
+            if rules:
+                relation_data = [RoleRule(
+                    role_id = model_data.id,
+                    rule_id =v
+                ) for v in rules.split(',') ]
+                Crud.add_all(relation_data)
             return marshal(data,sing_fields)
         abort(RET.BadRequest,msg='添加失败，请重试')
 
@@ -84,25 +82,31 @@ class RuleResource(Resource):
             abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
         name = args.get('name')
-        url = args.get('url')
-        menu_id = args.get('menu_id')
-        method = args.get('method')
+        rules = args.get('rules')
         # 如果名称存在，并且ID不是当前ID
-        _data = Rule.query.filter(Rule.id != id , Rule.is_del == '0',Rule.url == url,Rule.method==method).first()
+        _data = Role.query.filter(Role.id != id , Role.is_del == '0',Role.name == name).first()
         if _data:
-            abort(RET.Forbidden,msg='权限规则已存在')
+            abort(RET.Forbidden,msg='角色已存在')
         sing_data.name = name
-        sing_data.url = url if url else sing_data.url
-        sing_data.menu_id = menu_id if menu_id else sing_data.menu_id
-        sing_data.method = method if method else sing_data.method
         sing_data.last_editor = g.admin.username
-        result = Rule().updata()
+        result = Role().updata()
         if result:
             data =  {
                 'status':RET.OK,
                 'msg':'修改成功',
                 'data':sing_data
             }
+             # 清空原来的rules
+            old_data = RoleRule.query.filter_by(role_id = id ).all()
+            if old_data :
+                Crud.clean_all(old_data)
+            # 如果有配置规则
+            if rules:
+                relation_data = [RoleRule(
+                    role_id = sing_data.id,
+                    rule_id =v
+                ) for v in rules.split(',') ]
+                Crud.add_all(relation_data)
             return marshal(data,sing_fields)
         abort(RET.BadRequest,msg='修改失败，请重试')
 
@@ -115,22 +119,38 @@ class RuleResource(Resource):
         args_id = parse_id.parse_args()
         id = args_id.get('id')
         if id:
+            sql = '''
+            SELECT j.*,GROUP_CONCAT(r.rule_id SEPARATOR ',') as rules
+            FROM role as j
+            left join role_rule as r on j.id = r.role_id
+            WHERE j.is_del = 0 AND j.id = %s
+            GROUP BY j.id
+            '''%id
+            sql_data = Crud.auto_select(sql)
+            first_data = sql_data.first()
+
+            if not first_data:
+                abort(RET.NotFound,msg='角色不存在')
             return {
                         'status':RET.OK,
-                        'data':object_to_json(getSingData(id))
+                        'data':mysql_to_json(dict(first_data))
                 } 
-        _list = Rule.query.filter_by(is_del = '0').all()
-        if not _list:
+        sql = '''
+        SELECT 
+        j.*,
+        GROUP_CONCAT(r.rule_id SEPARATOR ',') as rules
+        FROM role as j
+        left join role_rule as r on j.id = r.role_id
+        WHERE j.is_del = 0
+        GROUP BY j.id
+        '''
+        sql_data = Crud.auto_select(sql)
+        fetchall_data = sql_data.fetchall()
+        if not fetchall_data:
             abort(RET.BadRequest,msg='暂无数据')
-        list_by_menu = {}
-        for v in _list:
-            if v.menu_id in list_by_menu.keys():
-                list_by_menu[v.menu_id].append(object_to_json(v))
-            else:
-                list_by_menu[v.menu_id] = [object_to_json(v)]
         data = {
                     'status':RET.OK,
-                    'data':list_by_menu
+                    'data':([mysql_to_json(dict(v))  for v in fetchall_data])
             }
         return data 
 
@@ -148,7 +168,7 @@ class RuleResource(Resource):
         sing_data = getSingData(id)
         sing_data.is_del = sing_data.id
         sing_data.last_editor = g.admin.username
-        result = Rule().updata()
+        result = Role().updata()
         if result:
             return {
                 'status':RET.OK,

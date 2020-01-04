@@ -21,11 +21,3 @@ class BlogTag(BaseModel):
     def __repr__(self):
         return '<BlogTag %r>' % self.name
 
-# 关联的标签
-class BlogTagRelation(db.Model):
-    __tablename__ = "blog_tag_relation"
-    content_id = db.Column(db.String(32), primary_key=True)  # 关联内容id
-    tag_id = db.Column(db.String(32), primary_key=True)
-
-    def __repr__(self):
-        return '<BlogTagRelation %r>' % self.content_id

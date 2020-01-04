@@ -12,7 +12,7 @@
 from .user import User
 from .city import City
 
-from .blog import BlogCategory,BlogContent,BlogTag,BlogTagRelation
+from .blog import BlogCategory,BlogContent,BlogTag,BlogContentTag
 
 
 
