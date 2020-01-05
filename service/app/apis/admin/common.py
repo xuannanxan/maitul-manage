@@ -4,16 +4,18 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2020-01-01 17:49:33
+@LastEditTime : 2020-01-05 22:19:05
 @LastEditors  : Xuannan
 '''
 from app.models.admin import Admin
-from flask import g
+from app.models.base import Crud
+from flask import g,request
 from flask_restful import abort,reqparse
 from app.ext import cache
 from app.apis.common.auth import Auth
 from app.apis.api_constant import *
 import datetime
+
 
 
 parse_authorization = reqparse.RequestParser()
@@ -25,10 +27,10 @@ def get_admin(ident):
     '''
     if not ident:
         return None
-    admin = Admin.query.get(ident)
-    if admin and admin.is_del=='0':
-        return admin
-    return None
+    admin = Admin.query.filter_by(id = ident , is_del = '0').first()
+    if not admin:
+        abort(RET.NotFound,msg='用户不存在')
+    return admin
 
 def _verify():
     token = get_token()
@@ -62,9 +64,8 @@ def _verify():
     # 其他用户异地登录
     if cache_token != token:
         abort(RET.Forbidden,msg='当前账户在其他地方登录，您已被强制下线！',status=RET.REENTRY)
-
     
-    
+        
 
 def login_required(fun):
     '''
@@ -77,16 +78,40 @@ def login_required(fun):
         return fun(*args,**kwargs)
     return wrapper
 
-def permission_required(permission):
-    def permission_required_wrapper(fun):
-        def wrapper(*args,**kwargs):
-            _verify()
-            if not g.user.check_permission(permission):
-                abort(403,msg='权限不足')
-            return fun(*args,**kwargs)
-        return wrapper
-    return permission_required_wrapper
 
+
+def permission_required(fun):
+    '''
+    权限的装饰器，需要有权限才能进行访问
+    '''
+    def wrapper(*args,**kwargs):
+        _permission()    
+        return fun(*args,**kwargs)
+    return wrapper
+
+def _permission():
+    admin = g.admin
+    if not admin:
+        abort(RET.NotFound,msg='请登录后访问')
+    # 是否有权限
+    if admin.is_super == 0 :
+        # 获取权限列表
+        method = request.method
+        path = request.path
+        sql = '''
+        SELECT  CONCAT(r.url,':',r.method) as url
+        FROM admin as a
+        left join admin_role as ar on a.id = ar.admin_id
+        left join role_rule as rr on rr.role_id = ar.role_id
+        left join rule as r on r.id = rr.rule_id
+        WHERE a.is_del = 0
+        AND a.id = %s
+        '''%admin.id
+        sql_data = Crud.auto_select(sql)
+        fetchall_data = sql_data.fetchall()
+        rules = list(set([v.url for v in fetchall_data]))
+        if (path[5:]+':'+method) not in rules:
+            abort(RET.Forbidden,msg='您的权限不足，请联系管理员')
 
 def logout():
     '''

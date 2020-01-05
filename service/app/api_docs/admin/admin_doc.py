@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-17 22:20:20
-@LastEditTime : 2019-12-20 13:43:03
+@LastEditTime : 2020-01-05 20:04:06
 @LastEditors  : Xuannan
 '''
 from app.utils.swagger_filed import IntegerQueryFiled, StringQueryFiled, IntegerPathFiled, StringPathFiled
@@ -38,6 +38,10 @@ email = StringQueryFiled(name='email',
 						required=True).data	
 phone = StringQueryFiled(name='phone',
 						description="手机号码",
+						default='',
+						required=True).data	
+roles = StringQueryFiled(name='roles',
+						description="角色",
 						default='',
 						required=True).data	
 page = IntegerPathFiled(name='page',
@@ -124,6 +128,27 @@ reset_pwd = {
 		}
 	}
 }
+
+roles = {
+	"description": "设置角色",
+	"parameters": [ id,roles],
+	"security": [
+		{
+			"Authorization": ''
+		}
+	],
+	"responses": {
+		"200": {
+			"description": "设置角色成功",
+			"properties":{
+				'msg':{
+					'type':'string'
+				}
+			}
+		}
+	}
+}
+
 del_admin = {
 	"description": "删除指定用户",
 	"parameters": [ id],

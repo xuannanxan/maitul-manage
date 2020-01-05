@@ -4,22 +4,22 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime : 2020-01-03 23:26:13
+@LastEditTime : 2020-01-05 22:19:45
 @LastEditors  : Xuannan
 '''
 
 
 from flask_restful import Resource,reqparse,fields,marshal,abort,inputs
-from app.models.admin import Admin,AdminLog
+from app.models.admin import Admin,AdminLog,AdminRole
+from app.models.base import Crud
 from app.apis.api_constant import *
-from .common import get_admin,login_required,logout
+from .common import get_admin,login_required,logout,permission_required
 import uuid,datetime
 from app.ext import cache
 from flask import g,request
-from app.utils import object_to_json
+from app.utils import object_to_json,mysql_to_json
 from app.apis.common.auth import Auth
 from app.config import PAGINATE_NUM
-
 from app.utils.api_doc import Apidoc
 from app.api_docs.admin import admin_doc
 
@@ -36,6 +36,10 @@ parse_register.add_argument('password',type=str,required=True,help='请输入密
 parse_register.add_argument('email',type=str,required=True,help='请输入邮箱地址')
 parse_register.add_argument('name',type=str,required=True,help='请输入姓名')
 parse_register.add_argument('phone',type=inputs.regex(r'1[35789]\d{9}'),required=True,help='手机号码错误')
+
+# 授权
+parse_role = parse_id.copy()
+parse_role.add_argument('roles',type=str,required=True,help='请设置角色')
 # 登录
 parse_login = reqparse.RequestParser()
 parse_login.add_argument('username',type=str,required=True,help='请输入用户名!')
@@ -97,6 +101,7 @@ class AdminCurrent(Resource):
         if (not admin.check_pwd(password)) or admin.is_del != '0':
             abort(RET.Unauthorized,msg='用户名或密码错误')
         admin.password = new_password
+        admin.last_editor = g.admin.username
         if admin.updata():
             logout()
             return  {
@@ -120,6 +125,7 @@ class AdminCurrent(Resource):
         admin.name = name
         admin.email = email
         admin.phone = phone
+        admin.last_editor = g.admin.username
         if admin.updata():
             return  {
                 'status':RET.OK,
@@ -127,19 +133,43 @@ class AdminCurrent(Resource):
                 }
         abort(RET.BadRequest,msg='修改失败')
 
+# 设置管理员角色
+class AdminRoles(Resource):
+    @api.doc(api_doc=admin_doc.roles)
+    @login_required
+    @permission_required
+    def post(self):
+        args_role = parse_role.parse_args()
+        id = args_role.get('id')
+        roles = args_role.get('roles')
+        admin = get_admin(id)
+        admin.last_editor = g.admin.username
+        admin.updata()
+        # 如果有配置规则
+        if roles:
+            admin_roles = [AdminRole(
+                admin_id = admin.id,
+                role_id =v
+            ) for v in roles.split(',') ]
+            Crud.add_all(admin_roles)
+            return {
+                        'status':RET.OK,
+                        'msg':'角色设置成功'
+                    }
+        abort(RET.BadRequest,msg='没有设置任何角色')
        
 class AdminResource(Resource):
     @api.doc(api_doc=admin_doc.admin_list)
     @login_required
+    @permission_required
     def get(self):
         '''
         获取用户信息
         '''
         args_id = parse_id.parse_args()
-        if args_id.get('id'):
+        id = args_id.get('id')
+        if id:
             admin = get_admin(id)
-            if not admin:
-                abort(RET.BadRequest,msg='用户不存在!!!')
             data = {
                         'status':RET.OK,
                         'data':object_to_json(admin)
@@ -152,23 +182,40 @@ class AdminResource(Resource):
             page = int(args.get('page'))
         if args.get('paginate'):
             paginate = int(args.get('paginate'))
-        admin_list = Admin.query.filter_by(is_del = '0').order_by(Admin.id.desc()).paginate(page, paginate, False)
-        if not admin_list:
-            abort(RET.BadRequest,msg='暂无数据')
+        sql = '''
+        SELECT SQL_CALC_FOUND_ROWS a.id,a.username,a.name,a.phone,a.email,
+        GROUP_CONCAT(r.name SEPARATOR ',') as roles_name,
+		GROUP_CONCAT(ar.role_id SEPARATOR ',') as roles
+        FROM admin as a
+        left join admin_role as ar on a.id = ar.admin_id
+        left join role as r on r.id = ar.role_id
+        WHERE a.is_del = 0
+        GROUP BY a.id
+        LIMIT {0},{1};
+        '''.format((page-1)*paginate,paginate)
+        sql_data = Crud.auto_select(sql)
+        # 查询总数
+        count_num = Crud.auto_select("SELECT FOUND_ROWS() as countnum")
+        count = int((count_num.first()).countnum)
+        fetchall_data = sql_data.fetchall()
+        if not fetchall_data:
+            abort(RET.NotFound,msg='暂无数据')
         data = {
                     'status':RET.OK,
                     'paginate':{
-                        'page':admin_list.page,
-                        'per_page':admin_list.per_page,
-                        'total':admin_list.total
+                        'page':page,
+                        'per_page':paginate,
+                        'total':count
                     },
-                    'data':[object_to_json(v) for v in admin_list.items]
+                    'data':([mysql_to_json(dict(v))  for v in fetchall_data])
             }
         return data 
+        
 
 
     @api.doc(api_doc=admin_doc.admin_add)
     @login_required
+    @permission_required
     def post(self):
         '''
         添加用户
@@ -188,6 +235,7 @@ class AdminResource(Resource):
         admin.name = name
         admin.email = email
         admin.phone = phone
+        admin.last_editor = g.admin.username
         if admin.add():
             data = {
                 'status':RET.Created,
@@ -200,7 +248,8 @@ class AdminResource(Resource):
        
     # 重置密码
     @api.doc(api_doc=admin_doc.reset_pwd)
-    @login_required   
+    @login_required
+    @permission_required   
     def put(self):
         '''
         重置密码
@@ -221,7 +270,8 @@ class AdminResource(Resource):
         abort(RET.BadRequest,msg='重置密码失败')
 
     @api.doc(api_doc=admin_doc.del_admin)      
-    @login_required 
+    @login_required
+    @permission_required 
     def delete(self):
         '''
         删除用户
@@ -236,6 +286,7 @@ class AdminResource(Resource):
         if admin.is_super == 1:
             abort(RET.BadRequest,msg='删除失败!!!')
         admin.is_del = admin.id
+        admin.last_editor = g.admin.username
         result = Admin().updata()
         if result:
             # 清除用户登录状态
@@ -287,6 +338,7 @@ class AdminLogin(Resource):
         '''
         登出
         '''
-        admin = g.admin
-        cache.delete(admin.id) 
+        # admin = g.admin
+        # cache.delete(admin.id) 
+        logout()
         abort(RET.BadRequest,msg='已退出',status=RET.REENTRY)
