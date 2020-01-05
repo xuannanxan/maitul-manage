@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime : 2020-01-03 23:24:01
+@LastEditTime : 2020-01-05 22:24:57
 @LastEditors  : Xuannan
 '''
 
@@ -13,7 +13,7 @@ from app.apis.api_constant import *
 from app.models.admin import Menu
 from app.utils import object_to_json
 from app.utils.tree import build_tree
-from app.apis.admin.common import login_required
+from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.admin import menu_doc as doc
 from flask import g
@@ -54,6 +54,7 @@ def getSingData(id):
 class MenuResource(Resource):
     @api.doc(api_doc=doc.add)
     @login_required
+    @permission_required
     def post(self):
         '''
         添加菜单
@@ -85,6 +86,7 @@ class MenuResource(Resource):
 
     @api.doc(api_doc=doc.put)
     @login_required  
+    @permission_required
     def put(self):
         '''
         修改菜单
@@ -121,6 +123,7 @@ class MenuResource(Resource):
 
     @api.doc(api_doc=doc.lst)
     @login_required
+    @permission_required
     def get(self):
         '''
         获取菜单树
@@ -144,6 +147,7 @@ class MenuResource(Resource):
         
     @api.doc(api_doc=doc.delete)
     @login_required
+    @permission_required
     def delete(self):
         '''
         删除菜单
