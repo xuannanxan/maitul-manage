@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-03 23:50:09
+ * @LastEditTime : 2020-01-08 14:01:12
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -34,6 +34,21 @@ export const _captcha = async (image_code)=>{
 //获取登录用户的信息/api/admin/current_user
 export const _currentUser = async ()=>{
   return await Http.request('/api/admin/current_user', Method.GET)
+};
+//修改用户的信息/api/admin/current_user
+export const _changeUserInfo = async (name,email,phone)=>{
+  return await Http.request('/api/admin/current_user', Method.POST,{
+    name,
+    email,
+    phone
+  })
+};
+//修改密码/api/admin/current_user
+export const _changeUserPwd = async (password,new_password)=>{
+  return await Http.request('/api/admin/current_user', Method.POST,{
+    password,
+    new_password
+  })
 };
 
 //获取博客内容列表
