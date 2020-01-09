@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-01-02 10:58:08
+ * @LastEditTime : 2020-01-09 17:44:34
  * @LastEditors  : Xuannan
  */
 
@@ -13,6 +13,7 @@ import '../static/css/home.css'
 import {Route,Link} from 'react-router-dom'
 import AddContent from './content/Add'
 import MenuList from './menu/List'
+import RuleList from './rule/List'
 import CurrentUser from './CurrentUser'
 import {_menuTree} from '../utils/api'
 
@@ -105,6 +106,9 @@ function Home(){
             <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
               <Route path="/" exact  component={MenuList}/>
               <Route path="/menu/" exact  component={MenuList}/>
+              <Route path="/rule/" exact  component={RuleList}/>
+              
+
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Maitul.com</Footer>

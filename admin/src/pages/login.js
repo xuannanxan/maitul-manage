@@ -2,12 +2,12 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-13 17:25:03
- * @LastEditTime : 2019-12-28 21:25:52
+ * @LastEditTime : 2020-01-09 13:27:56
  * @LastEditors  : Xuannan
  */
 import React , {useState,useEffect} from 'react';
 import 'antd/dist/antd.css';
-import { Card, Input, Icon,Button ,Spin ,Checkbox,Form,message} from 'antd';
+import { Card, Input, Icon,Button ,Spin ,Checkbox,Form} from 'antd';
 import '../static/css/login.css'
 import {_login,_captcha} from '../utils/api'
 

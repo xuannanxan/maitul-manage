@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime : 2020-01-05 22:19:45
+@LastEditTime : 2020-01-09 16:09:17
 @LastEditors  : Xuannan
 '''
 
@@ -99,7 +99,7 @@ class AdminCurrent(Resource):
         new_password = args.get('new_password')
         admin = g.admin
         if (not admin.check_pwd(password)) or admin.is_del != '0':
-            abort(RET.Unauthorized,msg='用户名或密码错误')
+            abort(RET.Unauthorized,msg='密码错误')
         admin.password = new_password
         admin.last_editor = g.admin.username
         if admin.updata():

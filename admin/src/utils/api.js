@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-08 14:01:12
+ * @LastEditTime : 2020-01-09 15:45:52
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -36,19 +36,12 @@ export const _currentUser = async ()=>{
   return await Http.request('/api/admin/current_user', Method.GET)
 };
 //修改用户的信息/api/admin/current_user
-export const _changeUserInfo = async (name,email,phone)=>{
-  return await Http.request('/api/admin/current_user', Method.POST,{
-    name,
-    email,
-    phone
-  })
+export const _changeUserInfo = async (formData)=>{
+  return await Http.request('/api/admin/current_user', Method.POST,formData)
 };
 //修改密码/api/admin/current_user
-export const _changeUserPwd = async (password,new_password)=>{
-  return await Http.request('/api/admin/current_user', Method.POST,{
-    password,
-    new_password
-  })
+export const _changeUserPwd = async (formData)=>{
+  return await Http.request('/api/admin/current_user', Method.PUT,formData)
 };
 
 //获取博客内容列表

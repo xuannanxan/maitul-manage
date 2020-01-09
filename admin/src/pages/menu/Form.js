@@ -44,7 +44,7 @@ function SubmitForm(props){
             arr.unshift({ key: 0, value: 0, title: '顶级菜单',children:[]})
             setTreeData(arr)
             if(params){
-                props.form.setFieldsValue({
+                form.setFieldsValue({
                     id:params.id,
                     pid:params.pid,
                     name:params.name,
@@ -57,15 +57,13 @@ function SubmitForm(props){
     }));
     
     const initTreeData = (data)=>{
-        let arr = []
-        data.map((v, index) => {
+        return data.map((v,k)=>{
             let children = []
             if (v.children.length>0){
                 children=initTreeData(v.children)
-            }
-            arr.push({ key: v.id, value: v.id, title: v.name,children:children})
+                }
+            return { key: v.id, value: v.id, title: v.name,children:children}
         })
-        return arr
     }
     
     return(

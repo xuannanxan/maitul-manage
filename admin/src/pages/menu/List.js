@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-03 21:43:35
+ * @LastEditTime : 2020-01-09 17:07:49
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -144,10 +144,11 @@ function MenuList(props){
             setEditData({})
             setTitle('新增菜单')
         }
-        setVisible(true)
+        
         setTimeout(()=>{
             formRef.current.init()
-        },100)
+        },300)
+        setVisible(true)
         
     }
     const handleCancel = ()=>{

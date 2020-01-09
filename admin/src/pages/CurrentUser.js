@@ -2,19 +2,23 @@
  * @Description: 当前用户，包含用户资料修改，密码修改等功能
  * @Author: Xuannan
  * @Date: 2019-12-19 17:06:47
- * @LastEditTime : 2020-01-02 17:29:50
+ * @LastEditTime : 2020-01-09 16:04:50
  * @LastEditors  : Xuannan
  */
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useRef} from 'react';
 import { Menu, Dropdown, Icon ,Modal} from 'antd';
 import {_currentUser,_logout} from '../utils/api'
-
+import ChangeUserInfo from './admin/ChangeInfo'
+import ChangeUserPwd from './admin/ChangePwd'
 
 function CurrentUser(){
     const [user,setUser] = useState({})
     const [visible,setVisible] = useState(false)
     const [title,setTitle] = useState('')
+    const [op,setOp] = useState('')
     const [confirmLoading,setConfirmLoading] = useState(false)
+    const userInfoRef = useRef()
+    const userPwdRef = useRef();
     const getCurrentUser = ()=>{
       _currentUser().then(res=>{
         setUser(res.data.data)
@@ -27,24 +31,39 @@ function CurrentUser(){
       setVisible(false)
     }
     const handleOk = ()=>{
-      setVisible(false)
-        
-    }
-    const showModal = (op)=>{
-      setVisible(true)
+      setConfirmLoading(true)
       if(op==='password'){
+        userPwdRef.current.changeUserPwd()
+      }else{
+        userInfoRef.current.changeUserInfo()
+      }
+      setConfirmLoading(false)  
+    }
+    const showModal = (option)=>{   
+      setOp(option)  
+      if(option==='password'){
         setTitle('修改密码')
       }else{
         setTitle('修改个人信息')
+        setTimeout(()=>{
+          userInfoRef.current.init()
+        },300)
       }
+      setVisible(true)
     }
     useEffect(()=>{
       getCurrentUser()
     },[])
+    const infoForm = (
+      <ChangeUserInfo cRef = {userInfoRef} params={user} handleCancel={handleCancel} refreshUser = {getCurrentUser}/>
+    )
+    const pwdForm = (
+      <ChangeUserPwd cRef = {userPwdRef} handleCancel={handleCancel} refreshUser = {getCurrentUser}/>
+    )
     const menu = (
       <Menu>
         <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" onClick={()=>showModal()}>
+          <a target="_blank" rel="noopener noreferrer" onClick={()=>showModal('')}>
             修改资料
           </a>
         </Menu.Item>
@@ -76,9 +95,8 @@ function CurrentUser(){
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             >
-              <p>Some contents...</p>
-              <p>Some contents...</p>
-              <p>Some contents...</p>
+              {op?pwdForm:infoForm}
+              
             </Modal>
 
         </div>
