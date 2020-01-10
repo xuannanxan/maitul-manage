@@ -2,11 +2,11 @@
  * @Description: 当前用户，包含用户资料修改，密码修改等功能
  * @Author: Xuannan
  * @Date: 2019-12-19 17:06:47
- * @LastEditTime : 2020-01-09 16:04:50
+ * @LastEditTime : 2020-01-10 15:50:08
  * @LastEditors  : Xuannan
  */
 import React,{useState,useEffect,useRef} from 'react';
-import { Menu, Dropdown, Icon ,Modal} from 'antd';
+import { Menu, Dropdown, Icon ,Modal,Button} from 'antd';
 import {_currentUser,_logout} from '../utils/api'
 import ChangeUserInfo from './admin/ChangeInfo'
 import ChangeUserPwd from './admin/ChangePwd'
@@ -63,19 +63,19 @@ function CurrentUser(){
     const menu = (
       <Menu>
         <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" onClick={()=>showModal('')}>
+          <Button type="link" size='small' className='link-btn'  target="_blank" rel="noopener noreferrer" onClick={()=>showModal('')}>
             修改资料
-          </a>
+          </Button>
         </Menu.Item>
         <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" onClick={()=>showModal('password')}>
+          <Button type="link" size='small' className='link-btn' target="_blank" rel="noopener noreferrer" onClick={()=>showModal('password')}>
             修改密码
-          </a>
+          </Button>
         </Menu.Item>
         <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" onClick={()=>logout()}>
+          <Button type="link" size='small' className='link-btn'  target="_blank" rel="noopener noreferrer" onClick={()=>logout()}>
             退出
-          </a>
+          </Button>
         </Menu.Item>
       </Menu>
     );
@@ -83,9 +83,7 @@ function CurrentUser(){
     return (
         <div>
             <Dropdown overlay={menu}>
-              <a className="ant-dropdown-link" href="#">
-              {user.name} <Icon type="down" />
-              </a>
+              <Button type="link" className="ant-dropdown-link">{user.name} <Icon type="down" /></Button>
             </Dropdown>
             <Modal
             width={600}

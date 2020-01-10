@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-08 13:49:14
- * @LastEditTime : 2020-01-09 16:32:45
+ * @LastEditTime : 2020-01-10 16:03:11
  * @LastEditors  : Xuannan
  */
 import React, {useImperativeHandle} from 'react';
@@ -10,7 +10,7 @@ import { Input ,Form ,message} from 'antd';
 import {_changeUserPwd} from '../../utils/api'
 
 function ChangeUserPwdForm(props){
-    let {cRef,form,params,handleCancel,refreshUser} = props
+    let {cRef,form,handleCancel,refreshUser} = props
     const { getFieldDecorator } = form; //表单内容
     useImperativeHandle(cRef, () => ({
         changeUserPwd:()=>{

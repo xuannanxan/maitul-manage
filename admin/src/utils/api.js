@@ -2,13 +2,15 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-09 15:45:52
+ * @LastEditTime : 2020-01-10 10:51:16
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
 
 
 const Http = require('./http');
+const menuUrl = '/api/admin/menu'
+const ruleUrl = '/api/admin/rule'
 //登录
 export const _login = async (username,password,captcha,image_code)=>{
   return await Http.request('/api/login', Method.POST, {
@@ -61,21 +63,42 @@ export const _fileUpload = async (formData)=>{
   })
 }
 
-// 后台菜单树 /api/admin/menu/tree
+// 菜单--------------------------
+// 后台菜单树 /api/admin/menu
 export const _menuTree = async ()=>{
-  return await Http.request('/api/admin/menu', Method.GET)
+  return await Http.request(menuUrl, Method.GET)
 };
 
 //新增菜单/api/admin/menu
 export const _menuAdd = async (formData)=>{
-  return await Http.request('/api/admin/menu', Method.POST,formData)
+  return await Http.request(menuUrl, Method.POST,formData)
 };
 
 //修改菜单 /api/admin/menu
 export const _menuEdit = async (formData)=>{
-  return await Http.request('/api/admin/menu', Method.PUT,formData)
+  return await Http.request(menuUrl, Method.PUT,formData)
 };
 //删除菜单 /api/admin/menu
 export const _menuDelete = async (id)=>{
-  return await Http.request('/api/admin/menu', Method.DELETE,{id})
+  return await Http.request(menuUrl, Method.DELETE,{id})
+};
+
+// 权限--------------------------
+// 权限列表 /api/admin/rule
+export const _ruleList = async ()=>{
+  return await Http.request(ruleUrl, Method.GET)
+};
+
+//新增菜单/api/admin/menu
+export const _ruleAdd = async (formData)=>{
+  return await Http.request(ruleUrl, Method.POST,formData)
+};
+
+//修改菜单 /api/admin/menu
+export const _ruleEdit = async (formData)=>{
+  return await Http.request(ruleUrl, Method.PUT,formData)
+};
+//删除菜单 /api/admin/menu
+export const _ruleDelete = async (id)=>{
+  return await Http.request(ruleUrl, Method.DELETE,{id})
 };

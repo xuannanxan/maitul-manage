@@ -2,13 +2,13 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-14 17:40:02
- * @LastEditTime : 2020-01-01 20:29:25
+ * @LastEditTime : 2020-01-10 16:02:33
  * @LastEditors  : Xuannan
  */
 
 
 import React, { useState} from 'react';
-import { Row, Col, Input, Icon ,Select,Form ,Spin,Button,InputNumber,TreeSelect} from 'antd';
+import { Row, Col, Input ,Select,Form ,Spin,Button,InputNumber,TreeSelect} from 'antd';
 import '../../static/css/content/add.css'
 import Editor from '../components/Editor'
 

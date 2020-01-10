@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-13 10:35:39
-@LastEditTime : 2019-12-31 19:08:08
+@LastEditTime : 2020-01-10 17:49:28
 @LastEditors  : Xuannan
 '''
 # -*- coding: utf-8 -*- 
@@ -50,8 +50,21 @@ def insert_menus(data):
         url = v.get("url")
         pid = v.get("pid")
         sort = v.get("sort")
-        is_del = v.get("is_del")
+        is_del = int(v.get("is_del"))
         cursor.execute("insert into menu(id,name,icon,url,pid,sort,is_del) values('%s','%s','%s','%s','%s','%d','%d');"%(id,name,icon,url,pid,sort,is_del))
+    db.commit()
+
+def insert_rules(data):
+    rules = data.get('rules')
+    cursor = db.cursor()
+    for v in rules:
+        id = v.get("id")
+        name = v.get("name")
+        method = v.get("method")
+        url = v.get("url")
+        menu_id = v.get("menu_id")
+        is_del = int(v.get("is_del"))
+        cursor.execute("insert into rule(id,name,method,url,menu_id,is_del) values('%s','%s','%s','%s','%s','%d');"%(id,name,method,url,menu_id,is_del))
     db.commit()
 
 def init_data():
@@ -61,7 +74,9 @@ def init_data():
         if check == '1':
             init_json = load_data('./data/init_data.json')
             city_json = load_data('./data/cities.json')
+            insert_rules(init_json)
             insert_menus(init_json)
+            
             insert_cities(city_json)
             print("初始化成功")
         else:

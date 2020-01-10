@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-21 19:54:46
- * @LastEditTime : 2019-12-28 21:11:38
+ * @LastEditTime : 2020-01-10 17:08:14
  * @LastEditors  : Xuannan
  */
 import React, { useRef,useEffect } from 'react';
@@ -72,7 +72,6 @@ const  Editor = React.forwardRef((props,ref)=>{
           editor.txt.html(propsValue)
         }
         editor.create()
-
     };
     useEffect(()=>{
       initEditor()

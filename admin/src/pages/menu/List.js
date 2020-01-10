@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-09 17:07:49
+ * @LastEditTime : 2020-01-10 15:20:05
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -111,9 +111,9 @@ function MenuList(props){
             key: 'action',
             render: (text, record) => (
               <span>
-                <a onClick={() => showFormModal(record)}><Icon type="edit" /> 修改</a>
+                <Button type="link" size='small'  onClick={() => showFormModal(record)}><Icon type="edit" />修改</Button>
                 <Divider type="vertical" />
-                <a onClick={() => deleteData(record.id)}><Icon type="delete" /> 删除</a>
+                <Button type="link" size='small'  onClick={() => deleteData(record.id)}><Icon type="delete" />删除</Button>
               </span>
             ),
         },
@@ -133,8 +133,7 @@ function MenuList(props){
         onCancel() {
           //console.log('Cancel');
         },
-      });
-      
+      }); 
     }
     const showFormModal = (record)=>{
         if(record.id){
@@ -157,9 +156,11 @@ function MenuList(props){
     const handleOk = ()=>{
         setConfirmLoading(true)
         formRef.current.submitFormData()
-        setConfirmLoading(false)
-        
+        setTimeout(()=>{
+          setConfirmLoading(false)
+        },500)
     }
+
     useEffect(()=>{
         getMenuTree()
       },[])

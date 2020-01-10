@@ -99,5 +99,139 @@
             "sort":0,
             "is_del":0
         }
+    ],
+    "rules":[
+        {
+            "id": "20200110140039301",
+            "create_time": "10/1/2020 14:00:39",
+            "update_time": "10/1/2020 14:00:39",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "添加菜单",
+            "url": "/api/admin/menu",
+            "menu_id": "20190101000001007",
+            "method": "POST"
+        },
+        {
+            "id": "20200110140344465",
+            "create_time": "10/1/2020 14:03:44",
+            "update_time": "10/1/2020 14:03:44",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "修改菜单",
+            "url": "/api/admin/menu",
+            "menu_id": "20190101000001007",
+            "method": "PUT"
+        },
+        {
+            "id": "20200110140356209",
+            "create_time": "10/1/2020 14:03:57",
+            "update_time": "10/1/2020 14:03:57",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "查看菜单",
+            "url": "/api/admin/menu",
+            "menu_id": "20190101000001007",
+            "method": "GET"
+        },
+        {
+            "id": "20200110140409337",
+            "create_time": "10/1/2020 14:04:09",
+            "update_time": "10/1/2020 14:04:09",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "删除菜单",
+            "url": "/api/admin/menu",
+            "menu_id": "20190101000001007",
+            "method": "DELETE"
+        },
+        {
+            "id": "20200110140452255",
+            "create_time": "10/1/2020 14:04:52",
+            "update_time": "10/1/2020 14:04:52",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "查看规则",
+            "url": "/api/admin/rule",
+            "menu_id": "20190101000001010",
+            "method": "GET"
+        },
+        {
+            "id": "20200110140507552",
+            "create_time": "10/1/2020 14:05:07",
+            "update_time": "10/1/2020 14:05:07",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "添加规则",
+            "url": "/api/admin/rule",
+            "menu_id": "20190101000001010",
+            "method": "POST"
+        },
+        {
+            "id": "20200110140515305",
+            "create_time": "10/1/2020 14:05:16",
+            "update_time": "10/1/2020 14:05:16",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "修改规则",
+            "url": "/api/admin/rule",
+            "menu_id": "20190101000001010",
+            "method": "PUT"
+        },
+        {
+            "id": "20200110140524681",
+            "create_time": "10/1/2020 14:05:25",
+            "update_time": "10/1/2020 16:01:48",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "删除规则",
+            "url": "/api/admin/rule",
+            "menu_id": "20190101000001010",
+            "method": "DELETE"
+        },
+        {
+            "id": "20200110142057734",
+            "create_time": "10/1/2020 14:20:58",
+            "update_time": "10/1/2020 14:36:48",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "获取角色",
+            "url": "/api/admin/role",
+            "menu_id": "20190101000001011",
+            "method": "GET"
+        },
+        {
+            "id": "20200110143657154",
+            "create_time": "10/1/2020 14:36:57",
+            "update_time": "10/1/2020 14:36:57",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "添加角色",
+            "url": "/api/admin/role",
+            "menu_id": "20190101000001011",
+            "method": "POST"
+        },
+        {
+            "id": "20200110143705533",
+            "create_time": "10/1/2020 14:37:06",
+            "update_time": "10/1/2020 14:37:06",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "修改",
+            "url": "/api/admin/role",
+            "menu_id": "20190101000001011",
+            "method": "PUT"
+        },
+        {
+            "id": "20200110143714414",
+            "create_time": "10/1/2020 14:37:15",
+            "update_time": "10/1/2020 14:37:15",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "删除角色",
+            "url": "/api/admin/role",
+            "menu_id": "20190101000001011",
+            "method": "DELETE"
+        }
     ]
 }
