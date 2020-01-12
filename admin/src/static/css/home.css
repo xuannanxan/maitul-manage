@@ -9,3 +9,29 @@
 .link-btn{
   color: rgba(0, 0, 0, 0.65);
 }
+
+.router-enter{
+  opacity: 0;
+  transform: translateX(100%);
+}
+.router-enter-active{
+  opacity: 1;
+  transform: translateX(0%);
+  transition: all 500ms;
+}
+
+.router-exit{
+  opacity: 1;
+  transform: translateX(0%);
+}
+.router-exit-active{
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: all 500ms ;
+}
+
+.main-content{
+  padding: 24px;
+  background-color: #fff;
+  min-height: 360px;
+}

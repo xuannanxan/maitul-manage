@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-10 15:20:05
+ * @LastEditTime : 2020-01-11 19:17:25
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -165,7 +165,7 @@ function MenuList(props){
         getMenuTree()
       },[])
     return(
-        <div>
+        <div className='main-content'>
             <Button type="primary" onClick={showFormModal} size="large"><Icon type="plus"/> 添加</Button>
             <br /><br />
             {menuTree && menuTree.length? 

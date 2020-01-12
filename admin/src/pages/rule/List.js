@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-10 15:06:05
+ * @LastEditTime : 2020-01-11 20:15:57
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -27,6 +27,7 @@ const RuleList = ()=>{
             setMenuTree(res.data.data)
         })
       }
+    
     const getRuleList = ()=>{
       _ruleList().then(res=>{
         setRuleList(res.data.data)
@@ -90,7 +91,7 @@ const RuleList = ()=>{
         formRef.current.submitFormData()
         setTimeout(()=>{
           setConfirmLoading(false)
-        },500)
+        },300)
     }
   
     useEffect(()=>{
@@ -126,7 +127,7 @@ const RuleList = ()=>{
         },
     ];  
     return (
-        <div>
+        <div className='main-content'>
             <Row>
                 <Col span={4}>
                 {menuTree && menuTree.length?

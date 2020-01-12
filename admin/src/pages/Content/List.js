@@ -9,7 +9,7 @@ function List(){
 
 
     return (
-        <div>
+        <div className='main-content'>
 
         </div>
     )
