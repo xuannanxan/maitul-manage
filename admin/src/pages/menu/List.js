@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-11 19:17:25
+ * @LastEditTime : 2020-01-13 14:25:25
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -105,6 +105,16 @@ function MenuList(props){
           title: 'URL',
           dataIndex: 'url',
           key: 'url',
+        },
+        {
+          title: '最后修改人',
+          dataIndex: 'last_editor',
+          key: 'last_editor',
+        },
+        {
+            title: '最后修改时间',
+            dataIndex: 'update_time',
+            key: 'update_time',
         },
         {
             title: '操作',

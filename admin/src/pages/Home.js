@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-01-12 14:17:58
+ * @LastEditTime : 2020-01-13 18:17:20
  * @LastEditors  : Xuannan
  */
 
@@ -14,7 +14,8 @@ import {Route ,Link ,Switch} from 'react-router-dom'
 import AddContent from './content/Add'
 import MenuList from './menu/List'
 import RuleList from './rule/List'
-import CurrentUser from './CurrentUser'
+import RoleList from './role/List'
+import CurrentUser from './admin/CurrentUser'
 import {_menuTree} from '../utils/api'
 import { CSSTransition,TransitionGroup } from 'react-transition-group'
 import {getAllParent,getNode} from '../utils/treeNodes'
@@ -25,6 +26,7 @@ const RouteList = [
   {path:"/",component:MenuList},
   {path:"/menu/",component:MenuList},
   {path:"/rule/",component:RuleList},
+  {path:"/role/",component:RoleList},
 ]
 
 

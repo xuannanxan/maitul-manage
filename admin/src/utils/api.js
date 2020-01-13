@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-10 10:51:16
+ * @LastEditTime : 2020-01-13 13:57:40
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -11,6 +11,7 @@ import {Method} from "./http";
 const Http = require('./http');
 const menuUrl = '/api/admin/menu'
 const ruleUrl = '/api/admin/rule'
+const roleUrl = '/api/admin/role'
 //登录
 export const _login = async (username,password,captcha,image_code)=>{
   return await Http.request('/api/login', Method.POST, {
@@ -89,16 +90,39 @@ export const _ruleList = async ()=>{
   return await Http.request(ruleUrl, Method.GET)
 };
 
-//新增菜单/api/admin/menu
+//新增权限/api/admin/rule
 export const _ruleAdd = async (formData)=>{
   return await Http.request(ruleUrl, Method.POST,formData)
 };
 
-//修改菜单 /api/admin/menu
+//修改权限/api/admin/rule
 export const _ruleEdit = async (formData)=>{
   return await Http.request(ruleUrl, Method.PUT,formData)
 };
-//删除菜单 /api/admin/menu
+//删除权限 /api/admin/rule
 export const _ruleDelete = async (id)=>{
   return await Http.request(ruleUrl, Method.DELETE,{id})
+};
+// 角色--------------------------
+// 角色列表 /api/admin/role
+export const _roleList = async ()=>{
+  return await Http.request(roleUrl, Method.GET)
+};
+
+//新增角色/api/admin/role
+export const _roleAdd = async (formData)=>{
+  return await Http.request(roleUrl, Method.POST,formData)
+};
+
+//修改角色 /api/admin/role
+export const _roleEdit = async (formData)=>{
+  return await Http.request(roleUrl, Method.PUT,formData)
+};
+//删除角色 /api/admin/role
+export const _roleDelete = async (id)=>{
+  return await Http.request(roleUrl, Method.DELETE,{id})
+};
+//角色授权 /api/admin/role/auth
+export const _roleAuth = async (formData)=>{
+  return await Http.request(roleUrl+'/auth', Method.POST,formData)
 };

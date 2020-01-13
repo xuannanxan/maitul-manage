@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-11 20:15:57
+ * @LastEditTime : 2020-01-13 14:49:52
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -27,7 +27,7 @@ const RuleList = ()=>{
             setMenuTree(res.data.data)
         })
       }
-    
+    //获取权限规则列表
     const getRuleList = ()=>{
       _ruleList().then(res=>{
         setRuleList(res.data.data)
@@ -45,6 +45,7 @@ const RuleList = ()=>{
             return <TreeNode key={item.id} title={item.name} icon={<Icon type={item.icon} />}/>;
           });  
     }
+    //点击树设置menuid展示对应菜单的rule
     const showRuleItem = (selectedKeys, info)  =>{
       setIsLoading(true)
       setMenuId(selectedKeys[0]);

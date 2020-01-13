@@ -2,14 +2,14 @@
  * @Description: 当前用户，包含用户资料修改，密码修改等功能
  * @Author: Xuannan
  * @Date: 2019-12-19 17:06:47
- * @LastEditTime : 2020-01-10 15:50:08
+ * @LastEditTime : 2020-01-13 14:27:25
  * @LastEditors  : Xuannan
  */
 import React,{useState,useEffect,useRef} from 'react';
 import { Menu, Dropdown, Icon ,Modal,Button} from 'antd';
-import {_currentUser,_logout} from '../utils/api'
-import ChangeUserInfo from './admin/ChangeInfo'
-import ChangeUserPwd from './admin/ChangePwd'
+import {_currentUser,_logout} from '../../utils/api'
+import ChangeUserInfo from './ChangeInfo'
+import ChangeUserPwd from './ChangePwd'
 
 function CurrentUser(){
     const [user,setUser] = useState({})

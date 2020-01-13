@@ -66,7 +66,7 @@ function SubmitForm(props){
     
     return(
         <div>
-            <Form className="content-form" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+            <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
                 <Form.Item  {...getFieldDecorator('id')}/>
                 <Form.Item label='所属菜单'>
                     {getFieldDecorator('menu_id', {

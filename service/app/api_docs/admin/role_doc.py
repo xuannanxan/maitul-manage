@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-18 20:47:10
-@LastEditTime : 2020-01-04 18:42:39
+@LastEditTime : 2020-01-13 14:01:15
 @LastEditors  : Xuannan
 '''
 
@@ -15,7 +15,11 @@ from app.utils.swagger_filed import IntegerQueryFiled, StringQueryFiled, Integer
 name = StringQueryFiled(name='name',
 						description="名称",
 						default='',
-						required=True).data						
+						required=True).data		
+info = StringQueryFiled(name='info',
+						description="描述",
+						default='',
+						required=True).data					
 rules = StringQueryFiled(name='rules',
 						description="规则授权",
 						default='',
@@ -26,6 +30,7 @@ id = StringPathFiled(	name='id',
 						required=True).data		
 data_fields = {
 						'name':{"type": "string",},
+						'info':{"type": "string",},
 						'rules':{"type": "string",},
 						'id':{"type": "string",},
 						}
@@ -89,7 +94,7 @@ delete = {
 
 put = {
 	"description": "修改",
-	"parameters": [ id,name,rules],
+	"parameters": [ id,name,info],
 	"security": [
 		{
 			"Authorization": ''
@@ -113,7 +118,7 @@ put = {
 add = {
 	"description": "添加",
 	"parameters": [
-		name,rules
+		name,info
 	],
 	"security": [
 		{
@@ -123,6 +128,29 @@ add = {
 	"responses": {
 		"201": {
 			"description": "添加成功",
+			"properties":{
+				'data':{
+					'properties':data_fields
+				},
+				'msg':{"type": "string"
+					}
+			}
+		}
+	}
+}
+auth = {
+	"description": "角色授权",
+	"parameters": [
+		id,rules
+	],
+	"security": [
+		{
+			"Authorization": ''
+		}
+	],
+	"responses": {
+		"201": {
+			"description": "设置成功",
 			"properties":{
 				'data':{
 					'properties':data_fields

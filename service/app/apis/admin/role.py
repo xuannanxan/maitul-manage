@@ -6,11 +6,11 @@ from app.models.base import Crud
 from app.utils import object_to_json,mysql_to_json
 from app.apis.admin.common import login_required
 from app.utils.api_doc import Apidoc
-from app.api_docs.admin import rule_doc as doc
+from app.api_docs.admin import role_doc as doc
 from flask import g
 from app.config import PAGINATE_NUM
 
-api = Apidoc('权限规则管理')
+api = Apidoc('角色管理')
 
 # 单数据操作
 parse_id = reqparse.RequestParser()
@@ -18,12 +18,16 @@ parse_id.add_argument('id',type=str)
 
 parse_base = parse_id.copy()
 parse_base.add_argument('name',type=str,required=True,help='请输入名称')
-parse_base.add_argument('rules',type=str,required=True,help='请配置权限')
+parse_base.add_argument('info',type=str)
+
+parse_rules = parse_id.copy()
+parse_rules.add_argument('rules',type=str,required=True,help='请配置权限')
 
 
 
 _fields = {
     'name':fields.String,
+    'info':fields.String,
     'id':fields.String,
 }
 sing_fields = {
@@ -38,6 +42,37 @@ def getSingData(id):
         abort(RET.NotFound,msg='角色不存在')
     return data
 
+class RoleAuthResource(Resource):
+    @api.doc(api_doc=doc.auth)
+    @login_required
+    def post(self):
+        '''
+        角色授权
+        '''
+        args = parse_rules.parse_args()
+        id = args.get('id')
+        if not id:
+            abort(RET.BadRequest,msg='请勿非法操作')
+        sing_data = getSingData(id)
+        rules = args.get('rules')
+        # 清空原来的rules
+        old_data = RoleRule.query.filter_by(role_id = id ).all()
+        if old_data :
+            Crud.clean_all(old_data)
+        # 新增新的权限
+        relation_data = [RoleRule(
+            role_id = sing_data.id,
+            rule_id =v
+        ) for v in rules.split(',') ]
+        if Crud.add_all(relation_data):
+            sing_data.last_editor = g.admin.username
+            Role().updata()
+            return {
+                    'status':RET.OK,
+                    'msg':'设置成功'
+                }    
+        abort(RET.BadRequest,msg='保存失败，请重试...') 
+
 class RoleResource(Resource):
     @api.doc(api_doc=doc.add)
     @login_required
@@ -47,12 +82,13 @@ class RoleResource(Resource):
         '''
         args = parse_base.parse_args()
         name = args.get('name')
-        rules = args.get('rules')
+        info = args.get('info')
         _data = Role.query.filter_by(name = name,is_del = '0').first()
         if _data:
             abort(RET.Forbidden,msg='当前角色已存在')
         model_data = Role()
         model_data.name = name
+        model_data.info = info
         model_data.last_editor = g.admin.username
         if model_data.add():
             data = {
@@ -60,13 +96,6 @@ class RoleResource(Resource):
                     'msg':'添加成功',
                     'data':model_data
             }
-            # 如果有配置规则
-            if rules:
-                relation_data = [RoleRule(
-                    role_id = model_data.id,
-                    rule_id =v
-                ) for v in rules.split(',') ]
-                Crud.add_all(relation_data)
             return marshal(data,sing_fields)
         abort(RET.BadRequest,msg='添加失败，请重试')
 
@@ -82,12 +111,13 @@ class RoleResource(Resource):
             abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
         name = args.get('name')
-        rules = args.get('rules')
+        info = args.get('info')
         # 如果名称存在，并且ID不是当前ID
         _data = Role.query.filter(Role.id != id , Role.is_del == '0',Role.name == name).first()
         if _data:
             abort(RET.Forbidden,msg='角色已存在')
         sing_data.name = name
+        sing_data.info = info
         sing_data.last_editor = g.admin.username
         result = Role().updata()
         if result:
@@ -96,17 +126,6 @@ class RoleResource(Resource):
                 'msg':'修改成功',
                 'data':sing_data
             }
-             # 清空原来的rules
-            old_data = RoleRule.query.filter_by(role_id = id ).all()
-            if old_data :
-                Crud.clean_all(old_data)
-            # 如果有配置规则
-            if rules:
-                relation_data = [RoleRule(
-                    role_id = sing_data.id,
-                    rule_id =v
-                ) for v in rules.split(',') ]
-                Crud.add_all(relation_data)
             return marshal(data,sing_fields)
         abort(RET.BadRequest,msg='修改失败，请重试')
 
@@ -135,22 +154,12 @@ class RoleResource(Resource):
                         'status':RET.OK,
                         'data':mysql_to_json(dict(first_data))
                 } 
-        sql = '''
-        SELECT 
-        j.*,
-        GROUP_CONCAT(r.rule_id SEPARATOR ',') as rules
-        FROM role as j
-        left join role_rule as r on j.id = r.role_id
-        WHERE j.is_del = 0
-        GROUP BY j.id
-        '''
-        sql_data = Crud.auto_select(sql)
-        fetchall_data = sql_data.fetchall()
-        if not fetchall_data:
+        _list = Role.query.filter_by(is_del = '0').all()
+        if not _list:
             abort(RET.BadRequest,msg='暂无数据')
         data = {
-                    'status':RET.OK,
-                    'data':([mysql_to_json(dict(v))  for v in fetchall_data])
+                'status':RET.OK,
+                'data':[object_to_json(v) for v in _list]
             }
         return data 
 
@@ -169,6 +178,10 @@ class RoleResource(Resource):
         sing_data.is_del = sing_data.id
         sing_data.last_editor = g.admin.username
         result = Role().updata()
+        # 清空原来的授权
+        _auth = RoleRule.query.filter_by(role_id = id ).all()
+        if _auth :
+            Crud.clean_all(_auth)
         if result:
             return {
                 'status':RET.OK,
