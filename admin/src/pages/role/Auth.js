@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-13 16:05:42
- * @LastEditTime : 2020-01-14 17:19:55
+ * @LastEditTime : 2020-01-14 21:36:42
  * @LastEditors  : Xuannan
  */
 import React, { useImperativeHandle,useState} from 'react';
@@ -142,7 +142,7 @@ const AuthForm =(props)=>{
         )
     }
     return(
-        <div>
+        <div style={{maxHeight:'400px',overflowY:'scroll'}}>
         {menuTree && menuTree.length? rulesCheckboxGroup(menuTree,ruleList):'无可设置的权限...'}
         </div>
     )

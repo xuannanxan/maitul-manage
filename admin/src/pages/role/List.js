@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-14 16:33:22
+ * @LastEditTime : 2020-01-14 21:29:58
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -132,6 +132,7 @@ const RoleList = ()=>{
           title: '描述',
           dataIndex: 'info',
           key: 'info',
+          width:200,
         },
         {
           title: '最后修改人',

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2020-01-05 22:19:05
+@LastEditTime : 2020-01-14 21:20:16
 @LastEditors  : Xuannan
 '''
 from app.models.admin import Admin
@@ -29,7 +29,7 @@ def get_admin(ident):
         return None
     admin = Admin.query.filter_by(id = ident , is_del = '0').first()
     if not admin:
-        abort(RET.NotFound,msg='用户不存在')
+        abort(RET.NotFound,msg='用户不存在',status=RET.REENTRY)
     return admin
 
 def _verify():

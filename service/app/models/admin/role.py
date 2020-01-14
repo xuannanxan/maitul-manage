@@ -4,7 +4,7 @@
 @Autor: Allen
 @Date: 2019-11-13 17:29:28
 @LastEditors  : Xuannan
-@LastEditTime : 2020-01-13 13:35:30
+@LastEditTime : 2020-01-14 21:25:03
 '''
 
 __author__ = 'Allen xu'
@@ -15,7 +15,7 @@ from  app.models.base import db,BaseModel
 class Role(BaseModel):
     __tablename__ = "role"
     name = db.Column(db.String(100), unique=True,nullable=False)
-    info = db.Column(db.String(255), unique=True,nullable=False)
+    info = db.Column(db.String(255))
     def __repr__(self):
         return '<Role %r>' % self.name
 

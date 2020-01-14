@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime : 2020-01-14 17:11:57
+@LastEditTime : 2020-01-14 22:07:23
 @LastEditors  : Xuannan
 '''
 
@@ -189,10 +189,13 @@ class AdminResource(Resource):
         sql = '''
         SELECT SQL_CALC_FOUND_ROWS a.id,a.username,a.name,a.phone,a.email,
         GROUP_CONCAT(r.name SEPARATOR ',') as roles_name,
-		GROUP_CONCAT(ar.role_id SEPARATOR ',') as roles
+		GROUP_CONCAT(ar.role_id SEPARATOR ',') as roles,
+        l.create_time as last_login,
+        l.ip as ip
         FROM admin as a
         left join admin_role as ar on a.id = ar.admin_id
         left join role as r on r.id = ar.role_id
+        left join admin_log as l on l.username = a.username and l.create_time=(select max(create_time) from admin_log where username=a.username)
         WHERE a.is_del = 0
         GROUP BY a.id
         LIMIT {0},{1};
@@ -319,7 +322,7 @@ class AdminLogin(Resource):
         cache.delete('image_code_%s'%args_login.get('image_code')) 
         admin = Admin.query.filter_by(username = username,is_del='0').first()
         if not admin:
-            abort(RET.BadRequest,msg='用户名或密码错误',status=RET.REENTRY)
+            abort(RET.BadRequest,msg='用户名或密码错误')
         if not admin.check_pwd(password):
             abort(RET.Unauthorized,msg='用户名或密码错误')
         token = Auth.encode_auth_token(admin.id)
