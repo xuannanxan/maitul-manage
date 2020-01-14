@@ -2,12 +2,14 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-13 16:05:42
- * @LastEditTime : 2020-01-13 22:00:40
+ * @LastEditTime : 2020-01-14 17:19:55
  * @LastEditors  : Xuannan
  */
 import React, { useImperativeHandle,useState} from 'react';
 import { Checkbox ,message} from 'antd';
+import {_roleAuth,_getRole} from '../../utils/api'
 const CheckboxGroup = Checkbox.Group;
+
 
 const AuthForm =(props)=>{
 
@@ -21,26 +23,69 @@ const AuthForm =(props)=>{
     useImperativeHandle(props.cRef, () => ({
         // 暴露给父组件的方法
         submitFormData:()=>{
-            handleCancel()
-        
+            _roleAuth({id:params.id,rules:JSON.stringify(checkedList)}).then(res=>{
+                if(res.data.status === 200){
+                    message.success(res.data.msg)
+                    handleCancel()
+                }
+            })
         },
         init:()=>{
             if(params){
+                _getRole(params.id).then(res=>{
+                    if(res.data.data.rules){
+                        setCheckedList(res.data.data.rules.split(','))
+                    }else{
+                        setCheckedList([])
+                    }
+                })
                 setMenuTree(params.menu)
                 setRuleList(params.rule)
             }
         }
     }));
-    const onChange = (e)=>{
-        //checkedList,
-        setIndeterminate(!!checkedList.length && checkedList.length < e.length)
-        setCheckAll(checkedList.length === e.length)
+    const onChange = (e,groupRuleList,indeterminateId)=>{
+        let groupRuleIds = groupRuleList.map((item,index)=>{
+            return item.id
+        })
+        pushChecked(groupRuleIds,e)
+        //部分选中，将对应的indeterminate[menu.id]设置为true
+        let indeterminateTemp = indeterminate
+        indeterminateTemp[indeterminateId] = !!e.length && groupRuleIds.length > e.length
+        setIndeterminate(indeterminateTemp)
+        //全部选中，将对应的checkAll[menu.id]设置为true
+        let checkAllTemp = checkAll
+        checkAllTemp[indeterminateId] = groupRuleIds.length === e.length
+        setCheckAll(checkAllTemp)
     }
-    const onCheckAllChange = (e) => {
-        setCheckedList(e.target.checked ? e : [])
-        setCheckAll(e.target.checked)
-        setIndeterminate(false)
+    const onCheckAllChange = (e,menuId) => {
+        let groupRuleIds = ruleList[menuId].map((item,index)=>{
+            return item.id
+        })
+        e.target.checked ? pushChecked(groupRuleIds,groupRuleIds) : pushChecked(groupRuleIds,[])
+        let checkAllTemp = checkAll
+        checkAllTemp[menuId] = e.target.checked
+        setCheckAll(checkAllTemp)
+        let indeterminateTemp = indeterminate
+        indeterminateTemp[menuId] = false
+        setIndeterminate(indeterminateTemp)
       };
+    const pushChecked=(groupIds,checkIds)=>{
+        //新增Checked的数据,如果checkedList有数据才就移除属于groupIds的数据
+        if(checkedList.length){
+            //移除checkedList中属于当前group的
+            let tempArr = []
+            checkedList.forEach((item,index)=>{     
+                if(groupIds.indexOf(item)=== -1){
+                    tempArr.push(item)    //只返回不属于groupIds的数据
+                }
+            })
+            //添加新的选中项
+            setCheckedList(tempArr.concat(checkIds)) 
+        }else{//没有数据，就直接赋值
+            setCheckedList(checkIds)
+        }
+    }
     const initRuleData = (data)=>{
         return data.map((item,index)=>{
             return {label: item.name, value:item.id }
@@ -59,20 +104,20 @@ const AuthForm =(props)=>{
                 }else{
                     if (menu.children.length) {
                         return (
-                            <div key={menu.id} style={{marginLeft: '10px'}}>
+                            <div key={menu.id} style={{marginLeft: '20px'}}>
                                 <h4>{menu.name}</h4>
                                 {rulesCheckboxGroup(menu.children,ruleData)}
-                                <br />
                             </div>
                         )  
                     }else{
                         return (
-                            <div key={menu.id} style={{marginLeft: '10px'}}>
+                            <div key={menu.id} style={{margin: '0 0 20px 20px'}}>
                                 <div style={{ borderBottom: '1px solid #E9E9E9'}}>
                                     <Checkbox
-                                    indeterminate={indeterminate}
-                                    onChange={onCheckAllChange}
-                                    checked={checkAll}
+                                    indeterminate={indeterminate[menu.id]}
+                                    onChange={(e)=>{onCheckAllChange(e,menu.id)} }
+                                    checked={checkAll[menu.id]}
+                                    disabled = {!(ruleList[menu.id]&&ruleList[menu.id].length)}
                                     >
                                     {menu.name}
                                     </Checkbox>
@@ -84,11 +129,11 @@ const AuthForm =(props)=>{
                                         initRuleData(ruleList[menu.id])
                                     }
                                     value={checkedList}
-                                    onChange={onChange}
+                                    onChange={(e)=>{onChange(e,ruleList[menu.id],menu.id)}}
                                     />
                                     :'该菜单无需授权...'
                                  }
-                                 
+                                 <br />
                             </div>
                         )
                     }

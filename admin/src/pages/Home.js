@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-01-13 18:17:20
+ * @LastEditTime : 2020-01-14 16:43:09
  * @LastEditors  : Xuannan
  */
 
@@ -106,7 +106,7 @@ function Home(props){
               </SubMenu>
             )
           } else {
-            return (<Menu.Item key={menu.id} onClick={()=>{setActiveMenu([menu.id])}}><Link to={menu.url}><Icon type={menu.icon} />{menu.name}</Link></Menu.Item>)
+            return (<Menu.Item key={menu.id} onClick={()=>{setActiveMenu([menu.id])}}><Link to={menu.url}><Icon type={menu.icon} /><span>{menu.name}</span></Link></Menu.Item>)
           }
         })
       )

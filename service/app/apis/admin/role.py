@@ -9,6 +9,7 @@ from app.utils.api_doc import Apidoc
 from app.api_docs.admin import role_doc as doc
 from flask import g
 from app.config import PAGINATE_NUM
+import json
 
 api = Apidoc('角色管理')
 
@@ -54,24 +55,30 @@ class RoleAuthResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
-        rules = args.get('rules')
+        rules = json.loads(args.get('rules'))
         # 清空原来的rules
         old_data = RoleRule.query.filter_by(role_id = id ).all()
         if old_data :
             Crud.clean_all(old_data)
+        #没有设置任何权限点就清空后返回
+        if not rules:
+            return {
+                    'status':RET.OK,
+                    'msg':'权限设置成功'
+                }   
         # 新增新的权限
         relation_data = [RoleRule(
             role_id = sing_data.id,
             rule_id =v
-        ) for v in rules.split(',') ]
+        ) for v in rules ]
         if Crud.add_all(relation_data):
             sing_data.last_editor = g.admin.username
             Role().updata()
             return {
                     'status':RET.OK,
-                    'msg':'设置成功'
+                    'msg':'权限设置成功'
                 }    
-        abort(RET.BadRequest,msg='保存失败，请重试...') 
+        abort(RET.BadRequest,msg='权限设置失败，请重试...') 
 
 class RoleResource(Resource):
     @api.doc(api_doc=doc.add)
@@ -143,11 +150,9 @@ class RoleResource(Resource):
             FROM role as j
             left join role_rule as r on j.id = r.role_id
             WHERE j.is_del = 0 AND j.id = %s
-            GROUP BY j.id
             '''%id
             sql_data = Crud.auto_select(sql)
             first_data = sql_data.first()
-
             if not first_data:
                 abort(RET.NotFound,msg='角色不存在')
             return {

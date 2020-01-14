@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime : 2020-01-09 16:09:17
+@LastEditTime : 2020-01-14 17:11:57
 @LastEditors  : Xuannan
 '''
 
@@ -134,7 +134,7 @@ class AdminCurrent(Resource):
         abort(RET.BadRequest,msg='修改失败')
 
 # 设置管理员角色
-class AdminRoles(Resource):
+class AdminAuth(Resource):
     @api.doc(api_doc=admin_doc.roles)
     @login_required
     @permission_required
@@ -143,8 +143,10 @@ class AdminRoles(Resource):
         id = args_role.get('id')
         roles = args_role.get('roles')
         admin = get_admin(id)
-        admin.last_editor = g.admin.username
-        admin.updata()
+        # 清空原来的roles
+        old_data = AdminRole.query.filter_by(admin_id = admin.id ).all()
+        if old_data :
+            Crud.clean_all(old_data)
         # 如果有配置规则
         if roles:
             admin_roles = [AdminRole(
@@ -152,6 +154,8 @@ class AdminRoles(Resource):
                 role_id =v
             ) for v in roles.split(',') ]
             Crud.add_all(admin_roles)
+            admin.last_editor = g.admin.username
+            admin.updata()
             return {
                         'status':RET.OK,
                         'msg':'角色设置成功'

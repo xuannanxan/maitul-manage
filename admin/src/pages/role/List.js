@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-13 18:01:56
+ * @LastEditTime : 2020-01-14 16:33:22
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -77,7 +77,8 @@ const RoleList = ()=>{
             setFormData(record)
             setTitle('修改角色【'+record.name+'】')
         }else{
-          setTitle('新增角色')
+            setFormData({})
+            setTitle('新增角色')
         }
         setTimeout(()=>{
           formRef.current.init()
@@ -187,7 +188,7 @@ const RoleList = ()=>{
             confirmLoading={confirmAuthLoading}
             onCancel={handleAuthCancel}
             >
-            <AuthForm cRef={authRef} params={{menu:menuTree,rule:ruleList,id:formData.id}} handleCancel={handleCancel}/>
+            <AuthForm cRef={authRef} params={{menu:menuTree,rule:ruleList,id:formData.id}} handleCancel={handleAuthCancel}/>
             </Modal>
         </div>
     )

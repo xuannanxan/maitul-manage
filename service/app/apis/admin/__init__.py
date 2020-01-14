@@ -8,7 +8,7 @@
 @LastEditors  : Xuannan
 '''
 from flask_restful import Api
-from app.apis.admin.admin import AdminResource,AdminLogin,AdminCurrent,AdminRoles
+from app.apis.admin.admin import AdminResource,AdminLogin,AdminCurrent,AdminAuth
 from app.apis.admin.menu import MenuResource
 from app.apis.admin.ad_space import AdSpaceResource
 from app.apis.admin.ad import AdResource
@@ -23,7 +23,7 @@ admin_api = Api(api_blueprint)
 admin_api.add_resource(AdminResource,'/admin')
 admin_api.add_resource(AdminLogin,'/login')
 admin_api.add_resource(AdminCurrent,'/admin/current_user')
-admin_api.add_resource(AdminRoles,'/admin/roles')
+admin_api.add_resource(AdminAuth,'/admin/auth')
 
 # 菜单
 admin_api.add_resource(MenuResource,'/admin/menu')
