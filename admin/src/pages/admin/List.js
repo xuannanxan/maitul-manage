@@ -2,14 +2,14 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-14 22:17:31
+ * @LastEditTime : 2020-01-15 19:01:54
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
-import {_adminList,_roleList,_adminDelete} from '../../utils/api'
+import {_adminList,_roleList,_adminDelete,_adminReset} from '../../utils/api'
 import {Table ,Divider ,Icon  ,Button ,Modal,message,Spin} from 'antd';
-//import RoleForm from './Form'
-//import AuthForm from './Auth'
+import AdminForm from './Form'
+import AuthForm from './Auth'
 const { confirm } = Modal;
 
 
@@ -21,8 +21,10 @@ const AdminList = ()=>{
     const [title,setTitle] = useState('新增管理员')
     const [visible,setVisible] = useState(false)
     const [confirmLoading,setConfirmLoading] = useState(false)
-    const [formData,setFormData] = useState({})
+    const [modalType,setModalType] = useState('')//modal类型，1新增，2角色
+    const [modalHtml,setModalHtml] = useState('')
     const formRef = useRef();
+    const authRef = useRef();
 
 
     // 获取管理员列表
@@ -42,6 +44,24 @@ const AdminList = ()=>{
             setRoleList(res.data.data)
         })
     }
+    //重置管理员密码
+    const adminReset = (record)=>{
+        confirm({
+            title: '密码重置确认?',
+            content: '【'+record.username+'】的密码即将重置为123456a，请谨慎操作！！',
+            onOk() {
+            _adminReset(record.id).then(res=>{
+                if(res.data.status===200){
+                message.success(res.data.msg)
+                getAdminList()
+                }
+            })
+            },
+            onCancel() {
+            //console.log('Cancel');
+            },
+        }); 
+    }
     //删除管理员
     const deleteData = (id)=>{
         confirm({
@@ -60,20 +80,44 @@ const AdminList = ()=>{
             },
         }); 
     }
+    
 
-    const showModal=(record)=>{
-        
+    const authModal=(record)=>{
+        setTitle('为【'+record.username+'】设置角色')
+        setModalHtml(
+            <AuthForm cRef={authRef} params={{id:record.id,roleList:roleList}} handleCancel={handleCancel}/> 
+        )
+        setModalType('2')
         setVisible(true)
+        setTimeout(()=>{
+            authRef.current.init()
+        },300)
+        
       }
+    const addModal=()=>{
+        setTitle('新增管理员')
+        setModalHtml(
+            <AdminForm cRef={formRef} handleCancel={handleCancel} /> 
+        )
+        setModalType('1')
+        setVisible(true)
+    }
 
     const handleCancel = ()=>{
         setVisible(false)
     }
     const handleOk = ()=>{
         setConfirmLoading(true)
-        //formRef.current.submitFormData()
+        if(modalType==='1'){
+            formRef.current.submitFormData()
+        }
+        if(modalType==='2'){
+            authRef.current.submitFormData()
+        }
+        
         setTimeout(()=>{
-        setConfirmLoading(false)
+            setConfirmLoading(false)
+            getAdminList()
         },300)
     }
     
@@ -122,9 +166,9 @@ const AdminList = ()=>{
             key: 'action',
             render: (text, record) => (
               <span>
-                <Button type="link" size='small'  onClick={() => showModal(record)}><Icon type="team" />角色</Button>
+                <Button type="link" size='small'  onClick={() => authModal(record)}><Icon type="team" />角色</Button>
                 <Divider type="vertical" />
-                <Button type="link" size='small'  onClick={() => showModal(record)}><Icon type="reload" />重置密码</Button>
+                <Button type="link" size='small'  onClick={() => adminReset(record)}><Icon type="reload" />重置密码</Button>
                 <Divider type="vertical" />
                 <Button type="link" size='small'  onClick={() => deleteData(record.id)}><Icon type="delete" />删除</Button>
               </span>
@@ -133,8 +177,8 @@ const AdminList = ()=>{
     ];  
     return (
         <div className='main-content'>
-            <Button type="primary" onClick={showModal} size="large"><Icon type="plus"/> 添加</Button>
-            <br /><br />
+            <Button type="primary" onClick={addModal} size="large"><Icon type="plus"/> 添加</Button>
+            <Divider className='divider'/>
             <Spin tip="Loading..." spinning={isLoading}>
             {adminList && adminList.length? 
             <Table rowKey="id" 
@@ -152,7 +196,7 @@ const AdminList = ()=>{
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             >
-           
+                {modalHtml}
             </Modal>
             
         </div>

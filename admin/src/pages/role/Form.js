@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-13 14:33:08
- * @LastEditTime : 2020-01-13 15:57:51
+ * @LastEditTime : 2020-01-15 18:41:00
  * @LastEditors  : Xuannan
  */
 import React, { useImperativeHandle} from 'react';
@@ -11,7 +11,7 @@ import {_roleAdd,_roleEdit} from '../../utils/api'
 const { TextArea } = Input
 
 function SubmitForm(props){
-    let { form,params,handleCancel,refresh} = props
+    let { form,params,handleCancel} = props
     const { getFieldDecorator } = form; //表单内容
     
 
@@ -20,7 +20,6 @@ function SubmitForm(props){
             if(res.data.status === 200){
                 message.success(res.data.msg)
                 handleCancel()
-                refresh()
             }
         })
         
@@ -30,7 +29,6 @@ function SubmitForm(props){
             if(res.data.status === 201){
                 message.success(res.data.msg)
                 handleCancel()
-                refresh()
             }
         })
     }

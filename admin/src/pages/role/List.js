@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-14 21:29:58
+ * @LastEditTime : 2020-01-15 18:40:24
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -94,6 +94,7 @@ const RoleList = ()=>{
         formRef.current.submitFormData()
         setTimeout(()=>{
         setConfirmLoading(false)
+        getRoleList()
         },300)
     }
     // 授权的modal
@@ -161,7 +162,7 @@ const RoleList = ()=>{
     return (
         <div className='main-content'>
             <Button type="primary" onClick={showModal} size="large"><Icon type="plus"/> 添加</Button>
-            <br /><br />
+            <Divider className='divider'/>
             <Spin tip="Loading..." spinning={isLoading}>
             {roleList && roleList.length? 
             <Table rowKey="id" 
@@ -179,7 +180,7 @@ const RoleList = ()=>{
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             >
-            <RoleForm cRef={formRef} params={formData} handleCancel={handleCancel} refresh = {getRoleList}/>
+            <RoleForm cRef={formRef} params={formData} handleCancel={handleCancel}/>
             </Modal>
             <Modal
             width={800}

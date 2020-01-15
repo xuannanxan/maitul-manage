@@ -177,7 +177,7 @@ function MenuList(props){
     return(
         <div className='main-content'>
             <Button type="primary" onClick={showFormModal} size="large"><Icon type="plus"/> 添加</Button>
-            <br /><br />
+            <Divider className='divider'/>
             {menuTree && menuTree.length? 
             <Table rowKey="id" 
             dataSource={menuTree} 

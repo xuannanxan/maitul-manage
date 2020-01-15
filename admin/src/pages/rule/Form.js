@@ -4,7 +4,7 @@ import {_ruleAdd,_ruleEdit} from '../../utils/api'
 const { Option } = Select;
 
 function SubmitForm(props){
-    let { form,params,menuTree ,handleCancel,refresh} = props
+    let { form,params,menuOption ,handleCancel} = props
     const { getFieldDecorator } = form; //表单内容
     const [treeData,setTreeData] = useState([])
 
@@ -13,7 +13,6 @@ function SubmitForm(props){
             if(res.data.status === 200){
                 message.success(res.data.msg)
                 handleCancel()
-                refresh()
             }
         })
         
@@ -23,7 +22,6 @@ function SubmitForm(props){
             if(res.data.status === 201){
                 message.success(res.data.msg)
                 handleCancel()
-                refresh()
             }
         })
     }
@@ -41,7 +39,6 @@ function SubmitForm(props){
                 });
         },
         init:()=>{
-            setTreeData(initTreeData(menuTree))
             if(params){
                 form.setFieldsValue({
                     id:params.id,
@@ -51,19 +48,10 @@ function SubmitForm(props){
                     url:params.url,
                 })
             }
+            setTreeData(menuOption)
         }
     }));
-    
-    const initTreeData = (data)=>{
-        return data.map((v,k)=>{
-            let children = []
-            if (v.children.length>0){
-                children=initTreeData(v.children)
-                }
-            return { key: v.id, value: v.id, title: v.name,children:children}
-        })
-    }
-    
+
     return(
         <div>
             <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-14 17:11:07
+ * @LastEditTime : 2020-01-15 14:34:52
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -143,9 +143,9 @@ export const _adminAdd = async (formData)=>{
   return await Http.request(adminUrl, Method.POST,formData)
 };
 
-//修改管理员 /api/admin
-export const _adminEdit = async (formData)=>{
-  return await Http.request(adminUrl, Method.PUT,formData)
+//重置管理员密码 /api/admin
+export const _adminReset = async (id)=>{
+  return await Http.request(adminUrl, Method.PUT,{id})
 };
 //删除管理员 /api/admin
 export const _adminDelete = async (id)=>{

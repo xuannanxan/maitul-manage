@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-01-14 21:58:37
+ * @LastEditTime : 2020-01-15 19:12:32
  * @LastEditors  : Xuannan
  */
 
@@ -29,6 +29,7 @@ const RouteList = [
   {path:"/rule/",component:RuleList},
   {path:"/role/",component:RoleList},
   {path:"/admin/",component:AdminList},
+  {path:"/blog/add",component:AddContent},
 ]
 
 
@@ -40,6 +41,7 @@ function Home(props){
     const [openMenu,setOpenMenu] = useState([])
     const [activeTopMenu,setActiveTopMenu] = useState([])
     const location = props.location
+    
     const getMenuTree = ()=>{
       _menuTree().then(res=>{
         setHeaderMenu(res.data.data)

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime : 2020-01-14 22:07:23
+@LastEditTime : 2020-01-15 19:07:54
 @LastEditors  : Xuannan
 '''
 
@@ -14,7 +14,7 @@ from app.models.admin import Admin,AdminLog,AdminRole
 from app.models.base import Crud
 from app.apis.api_constant import *
 from .common import get_admin,login_required,logout,permission_required
-import uuid,datetime
+import uuid,datetime,json
 from app.ext import cache
 from flask import g,request
 from app.utils import object_to_json,mysql_to_json
@@ -141,7 +141,7 @@ class AdminAuth(Resource):
     def post(self):
         args_role = parse_role.parse_args()
         id = args_role.get('id')
-        roles = args_role.get('roles')
+        roles = json.loads(args_role.get('roles'))
         admin = get_admin(id)
         # 清空原来的roles
         old_data = AdminRole.query.filter_by(admin_id = admin.id ).all()
@@ -152,15 +152,15 @@ class AdminAuth(Resource):
             admin_roles = [AdminRole(
                 admin_id = admin.id,
                 role_id =v
-            ) for v in roles.split(',') ]
+            ) for v in roles ]
             Crud.add_all(admin_roles)
             admin.last_editor = g.admin.username
             admin.updata()
-            return {
-                        'status':RET.OK,
-                        'msg':'角色设置成功'
-                    }
-        abort(RET.BadRequest,msg='没有设置任何角色')
+        return {
+                    'status':RET.OK,
+                    'msg':'角色设置成功'
+                }
+        
        
 class AdminResource(Resource):
     @api.doc(api_doc=admin_doc.admin_list)
@@ -266,6 +266,8 @@ class AdminResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作')
         admin = get_admin(id)
+        if admin.is_super == 1:
+            abort(RET.BadRequest,msg='重置失败，超级管理员的密码不能重置!!!')
         admin.password = '123456a'
         if admin.updata():
             # 清除用户登录状态
@@ -291,7 +293,7 @@ class AdminResource(Resource):
         if not admin:
             abort(RET.BadRequest,msg='用户不存在!!!')
         if admin.is_super == 1:
-            abort(RET.BadRequest,msg='删除失败!!!')
+            abort(RET.BadRequest,msg='删除失败，无法删除超级管理员!!!')
         admin.is_del = admin.id
         admin.last_editor = g.admin.username
         result = Admin().updata()

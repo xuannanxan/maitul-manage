@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-13 14:49:52
+ * @LastEditTime : 2020-01-15 18:48:01
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -14,6 +14,7 @@ const { confirm } = Modal;
 const RuleList = ()=>{
     const [isLoading,setIsLoading] = useState(false)
     const [menuTree,setMenuTree] = useState([])
+    const [menuOption,setMenuOption] = useState([])
     const [ruleList,setRuleList] = useState([])
     const [menuId,setMenuId] = useState([])
     const [visible,setVisible] = useState(false)
@@ -21,12 +22,12 @@ const RuleList = ()=>{
     const [title,setTitle] = useState('新增权限规则')
     const [formData,setFormData] = useState({})
     const formRef = useRef();
-    // 获取菜单树
+
     const getMenuTree = ()=>{
-        _menuTree().then(res=>{
-            setMenuTree(res.data.data)
-        })
-      }
+      _menuTree().then(res=>{
+          setMenuTree(res.data.data)
+      })
+    }
     //获取权限规则列表
     const getRuleList = ()=>{
       _ruleList().then(res=>{
@@ -55,8 +56,11 @@ const RuleList = ()=>{
       
     }
     const showModal=(record)=>{
+      if(!menuOption.length){
+        setMenuOption(initTreeData(menuTree))
+      }
       if(record.id){
-          setFormData(record)
+          setFormData(record)         
           setTitle('修改权限规则【'+record.name+'】')
       }else{
         setFormData({menu_id:menuId})
@@ -92,9 +96,18 @@ const RuleList = ()=>{
         formRef.current.submitFormData()
         setTimeout(()=>{
           setConfirmLoading(false)
+          getRuleList()
         },300)
     }
-  
+    const initTreeData = (data)=>{
+      return data.map((v,k)=>{
+          let children = []
+          if (v.children.length>0){
+              children=initTreeData(v.children)
+              }
+          return { key: v.id, value: v.id, title: v.name,children:children}
+      })
+    }
     useEffect(()=>{
         getMenuTree()
         getRuleList()
@@ -130,12 +143,14 @@ const RuleList = ()=>{
     return (
         <div className='main-content'>
             <Row>
-                <Col span={4}>
+                <Col span={4} style={{paddingRight:'10px',borderRight:'1px solid #e8e8e8'}}>
+                <div><h3>后台菜单</h3></div>
+                <Divider className='divider'/>
                 {menuTree && menuTree.length?
                 <Tree
                 showIcon
                 blockNode
-                autoExpandParent={true}
+                defaultExpandAll={true}
                 onSelect={showRuleItem}
                 >
                     {loop(menuTree)}
@@ -143,9 +158,9 @@ const RuleList = ()=>{
                 : '暂无数据' }     
                 </Col>
                 
-                <Col span={20}>
+                <Col span={20} style={{paddingLeft:'10px'}}>
                   <Button type="primary" onClick={showModal} size="large"><Icon type="plus"/> 添加</Button>
-                  <br /><br />
+                  <Divider className='divider'/>
                   <Spin tip="Loading..." spinning={isLoading}>
                   {ruleList[menuId] && ruleList[menuId].length? 
                     <Table rowKey="id" 
@@ -165,7 +180,7 @@ const RuleList = ()=>{
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             >
-            <RuleForm cRef={formRef} params={formData} menuTree={menuTree} handleCancel={handleCancel} refresh = {getRuleList}/>
+            <RuleForm cRef={formRef} params={formData} menuOption={menuOption} handleCancel={handleCancel}/>
             </Modal>
         </div>
     )
