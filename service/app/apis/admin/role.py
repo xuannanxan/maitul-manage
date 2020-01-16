@@ -4,7 +4,7 @@ from app.apis.api_constant import *
 from app.models.admin import Role,RoleRule
 from app.models.base import Crud
 from app.utils import object_to_json,mysql_to_json
-from app.apis.admin.common import login_required
+from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.admin import role_doc as doc
 from flask import g
@@ -46,6 +46,7 @@ def getSingData(id):
 class RoleAuthResource(Resource):
     @api.doc(api_doc=doc.auth)
     @login_required
+    @permission_required
     def post(self):
         '''
         角色授权
@@ -83,6 +84,7 @@ class RoleAuthResource(Resource):
 class RoleResource(Resource):
     @api.doc(api_doc=doc.add)
     @login_required
+    @permission_required
     def post(self):
         '''
         添加
@@ -107,7 +109,8 @@ class RoleResource(Resource):
         abort(RET.BadRequest,msg='添加失败，请重试')
 
     @api.doc(api_doc=doc.put)
-    @login_required  
+    @login_required 
+    @permission_required 
     def put(self):
         '''
         修改
@@ -138,6 +141,7 @@ class RoleResource(Resource):
 
     @api.doc(api_doc=doc.lst)
     @login_required
+    @permission_required
     def get(self):
         '''
         获取数据，如果有ID就是单个数据，没有就是全部数据
@@ -171,6 +175,7 @@ class RoleResource(Resource):
  
     @api.doc(api_doc=doc.delete)
     @login_required
+    @permission_required
     def delete(self):
         '''
         删除

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime : 2020-01-05 22:24:57
+@LastEditTime : 2020-01-16 14:00:08
 @LastEditors  : Xuannan
 '''
 
@@ -12,7 +12,7 @@ from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
 from app.models.admin import Menu
 from app.utils import object_to_json
-from app.utils.tree import build_tree
+from app.utils.tree import build_tree,getParent
 from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.admin import menu_doc as doc
@@ -138,12 +138,15 @@ class MenuResource(Resource):
         _list = Menu.query.filter_by(is_del = '0').order_by(Menu.sort.desc()).all()
         if not _list:
             abort(RET.BadRequest,msg='暂无数据')
+        if g.admin.is_super==0:
+            authMenus = getParent(_list,[v for v in _list if v.id in g.menus])
+            _list = authMenus
         data = {
                     'status':RET.OK,
                     'data':build_tree(_list,'0',0)
             }
-        return data    
-
+        return data  
+ 
         
     @api.doc(api_doc=doc.delete)
     @login_required
@@ -166,4 +169,6 @@ class MenuResource(Resource):
                 'msg':'删除成功'
             }
         abort(RET.BadRequest,msg='删除失败，请重试')
-        
+
+
+

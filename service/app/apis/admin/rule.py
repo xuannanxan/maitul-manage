@@ -2,8 +2,8 @@
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
 from app.models.admin import Rule
-from app.utils import object_to_json
-from app.apis.admin.common import login_required
+from app.utils import object_to_json,mysql_to_json
+from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.admin import rule_doc as doc
 from flask import g
@@ -44,6 +44,7 @@ def getSingData(id):
 class RuleResource(Resource):
     @api.doc(api_doc=doc.add)
     @login_required
+    @permission_required
     def post(self):
         '''
         添加
@@ -74,6 +75,7 @@ class RuleResource(Resource):
 
     @api.doc(api_doc=doc.put)
     @login_required  
+    @permission_required
     def put(self):
         '''
         修改
@@ -108,6 +110,7 @@ class RuleResource(Resource):
 
     @api.doc(api_doc=doc.lst)
     @login_required
+    @permission_required
     def get(self):
         '''
         获取数据，如果有ID就是单个数据，没有就是全部数据
@@ -119,10 +122,24 @@ class RuleResource(Resource):
                         'status':RET.OK,
                         'data':object_to_json(getSingData(id))
                 } 
+        list_by_menu = {}
+        if g.admin.is_super==0:
+            # 如果不是超级管理员，只能在自己的权限范围内进行授权
+            if not g.auth:
+                abort(RET.BadRequest,msg='请勿非法操作')
+            for v in g.auth:   
+                if v.menu_id in list_by_menu.keys():
+                    list_by_menu[v.menu_id].append(mysql_to_json(dict(v)))
+                else:
+                    list_by_menu[v.menu_id] = [mysql_to_json(dict(v))]
+            return {
+                    'status':RET.OK,
+                    'data':list_by_menu
+            }
+            
         _list = Rule.query.filter_by(is_del = '0').all()
         if not _list:
             abort(RET.BadRequest,msg='暂无数据')
-        list_by_menu = {}
         for v in _list:
             if v.menu_id in list_by_menu.keys():
                 list_by_menu[v.menu_id].append(object_to_json(v))
@@ -137,6 +154,7 @@ class RuleResource(Resource):
  
     @api.doc(api_doc=doc.delete)
     @login_required
+    @permission_required
     def delete(self):
         '''
         删除

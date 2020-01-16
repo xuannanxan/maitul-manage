@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 10:30:34
-@LastEditTime: 2019-12-11 13:38:24
-@LastEditors: Xuannan
+@LastEditTime : 2020-01-16 13:40:31
+@LastEditors  : Xuannan
 '''
 
 from app.utils import object_to_json
@@ -30,3 +30,15 @@ def build_tree(data, pid, level=0):
                     row['children'] += child
                 tree.append(row)
     return tree
+
+
+def getParent(data,node,tempNodes = []):
+    '''
+    获取菜单和上级菜单
+    ''' 
+    # 父级菜单
+    parentIds = list(set([v.pid for v in node if v.pid != '0'])) 
+    parentNodes = [v for v in data if v.id in parentIds]
+    if parentNodes:
+        return getParent(data,parentNodes,tempNodes+node)
+    return tempNodes

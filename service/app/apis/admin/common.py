@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2020-01-14 21:20:16
+@LastEditTime : 2020-01-16 14:08:40
 @LastEditors  : Xuannan
 '''
 from app.models.admin import Admin
@@ -99,7 +99,7 @@ def _permission():
         method = request.method
         path = request.path
         sql = '''
-        SELECT  CONCAT(r.url,':',r.method) as url
+        SELECT  CONCAT(r.url,':',r.method) as 'request', r.*
         FROM admin as a
         left join admin_role as ar on a.id = ar.admin_id
         left join role_rule as rr on rr.role_id = ar.role_id
@@ -109,8 +109,11 @@ def _permission():
         '''%admin.id
         sql_data = Crud.auto_select(sql)
         fetchall_data = sql_data.fetchall()
-        rules = list(set([v.url for v in fetchall_data]))
-        if (path[5:]+':'+method) not in rules:
+        rules = list(set([v.request for v in fetchall_data]))
+        # 当前用户的菜单和权限
+        g.menus = list(set([v.menu_id for v in fetchall_data]))
+        g.auth = fetchall_data
+        if (path+':'+method) not in rules:
             abort(RET.Forbidden,msg='您的权限不足，请联系管理员')
 
 def logout():
