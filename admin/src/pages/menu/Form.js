@@ -3,7 +3,7 @@ import { Input ,Form ,InputNumber,TreeSelect,message} from 'antd';
 import {_menuAdd,_menuEdit} from '../../utils/api'
 
 function SubmitForm(props){
-    let { form,params,menuTree ,handleCancel,refreshMenu} = props
+    let { form,params,menuTree ,handleCancel} = props
     const { getFieldDecorator } = form; //表单内容
     const [treeData,setTreeData] = useState([])
 
@@ -12,7 +12,6 @@ function SubmitForm(props){
             if(res.data.status === 200){
                 message.success(res.data.msg)
                 handleCancel()
-                refreshMenu()
             }
         })
         
@@ -22,7 +21,6 @@ function SubmitForm(props){
             if(res.data.status === 201){
                 message.success(res.data.msg)
                 handleCancel()
-                refreshMenu()
             }
         })
     }

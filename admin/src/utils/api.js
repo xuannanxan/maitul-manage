@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-15 14:34:52
+ * @LastEditTime : 2020-01-17 11:55:10
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -13,6 +13,8 @@ const menuUrl = '/api/admin/menu'
 const ruleUrl = '/api/admin/rule'
 const roleUrl = '/api/admin/role'
 const adminUrl = '/api/admin'
+const adspaceUrl = '/api/resource/adspace'
+const adUrl = '/api/resource/ad'
 //登录
 export const _login = async (username,password,captcha,image_code)=>{
   return await Http.request('/api/login', Method.POST, {
@@ -154,4 +156,43 @@ export const _adminDelete = async (id)=>{
 //管理员授权 /api/admin/auth
 export const _adminAuth = async (formData)=>{
   return await Http.request(adminUrl+'/auth', Method.POST,formData)
+};
+
+// 广告位/api/resource/adspace--------------------------
+// 广告位列表 
+export const _adSpaceList = async ()=>{
+  return await Http.request(adspaceUrl, Method.GET)
+};
+
+//新增广告位
+export const _adSpaceAdd = async (formData)=>{
+  return await Http.request(adspaceUrl, Method.POST,formData)
+};
+
+//修改广告位 
+export const _adSpaceEdit = async (formData)=>{
+  return await Http.request(adspaceUrl, Method.PUT,formData)
+};
+//删除广告位 
+export const _adSpaceDelete = async (id)=>{
+  return await Http.request(adspaceUrl, Method.DELETE,{id})
+};
+// 广告/api/resource/ad--------------------------
+// 广告列表 
+export const _adList = async ()=>{
+  return await Http.request(adUrl, Method.GET)
+};
+
+//新增广告
+export const _adAdd = async (formData)=>{
+  return await Http.request(adUrl, Method.POST,formData)
+};
+
+//修改广告 
+export const _adEdit = async (formData)=>{
+  return await Http.request(adUrl, Method.PUT,formData)
+};
+//删除广告 
+export const _adDelete = async (id)=>{
+  return await Http.request(adUrl, Method.DELETE,{id})
 };

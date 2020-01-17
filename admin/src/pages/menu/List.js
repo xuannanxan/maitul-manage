@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-13 14:25:25
+ * @LastEditTime : 2020-01-17 11:35:25
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -168,6 +168,7 @@ function MenuList(props){
         formRef.current.submitFormData()
         setTimeout(()=>{
           setConfirmLoading(false)
+          getMenuTree()
         },500)
     }
 
@@ -194,7 +195,7 @@ function MenuList(props){
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             >
-            <MenuForm cRef={formRef} params={editData} menuTree={menuTree} handleCancel={handleCancel} refreshMenu = {getMenuTree}/>
+            <MenuForm cRef={formRef} params={editData} menuTree={menuTree} handleCancel={handleCancel} />
             </Modal>
         </div>
         

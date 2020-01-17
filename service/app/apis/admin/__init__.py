@@ -4,17 +4,14 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-13 10:35:39
-@LastEditTime : 2020-01-13 13:32:30
+@LastEditTime : 2020-01-17 10:36:55
 @LastEditors  : Xuannan
 '''
 from flask_restful import Api
 from app.apis.admin.admin import AdminResource,AdminLogin,AdminCurrent,AdminAuth
 from app.apis.admin.menu import MenuResource
-from app.apis.admin.ad_space import AdSpaceResource
-from app.apis.admin.ad import AdResource
 from app.apis.admin.rule import RuleResource
 from app.apis.admin.role import RoleResource,RoleAuthResource
-from app.apis.admin.uploads import UploadResource
 from app.apis import api_blueprint
 
 
@@ -34,10 +31,3 @@ admin_api.add_resource(RuleResource,'/admin/rule')
 # 角色
 admin_api.add_resource(RoleResource,'/admin/role')
 admin_api.add_resource(RoleAuthResource,'/admin/role/auth')
-# 广告位
-admin_api.add_resource(AdSpaceResource,'/admin/adspace')
-
-# 广告
-admin_api.add_resource(AdResource,'/admin/ad')
-# 上传
-admin_api.add_resource(UploadResource,'/upload')

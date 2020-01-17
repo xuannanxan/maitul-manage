@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# coding=utf-8
+'''
+@Description: 
+@Author: Xuannan
+@Date: 2020-01-17 10:05:42
+@LastEditTime: 2020-01-17 10:44:25
+@LastEditors: Xuannan
+'''
 
 from flask_restful import Resource,reqparse,abort
 from werkzeug.datastructures import FileStorage
@@ -5,7 +14,7 @@ from app.utils.file import FileUpload
 from app.apis.api_constant import *
 from app.apis.admin.common import login_required
 from app.utils.api_doc import Apidoc
-from app.api_docs.admin import upload_doc as doc
+from app.api_docs.resource import upload_doc as doc
 
 
 api = Apidoc('上传')

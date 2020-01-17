@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime: 2019-12-08 20:20:02
-@LastEditors: Xuannan
+@LastEditTime : 2020-01-17 10:50:27
+@LastEditors  : Xuannan
 '''
 # -*- coding: utf-8 -*- 
 # Created by xuannan on 2019-01-01.
@@ -23,6 +23,7 @@ from app.apis.client import client_api
 from app.apis.admin import admin_api
 from app.apis.company import company_api
 from app.apis.common import common_api
+from app.apis.resource import resource_api
 from app.apis.blog import blog_api
 
 DEFAULT_BLUEPRINT = (
@@ -38,6 +39,7 @@ def init_api(app):
     company_api.init_app(app)
     admin_api.init_app(app)
     blog_api.init_app(app)
+    resource_api.init_app(app)
 
 def app_log(app):
     log_dir_name = "logs"
