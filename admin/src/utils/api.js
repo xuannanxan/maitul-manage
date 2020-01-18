@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-17 11:55:10
+ * @LastEditTime : 2020-01-17 23:19:53
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -179,8 +179,8 @@ export const _adSpaceDelete = async (id)=>{
 };
 // 广告/api/resource/ad--------------------------
 // 广告列表 
-export const _adList = async ()=>{
-  return await Http.request(adUrl, Method.GET)
+export const _adList = async (formData)=>{
+  return await Http.request(adUrl, Method.GET,formData)
 };
 
 //新增广告

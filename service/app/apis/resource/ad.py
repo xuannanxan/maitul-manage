@@ -121,7 +121,7 @@ class AdResource(Resource):
         '''
         args_id = parse_id.parse_args()
         id = args_id.get('id')
-        space_id = args_id.get('sapce_id')
+        space_id = args_id.get('space_id')
         if id:
             return {
                         'status':RET.OK,
@@ -136,6 +136,7 @@ class AdResource(Resource):
                     'data':[object_to_json(v) for v in _list]
             }
             return data     
+        abort(RET.BadRequest,msg='暂无数据')
         
 
     
@@ -143,7 +144,7 @@ class AdResource(Resource):
     @api.doc(api_doc=doc.delete)
     @login_required
     @permission_required
-    def delete(self,id):
+    def delete(self):
         '''
         删除
         '''

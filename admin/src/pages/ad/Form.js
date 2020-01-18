@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-17 10:30:37
- * @LastEditTime : 2020-01-17 14:35:53
+ * @LastEditTime : 2020-01-17 23:22:34
  * @LastEditors  : Xuannan
  */
 import React, { useState ,useImperativeHandle} from 'react';
@@ -11,10 +11,11 @@ import {_adAdd,_adEdit,_fileUpload} from '../../utils/api'
 const {TextArea} = Input 
 const {Option} = Select 
 function SubmitForm(props){
-    let { form,params ,handleCancel} = props
+    let { form,params,adSpaceList ,handleCancel} = props
     const { getFieldDecorator } = form; //表单内容
- 
-
+    const [imageUrl ,setImageUrl ] = useState('')
+    const [loading ,setLoading ] = useState(false)
+    const [spaceList ,setSpaceList ] = useState([])
     const edit= (formData) => {
         _adEdit(formData).then(res=>{
             if(res.data.status === 200){
@@ -33,14 +34,51 @@ function SubmitForm(props){
             }
         })
     }
-
+    const uploadButton = (
+        <div>
+          <Icon type={loading ? 'loading' : 'plus'} />
+          <div className="ant-upload-text">Upload</div>
+        </div>
+      );
     const uploadImg = (e)=>{
         let formData=new FormData();
         formData.append('file',e.file)
         _fileUpload(formData).then(res=>{
-            console.log(res.data)
+            if (res.data.status===200){
+                setImageUrl(res.data.path)
+                form.setFieldsValue({
+                    img:res.data.path,
+                })
+            }
         })
     }
+    const checkImg = (rule, value, callback) => {
+        if (value.length) {
+          callback();
+          return;
+        }
+        callback('请添加广告图片...');
+      }
+    const  handleChange = (info) => {
+        if (info.file.status === 'uploading') {
+            setLoading(true)
+            return;
+        }
+        if (info.file.status === 'done') {
+            setLoading(false)
+        }
+      };
+    const beforeUpload=(file)=>{
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+          message.error('只能上传JPG/PNG文件!');
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+          message.error('图片不能超过2MB!');
+        }
+        return isJpgOrPng && isLt2M;
+      }  
     useImperativeHandle(props.cRef, () => ({
         // 暴露给父组件的方法
         submitFormData:()=>{
@@ -62,8 +100,15 @@ function SubmitForm(props){
                     name:params.name,
                     info:params.info,
                     url:params.url,
+                    img:params.img,
                     sort:params.sort
                 })
+                setImageUrl(params.img)
+            }
+            if(adSpaceList){
+                setSpaceList(adSpaceList.map((item,index)=>{
+                    return(<Option key={item.id}>{item.name}</Option>)
+                }))
             }
         }
     }));
@@ -79,8 +124,7 @@ function SubmitForm(props){
                     rules: [{ required: true, message: '请选择所属广告位...' }],
                 })(
                     <Select placeholder="请选择所属广告位...">
-                    <Option value="china">China</Option>
-                    <Option value="usa">U.S.A</Option>
+                        {spaceList}
                     </Select>,
                 )}
                 </Form.Item>
@@ -103,14 +147,21 @@ function SubmitForm(props){
                         />,
                     )}
                 </Form.Item>
-                <Form.Item label="广告图片" extra="请上传图片...">
+                <Form.Item label="广告图片">
                     {getFieldDecorator('img', {
-                        valuePropName: 'fileList',
+                        initialValue: imageUrl,
+                        rules: [{ required: true,validator: checkImg }],
                     })(
-                        <Upload name="file" listType="picture" customRequest={uploadImg}>
-                        <Button>
-                            <Icon type="upload" /> Click to upload
-                        </Button>
+                        <Upload
+                            name="file"
+                            listType="picture-card"
+                            className="avatar-uploader"
+                            showUploadList={false}
+                            customRequest={uploadImg} 
+                            beforeUpload={beforeUpload}
+                            onChange={handleChange}
+                        >
+                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                         </Upload>,
                     )}
                 </Form.Item>
