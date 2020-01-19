@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-15 14:44:39
- * @LastEditTime : 2020-01-15 19:03:34
+ * @LastEditTime : 2020-01-19 13:43:42
  * @LastEditors  : Xuannan
  */
 import React, {useImperativeHandle,useState} from 'react';
@@ -28,9 +28,11 @@ const AuthForm = (props)=>{
         },
         init:()=>{
             if(params){
+                setSelectedValue(params.roles?params.roles.split(','):[])
                 setRoleOption(params.roleList.map((item,index)=>{
                     return(<Option key={item.id}>{item.name}</Option>)
                 }))
+                
             }
         }
 
@@ -41,6 +43,7 @@ const AuthForm = (props)=>{
             mode="multiple"
             style={{ width: '100%' }}
             placeholder="请选择角色"
+            value={selectedValue}
             onChange={handleChange}
         >
             {roleOption}

@@ -2,11 +2,11 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-17 10:30:37
- * @LastEditTime : 2020-01-17 23:22:34
+ * @LastEditTime : 2020-01-19 14:03:16
  * @LastEditors  : Xuannan
  */
 import React, { useState ,useImperativeHandle} from 'react';
-import { Input ,Select, Form ,Button,Icon,Upload,InputNumber,message} from 'antd';
+import { Input ,Select, Form ,Icon,Upload,InputNumber,message} from 'antd';
 import {_adAdd,_adEdit,_fileUpload} from '../../utils/api'
 const {TextArea} = Input 
 const {Option} = Select 
@@ -23,7 +23,6 @@ function SubmitForm(props){
                 handleCancel()
             }
         })
-        
     }
     const add=(formData)=>{
         _adAdd(formData).then(res=>{
@@ -37,10 +36,11 @@ function SubmitForm(props){
     const uploadButton = (
         <div>
           <Icon type={loading ? 'loading' : 'plus'} />
-          <div className="ant-upload-text">Upload</div>
+          <div className="ant-upload-text">点击上传</div>
         </div>
       );
     const uploadImg = (e)=>{
+        setLoading(true)
         let formData=new FormData();
         formData.append('file',e.file)
         _fileUpload(formData).then(res=>{
@@ -51,6 +51,7 @@ function SubmitForm(props){
                 })
             }
         })
+        setLoading(false)
     }
     const checkImg = (rule, value, callback) => {
         if (value.length) {
@@ -59,15 +60,7 @@ function SubmitForm(props){
         }
         callback('请添加广告图片...');
       }
-    const  handleChange = (info) => {
-        if (info.file.status === 'uploading') {
-            setLoading(true)
-            return;
-        }
-        if (info.file.status === 'done') {
-            setLoading(false)
-        }
-      };
+    
     const beforeUpload=(file)=>{
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
@@ -123,7 +116,7 @@ function SubmitForm(props){
                 {getFieldDecorator('space_id', {
                     rules: [{ required: true, message: '请选择所属广告位...' }],
                 })(
-                    <Select placeholder="请选择所属广告位...">
+                    <Select placeholder="请选择所属广告位..." size='large'>
                         {spaceList}
                     </Select>,
                 )}
@@ -150,6 +143,7 @@ function SubmitForm(props){
                 <Form.Item label="广告图片">
                     {getFieldDecorator('img', {
                         initialValue: imageUrl,
+                        valuePropName:'file',
                         rules: [{ required: true,validator: checkImg }],
                     })(
                         <Upload
@@ -159,7 +153,7 @@ function SubmitForm(props){
                             showUploadList={false}
                             customRequest={uploadImg} 
                             beforeUpload={beforeUpload}
-                            onChange={handleChange}
+                            
                         >
                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                         </Upload>,

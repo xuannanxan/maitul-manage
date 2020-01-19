@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-17 11:30:07
+ * @LastEditTime : 2020-01-19 13:15:42
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -85,7 +85,7 @@ const AdminList = ()=>{
     const authModal=(record)=>{
         setTitle('为【'+record.username+'】设置角色')
         setModalHtml(
-            <AuthForm cRef={authRef} params={{id:record.id,roleList:roleList}} handleCancel={handleCancel}/> 
+            <AuthForm cRef={authRef} params={{id:record.id,roleList:roleList,roles:record.roles}} handleCancel={handleCancel}/> 
         )
         setModalType('2')
         setVisible(true)

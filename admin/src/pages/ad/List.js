@@ -2,13 +2,15 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-17 23:33:39
+ * @LastEditTime : 2020-01-19 14:11:27
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
 import {Table ,Divider ,Icon ,Spin,Avatar ,Menu,Row,Col ,Button ,Modal,message} from 'antd';
 import {_adList ,_adSpaceList,_adDelete } from '../../utils/api'
 import AdForm from './Form'
+import AdSpaceForm from '../adSpace/Form'
+import '../../static/css/ad/list.css'
 
 const { confirm } = Modal;
 
@@ -17,11 +19,13 @@ const AdList = ()=>{
     const [spaceId,setSpaceId] = useState('')
     const [adList,setAdList] = useState([])
     const [visible,setVisible] = useState(false)
+    const [spaceVisible,setSpaceVisible] = useState(false)
     const [isLoading,setIsLoading] = useState(false)
     const [confirmLoading,setConfirmLoading] = useState(false)
     const [title,setTitle] = useState('新增菜单')
     const [editData,setEditData] = useState({})
     const formRef = useRef();
+    const spaceFormRef = useRef();
     // 获取广告位
     const getAdSpaceList = ()=>{
       _adSpaceList().then(res=>{
@@ -34,6 +38,9 @@ const AdList = ()=>{
       setSpaceId(e.key)
       _adList({space_id:e.key}).then(res=>{
         setAdList(res.data.data)
+        })
+        .catch(err=>{
+          setAdList([])
         })
       }
       setTimeout(()=>{
@@ -118,20 +125,35 @@ const AdList = ()=>{
         setVisible(true)
         
     }
+    const showSpaceFormModal = ()=>{
+      setSpaceVisible(true)
+  }
     const handleCancel = ()=>{
         setVisible(false)
+    }
+    const handleSpaceModalCancel = ()=>{
+      setSpaceVisible(false)
     }
     const handleOk = ()=>{
         setConfirmLoading(true)
         formRef.current.submitFormData()
-        _adList({space_id:spaceId}).then(res=>{
-          setAdList(res.data.data)
-          })
+        if(spaceId){
+          _adList({space_id:spaceId}).then(res=>{
+            setAdList(res.data.data)
+            })
+        }
         setTimeout(()=>{
           setConfirmLoading(false)
         },500)
     }
-
+    const handleSpaceOk = ()=>{
+      setConfirmLoading(true)
+      spaceFormRef.current.submitFormData()
+      getAdSpaceList()
+      setTimeout(()=>{
+        setConfirmLoading(false)
+      },500)
+  }
     useEffect(()=>{
         getAdSpaceList()
       },[])
@@ -139,7 +161,12 @@ const AdList = ()=>{
         <div className='main-content'>
           <Row>
                 <Col span={4} style={{paddingRight:'10px',borderRight:'1px solid #e8e8e8'}}>
-                <div><h3>广告位</h3></div>
+                  <Col span={20}>
+                    <div><h3>广告位</h3></div>
+                  </Col>
+                  <Col span={4}>
+                    <Button icon="plus" type="link" onClick={showSpaceFormModal}></Button>
+                  </Col>
                 <Divider className='divider'/>
                 {adSpaceList && adSpaceList.length?
                 <Menu 
@@ -149,7 +176,6 @@ const AdList = ()=>{
                 </Menu>
                 : '暂无数据' }     
                 </Col>
-                
                 <Col span={20} style={{paddingLeft:'10px'}}>
                   <Button type="primary" onClick={showFormModal} size="large"><Icon type="plus"/> 添加</Button>
                   <Divider className='divider'/>
@@ -173,6 +199,16 @@ const AdList = ()=>{
             onCancel={handleCancel}
             >
             <AdForm cRef={formRef} params={editData} adSpaceList={adSpaceList} handleCancel={handleCancel}/>
+            </Modal>
+            <Modal
+            width={600}
+            title={'添加广告位'}
+            visible={spaceVisible}
+            onOk={handleSpaceOk}
+            confirmLoading={confirmLoading}
+            onCancel={handleSpaceModalCancel}
+            >
+            <AdSpaceForm cRef={spaceFormRef} params={{}} handleCancel={handleSpaceModalCancel}/>
             </Modal>
         </div>
         

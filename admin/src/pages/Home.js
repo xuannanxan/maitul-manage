@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-01-17 22:57:23
+ * @LastEditTime : 2020-01-19 12:30:24
  * @LastEditors  : Xuannan
  */
 
@@ -48,7 +48,11 @@ function Home(props){
     
     const getMenuTree = ()=>{
       _menuTree().then(res=>{
-        setHeaderMenu(res.data.data)
+        const menuData = []
+        res.data.data.forEach((item,index)=>{
+          menuData[item.id]=item
+        })
+        setHeaderMenu(menuData)
         let activeNode = getNode(res.data.data,location.pathname,'url')
         let allParents = getAllParent(activeNode,res.data.data)
         if(activeNode){
@@ -60,21 +64,13 @@ function Home(props){
           setOpenMenu(allParents.map((item,index)=>{
             return item.id
           }))
-          //选中的顶级菜单
-          let topMenuId = ''
+          //选中的顶级菜单 
           allParents.forEach((item,index)=>{
             if(item.pid==='0'){
-              topMenuId = item.id
-            }
-          })
-          let topMenuIndex = []
-          res.data.data.forEach((item,index)=>{
-            if(item.id===topMenuId){
-              topMenuIndex = [String(index)]
+              setActiveTopMenu([item.id])
               setLeftMenu(item.children)
             }
           })
-          setActiveTopMenu(topMenuIndex)
         }
       })
     }
@@ -83,11 +79,14 @@ function Home(props){
       setActiveTopMenu([e.key])
     }
     const headerMenuItem = ()=>{
-      return (
-        headerMenu.map((menu, index) => {
-          return (<Menu.Item key={index}><Icon type={menu.icon} />{menu.name}</Menu.Item>)
-        })
-      )
+      var arr = []
+      for (let index in headerMenu) {
+        arr.push(
+          <Menu.Item key={headerMenu[index].id}><Icon type={headerMenu[index].icon} />{headerMenu[index].name}</Menu.Item>
+        ); //属性
+      }
+      return arr
+     
     }
     const leftMenuItem = ()=>{
         if(leftMenu){

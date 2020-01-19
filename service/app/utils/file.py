@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 10:34:07
-@LastEditTime : 2019-12-28 20:54:18
+@LastEditTime : 2020-01-19 08:49:56
 @LastEditors  : Xuannan
 '''
 
@@ -57,7 +57,7 @@ class FileUpload():
         else:
             im = file
         # 文件目录
-        path = time.strftime('%Y%m%d')
+        path = time.strftime('%Y%m')
         d = UPLOAD_FOLDER+'/'+path
         if not os.path.exists(d):
             os.makedirs(d)
@@ -69,7 +69,7 @@ class FileUpload():
         return fn + ext
         
     def file_path(self):
-        return '/'+(self.file_name)[:8]+'/'+self.file_name
+        return '/'+(self.file_name)[:6]+'/'+self.file_name
 
     def full_path(self):
         '''获取全路径'''
@@ -77,13 +77,14 @@ class FileUpload():
         
 
     def file_size(self):
-        '''获取文件的大小,结果保留两位小数，单位为MB'''
+        '''获取文件的大小,结果保留两位小数，单位为KB'''
         fsize = os.path.getsize(UPLOAD_FOLDER+self.file_path)
-        fsize = fsize / float(1024 * 1024)
+        fsize = fsize / float(1024)
         return round(fsize, 2)
 
-    def delete_file(filename):
-        path = UPLOAD_FOLDER+'/'+filename[:8]+'/'+filename
+    def delete_file(filename='',path = ''):
+        if not path:
+            path = UPLOAD_FOLDER+'/'+filename[:6]+'/'+filename
         if os.path.exists(path): # 如果文件存在
         #删除文件，可使用以下两种方法。
             os.remove(path) # 则删除
@@ -217,7 +218,7 @@ def save_file(file,type = "image",max_width = 800,max_height = 0,watermark = Non
     else:
         im = file
     # 文件目录
-    path = time.strftime('%Y%m%d')
+    path = time.strftime('%Y%m')
     d = UPLOAD_FOLDER+'/'+path
     if not os.path.exists(d):
         os.makedirs(d)
@@ -225,7 +226,7 @@ def save_file(file,type = "image",max_width = 800,max_height = 0,watermark = Non
     ext = os.path.splitext(filename)[1]
     # 定义文件名，年月日时分秒随机数
     fn = time.strftime('%Y%m%d%H%M%S')
-    fn = fn + '_%d' % random.randint(100,999)
+    fn = fn + '%d' % random.randint(100,999)
     # 重写合成文件名
     im.save(os.path.join(d, fn + ext))
     return '/static/uploads/'+path+'/'+fn + ext
@@ -277,7 +278,7 @@ def get_file_list(path=''):
         else:
             file_list.append({
                 'name':cp,
-                'path':'/static/uploads/'+cp[:8]+'/'+cp,
+                'path':'/static/uploads/'+cp[:6]+'/'+cp,
                 'type':'file'
             })
     return file_list
