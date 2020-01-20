@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-17 23:19:53
+ * @LastEditTime : 2020-01-20 11:21:41
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -15,6 +15,7 @@ const roleUrl = '/api/admin/role'
 const adminUrl = '/api/admin'
 const adspaceUrl = '/api/resource/adspace'
 const adUrl = '/api/resource/ad'
+const configUrl = '/api/admin/config'
 //登录
 export const _login = async (username,password,captcha,image_code)=>{
   return await Http.request('/api/login', Method.POST, {
@@ -195,4 +196,24 @@ export const _adEdit = async (formData)=>{
 //删除广告 
 export const _adDelete = async (id)=>{
   return await Http.request(adUrl, Method.DELETE,{id})
+};
+
+// 配置项 configUrl
+// 配置项列表 
+export const _configList = async (formData)=>{
+  return await Http.request(configUrl, Method.GET,formData)
+};
+
+//新增配置项
+export const _configAdd = async (formData)=>{
+  return await Http.request(configUrl, Method.POST,formData)
+};
+
+//修改配置项 
+export const _configEdit = async (formData)=>{
+  return await Http.request(configUrl, Method.PUT,formData)
+};
+//删除配置项 
+export const _configDelete = async (id)=>{
+  return await Http.request(configUrl, Method.DELETE,{id})
 };

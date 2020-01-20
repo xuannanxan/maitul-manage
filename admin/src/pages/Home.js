@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-01-19 12:30:24
+ * @LastEditTime : 2020-01-20 14:33:09
  * @LastEditors  : Xuannan
  */
 
@@ -19,6 +19,7 @@ import AdminList from './admin/List'
 import CurrentUser from './admin/CurrentUser'
 import AdSpaceList from './adSpace/List'
 import AdList from './ad/List'
+import ConfList from './webconfig/List'
 import {_menuTree} from '../utils/api'
 import { CSSTransition,TransitionGroup } from 'react-transition-group'
 import {getAllParent,getNode} from '../utils/treeNodes'
@@ -33,6 +34,7 @@ const RouteList = [
   {path:"/admin/",component:AdminList},
   {path:"/adspace",component:AdSpaceList},
   {path:"/ad",component:AdList},
+  {path:"/config",component:ConfList},
   {path:"/blog/add",component:AddContent},
 ]
 

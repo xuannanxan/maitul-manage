@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-17 10:30:37
- * @LastEditTime : 2020-01-17 22:35:59
+ * @LastEditTime : 2020-01-20 16:50:39
  * @LastEditors  : Xuannan
  */
 import React, { useImperativeHandle} from 'react';
@@ -51,7 +51,11 @@ function SubmitForm(props){
                 form.setFieldsValue({
                     id:params.id,
                     name:params.name,
-                    sort:params.sort
+                })
+            }
+            if(params.sort){
+                form.setFieldsValue({
+                    sort:params.sort,
                 })
             }
         }

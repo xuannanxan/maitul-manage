@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-17 10:30:37
- * @LastEditTime : 2020-01-19 14:03:16
+ * @LastEditTime : 2020-01-20 16:51:16
  * @LastEditors  : Xuannan
  */
 import React, { useState ,useImperativeHandle} from 'react';
@@ -86,17 +86,21 @@ function SubmitForm(props){
                 });
         },
         init:()=>{
-            if(params){
+            if(params.space_id){
                 form.setFieldsValue({
                     id:params.id,
                     space_id:params.space_id,
                     name:params.name,
                     info:params.info,
                     url:params.url,
-                    img:params.img,
-                    sort:params.sort
+                    img:params.img, 
                 })
                 setImageUrl(params.img)
+            }
+            if(params.sort){
+                form.setFieldsValue({
+                    sort:params.sort,
+                })
             }
             if(adSpaceList){
                 setSpaceList(adSpaceList.map((item,index)=>{

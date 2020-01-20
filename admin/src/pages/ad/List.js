@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-19 14:11:27
+ * @LastEditTime : 2020-01-20 13:42:22
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -46,7 +46,7 @@ const AdList = ()=>{
       setTimeout(()=>{
         setIsLoading(false)
       },300)
-    const MenuItem = ()=>{
+    const spaceItem = ()=>{
       return (
         adSpaceList.map((item, index) => {
           return (<Menu.Item key={item.id}>{item.name}</Menu.Item>)
@@ -172,7 +172,7 @@ const AdList = ()=>{
                 <Menu 
                 onClick = {getAdList}
                 >
-                  {MenuItem()}
+                  {spaceItem()}
                 </Menu>
                 : '暂无数据' }     
                 </Col>
