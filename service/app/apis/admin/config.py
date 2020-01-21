@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime : 2020-01-20 11:43:20
+@LastEditTime : 2020-01-21 14:23:02
 @LastEditors  : Xuannan
 '''
 
@@ -57,7 +57,7 @@ def getSingData(id):
         abort(RET.NotFound,msg='配置项不存在')
     return data
 
-class WebConfigResource(Resource):
+class ConfigResource(Resource):
     @api.doc(api_doc=doc.add)
     @login_required
     @permission_required
@@ -146,14 +146,18 @@ class WebConfigResource(Resource):
         '''
         获取配置列表
         '''
-        args_id = parse_id.parse_args()
-        moduleID = args_id.get('moduleID')
-        _list = WebConfig.query.filter_by(is_del = '0',moduleID=moduleID).order_by(WebConfig.sort.desc()).all()
+        list_by_menu = {}
+        _list = WebConfig.query.filter_by(is_del = '0').order_by(WebConfig.sort.desc()).all()
         if not _list:
             abort(RET.BadRequest,msg='暂无数据')
+        for v in _list:
+            if v.moduleID in list_by_menu.keys():
+                list_by_menu[v.moduleID].append(object_to_json(v))
+            else:
+                list_by_menu[v.moduleID] = [object_to_json(v)] 
         data = {
                     'status':RET.OK,
-                    'data':[object_to_json(v) for v in _list]
+                    'data':list_by_menu
             }
         return data  
  
@@ -181,4 +185,21 @@ class WebConfigResource(Resource):
         abort(RET.BadRequest,msg='删除失败，请重试')
 
 
+class WebConfigResource(Resource):
+    @api.doc(api_doc=doc.lst)
+    def get(self):
+        '''
+        获取配置列表
+        '''
+        args_id = parse_id.parse_args()
+        moduleID = args_id.get('moduleID')
+        _list = WebConfig.query.filter_by(is_del = '0',moduleID=moduleID).order_by(WebConfig.sort.desc()).all()
+        if not _list:
+            abort(RET.BadRequest,msg='暂无数据')
+        configData = [{v.ename:v.value} for v in _list]
+        data = {
+                    'status':RET.OK,
+                    'data':configData
+            }
+        return data  
 

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-20 17:29:52
+ * @LastEditTime : 2020-01-21 11:46:09
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -22,23 +22,15 @@ const ConfList = ()=>{
     const [formData,setFormData] = useState({})
     const formRef = useRef();
 
-    const getMenuTree = ()=>{
+    const initData = ()=>{
       _menuTree().then(res=>{
           setMenuTree(res.data.data)
       })
+      _configList().then(res=>{
+        setConfList(res.data.data)
+      })
     }
-    //获取权限规则列表
-    const getConfigList = ()=>{
-      console.log(menuId)
-      if (menuId){
-        _configList({moduleID:menuId}).then(res=>{
-          setConfList(res.data.data)
-        })
-      }else{
-        setConfList([])
-      }
-      
-    }
+   
     const menuItem = ()=>{
       return (
         menuTree.map((item, index) => {
@@ -76,7 +68,7 @@ const ConfList = ()=>{
           _configDelete(id).then(res=>{
             if(res.data.status===200){
               message.success(res.data.msg)
-              getConfigList()
+              initData()
             }
           })
         },
@@ -93,12 +85,12 @@ const ConfList = ()=>{
         formRef.current.submitFormData()
         setTimeout(()=>{
           setConfirmLoading(false)
-          getConfigList()
+          initData()
         },300)
     }
 
     useEffect(()=>{
-        getMenuTree()
+        initData()
       },[])
     const columns = [
         {
@@ -147,9 +139,9 @@ const ConfList = ()=>{
                   <Button type="primary" onClick={showModal} size="large"><Icon type="plus"/> 添加</Button>
                   <Divider className='divider'/>
                   <Spin tip="Loading..." spinning={isLoading}>
-                  {confList && confList.length? 
+                  {confList[menuId] && confList[menuId].length? 
                     <Table rowKey="id" 
-                    dataSource={confList} 
+                    dataSource={confList[menuId]} 
                     columns={columns} 
                     pagination={false} 
                     />

@@ -12,7 +12,7 @@ from app.apis.admin.admin import AdminResource,AdminLogin,AdminCurrent,AdminAuth
 from app.apis.admin.menu import MenuResource
 from app.apis.admin.rule import RuleResource
 from app.apis.admin.role import RoleResource,RoleAuthResource
-from app.apis.admin.config import WebConfigResource
+from app.apis.admin.config import WebConfigResource,ConfigResource
 from app.apis import api_blueprint
 
 
@@ -34,4 +34,5 @@ admin_api.add_resource(RoleResource,'/admin/role')
 admin_api.add_resource(RoleAuthResource,'/admin/role/auth')
 
 # 配置项
-admin_api.add_resource(WebConfigResource,'/admin/config')
+admin_api.add_resource(WebConfigResource,'/admin/webconfig')
+admin_api.add_resource(ConfigResource,'/admin/config')

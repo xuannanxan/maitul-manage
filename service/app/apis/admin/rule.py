@@ -123,21 +123,14 @@ class RuleResource(Resource):
                         'data':object_to_json(getSingData(id))
                 } 
         list_by_menu = {}
+        _list = []
         if g.admin.is_super==0:
             # 如果不是超级管理员，只能在自己的权限范围内进行授权
             if not g.auth:
                 abort(RET.BadRequest,msg='请勿非法操作')
-            for v in g.auth:   
-                if v.menu_id in list_by_menu.keys():
-                    list_by_menu[v.menu_id].append(mysql_to_json(dict(v)))
-                else:
-                    list_by_menu[v.menu_id] = [mysql_to_json(dict(v))]
-            return {
-                    'status':RET.OK,
-                    'data':list_by_menu
-            }
-            
-        _list = Rule.query.filter_by(is_del = '0').all()
+            _list =  g.auth
+        else:
+            _list = Rule.query.filter_by(is_del = '0').all()
         if not _list:
             abort(RET.BadRequest,msg='暂无数据')
         for v in _list:

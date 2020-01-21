@@ -15,8 +15,7 @@ function SubmitForm(props){
                 message.success(res.data.msg)
                 handleCancel()
             }
-        })
-        
+        }) 
     }
     const add=(formData)=>{
         _configAdd(formData).then(res=>{
@@ -31,13 +30,16 @@ function SubmitForm(props){
         submitFormData:()=>{
             form.validateFields((err, values) => {
                 if (!err) {
+                    if(values.values){
+                        values.values = values.values.join(',')
+                    }
                     if(params.id){
                         edit(values)
                     }else{
                         add(values)
                     }
                 }
-                });
+            });
         },
         init:()=>{
             if(params.moduleID){
@@ -49,13 +51,15 @@ function SubmitForm(props){
                     fieldType:params.fieldType,
                     placeholder:params.placeholder,
                     value:params.value,
-                    
                 })
+                setFieldType(params.fieldType)
+
             }
             if(params.values){
                 form.setFieldsValue({
                     values:params.values.split(',')
                 })
+                setSelectValue(params.values.split(','))
             }
             if(params.sort){
                 form.setFieldsValue({
@@ -127,7 +131,6 @@ function SubmitForm(props){
                         <Option key='Input'>文本框</Option>
                         <Option key='Number'>数字输入框</Option>
                         <Option key='Textarea'>文本域</Option>
-                        <Option key='Switch'>开关</Option>
                         <Option key='Select'>选择器</Option>
                         <Option key='Checkbox'>多选框</Option>
                         <Option key='Editor'>富文本编辑器</Option>
@@ -136,8 +139,6 @@ function SubmitForm(props){
                         </Select>,
                     )}
                 </Form.Item>
-               
-                
                 {(['Switch','Select','Checkbox'].indexOf(fieldType)>-1)?
                 <div>
                 <Form.Item label='可选值'>
@@ -157,7 +158,6 @@ function SubmitForm(props){
                     {getFieldDecorator('value', {
                     })(
                         <Select
-                        mode="tags"
                         placeholder="请选择默认值..."
                         size='large' 
                         >
