@@ -16,6 +16,7 @@ const adminUrl = '/api/admin'
 const adspaceUrl = '/api/resource/adspace'
 const adUrl = '/api/resource/ad'
 const configUrl = '/api/admin/config'
+const webconfigUrl = '/api/admin/webconfig'
 //登录
 export const _login = async (username,password,captcha,image_code)=>{
   return await Http.request('/api/login', Method.POST, {
@@ -216,4 +217,9 @@ export const _configEdit = async (formData)=>{
 //删除配置项 
 export const _configDelete = async (id)=>{
   return await Http.request(configUrl, Method.DELETE,{id})
+};
+
+//修改配置 
+export const _webconfigEdit = async (formData)=>{
+  return await Http.request(webconfigUrl, Method.PUT,formData)
 };

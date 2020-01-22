@@ -1,12 +1,19 @@
 /*
  * @Description: 
  * @Author: Xuannan
- * @Date: 2020-01-21 11:59:51
- * @LastEditTime : 2020-01-21 17:26:45
+ * @Date: 2020-01-22 19:25:04
+ * @LastEditTime : 2020-01-23 00:08:54
  * @LastEditors  : Xuannan
  */
-import React, { useState,useEffect ,useRef} from 'react';
-import {_menuTree,_configList,_fileUpload} from '../../utils/api'
+/*
+ * @Description: 
+ * @Author: Xuannan
+ * @Date: 2020-01-21 11:59:51
+ * @LastEditTime : 2020-01-22 19:46:15
+ * @LastEditors  : Xuannan
+ */
+import React, { useState,useEffect ,useRef,useReducer } from 'react';
+import {_menuTree,_configList,_fileUpload,_webconfigEdit} from '../../utils/api'
 import Editor from '../components/Editor'
 import {Select,InputNumber,Input,Form ,Tabs ,Divider ,Switch,Upload,Checkbox,Icon ,Menu ,Button ,Modal,message,Col,Row,Spin} from 'antd';
 const { TabPane } = Tabs;
@@ -20,14 +27,49 @@ const WebConfigForm = (props)=>{
     const [menuTree,setMenuTree] = useState([])
     const [confList,setConfList] = useState([])
     const [activeTab,setActiveTab] = useState('')
-    const [showImg,setShowImg] = useState({})
+    const [imgObj, uploadImg] = useReducer((state, e) => {
+        setLoading(true)
+        let formData=new FormData();
+        if(e.file){
+            formData.append('file',e.file)
+            _fileUpload(formData).then(res=>{
+                if (res.data.status===200){
+                    const obj = {}
+                    state[e.filename] = res.data.path
+                    obj[e.filename] = res.data.path
+                    form.setFieldsValue(obj)
+                }
+            })
+        }else{
+            for (var i in e) {
+                state[i] = e[i]
+            }
+        }
+        setLoading(false)
+        return state;
+      }, {});
+
     const initData = ()=>{
+        let activeId = ''
         _menuTree().then(res=>{
             setMenuTree(res.data.data)
-            setActiveTab(res.data.data[0].id)
+            activeId = res.data.data[0].id
+            setActiveTab(activeId)
         })
         _configList().then(res=>{
           setConfList(res.data.data)
+          for (var i in res.data.data) {
+                if(res.data.data[i]){
+                    res.data.data[i].forEach(item=>{
+                        if(item.fieldType === 'ImgUpload'){
+                            let obj = {}
+                            obj[item.ename] = item.value
+                            uploadImg(obj)
+                        }
+                    })
+                } 
+            }
+          
         })
       }
     const uploadButton = (
@@ -36,21 +78,18 @@ const WebConfigForm = (props)=>{
         <div className="ant-upload-text">点击上传</div>
     </div>
     );
-    const uploadImg = (e)=>{
-        setLoading(true)
-        let formData=new FormData();
-        formData.append('file',e.file)
-        _fileUpload(formData).then(res=>{
-            if (res.data.status===200){
-                const obj = {}
-                obj[e.filename] = res.data.path
-                form.setFieldsValue(obj)
-                const tempShowImg = showImg
-                tempShowImg[e.filename] = res.data.path
-                setShowImg(tempShowImg)
+    const submitFormData = ()=>{
+        form.validateFields((err, values) => {
+            if (!err) {
+                _webconfigEdit({data:values}).then(res=>{
+                    if(res.data.status===200){
+                        message.success(res.data.msg)
+                        initData()
+                      }
+                })
+                
             }
-        })
-        setLoading(false)
+        });
     }
     useEffect(()=>{
     initData()
@@ -164,7 +203,6 @@ const WebConfigForm = (props)=>{
                                             </Form.Item>    
                                         );
                                     case 'ImgUpload':
-                                        
                                         return(
                                             <Form.Item label={conf.name} key={conf.id}>
                                                 {getFieldDecorator(conf.ename, {
@@ -177,7 +215,7 @@ const WebConfigForm = (props)=>{
                                                         showUploadList={false}
                                                         customRequest={uploadImg} 
                                                     >
-                                                        {  showImg[conf.ename] ? <img src={showImg[conf.ename]} alt={conf.name} style={{ width: '100%' }} /> : uploadButton}
+                                                        { imgObj[conf.ename] ? <img src={imgObj[conf.ename]} alt={conf.name} style={{ width: '100%' }} /> : uploadButton}
                                                     </Upload>,
                                                 )}
                                             </Form.Item>    
@@ -186,6 +224,11 @@ const WebConfigForm = (props)=>{
                                 } 
 
                             })}
+                             <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
+                            <Button type="primary"  size='large' onClick={submitFormData}>
+                                保存
+                            </Button>
+                            </Form.Item>
                             </Form>: '暂无数据' }
                         </TabPane>
                     )

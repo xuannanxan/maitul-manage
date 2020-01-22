@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime : 2020-01-21 14:23:02
+@LastEditTime : 2020-01-23 00:09:22
 @LastEditors  : Xuannan
 '''
 
@@ -15,7 +15,8 @@ from app.utils import object_to_json
 from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.admin import conf_doc as doc
-from flask import g
+from flask import g ,request
+import json
 
 api = Apidoc('配置项')
 
@@ -33,6 +34,10 @@ parse_base.add_argument('placeholder')
 parse_base.add_argument('values')
 parse_base.add_argument('value')
 parse_base.add_argument('sort',type=int,help='排序号只能是数字')
+
+
+parse_conf = reqparse.RequestParser()
+parse_conf.add_argument('data',location='json')
 
 _fields = {
     'moduleID':fields.String,
@@ -203,3 +208,24 @@ class WebConfigResource(Resource):
             }
         return data  
 
+
+    @api.doc(api_doc=doc.put)
+    @login_required  
+    @permission_required
+    def put(self):
+        '''
+        修改配置项
+        '''
+        args = parse_conf.parse_args()
+        data = json.loads(json.dumps(eval(args.get('data'))))
+        _list = WebConfig.query.filter_by(is_del = '0').order_by(WebConfig.sort.desc()).all()
+        for v in _list:
+            v.value = data.get(v.ename)
+        result = WebConfig().updata()
+        if result:
+            data =  {
+                'status':RET.OK,
+                'msg':'保存成功'
+            }
+            return data
+        abort(RET.BadRequest,msg='保存失败，请重试')
