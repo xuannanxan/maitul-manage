@@ -157,7 +157,6 @@ function SubmitForm(props){
                             showUploadList={false}
                             customRequest={uploadImg} 
                             beforeUpload={beforeUpload}
-                            
                         >
                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                         </Upload>,

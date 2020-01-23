@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-22 19:25:04
- * @LastEditTime : 2020-01-23 17:18:31
+ * @LastEditTime : 2020-01-23 20:13:40
  * @LastEditors  : Xuannan
  */
 /*
@@ -12,10 +12,10 @@
  * @LastEditTime : 2020-01-22 19:46:15
  * @LastEditors  : Xuannan
  */
-import React, { useState,useEffect ,useRef,useReducer } from 'react';
+import React, { useState,useEffect ,useReducer } from 'react';
 import {_menuTree,_configList,_fileUpload,_webconfigEdit} from '../../utils/api'
 import Editor from '../components/Editor'
-import {Select,InputNumber,Input,Form ,Tabs ,Divider ,Switch,Upload,Checkbox,Icon ,Menu ,Button ,Modal,message,Col,Row,Spin} from 'antd';
+import {Select,InputNumber,Input,Form ,Tabs ,Upload,Checkbox,Icon  ,Button ,message,Col,Row,Spin} from 'antd';
 const { TabPane } = Tabs;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -50,6 +50,7 @@ const WebConfigForm = (props)=>{
       }, {});
 
     const initData = ()=>{
+        setIsLoading(true)
         let activeId = ''
         _menuTree().then(res=>{
             setMenuTree(res.data.data)
@@ -69,8 +70,10 @@ const WebConfigForm = (props)=>{
                     })
                 } 
             }
-          
         })
+        setTimeout(()=>{
+            setIsLoading(false)
+          },300)
       }
     const uploadButton = (
     <div>
@@ -79,6 +82,7 @@ const WebConfigForm = (props)=>{
     </div>
     );
     const submitFormData = ()=>{
+        setIsLoading(true)
         form.validateFields((err, values) => {
             if (!err) {
                 _webconfigEdit({data:values}).then(res=>{
@@ -87,9 +91,11 @@ const WebConfigForm = (props)=>{
                         initData()
                       }
                 })
-                
             }
         });
+        setTimeout(()=>{
+            setIsLoading(false)
+          },300)
     }
     useEffect(()=>{
     initData()
@@ -101,7 +107,8 @@ const WebConfigForm = (props)=>{
                 {menuTree.map(item=>{
                     return (
                         <TabPane tab={item.name} key={item.id}>
-                       { confList[item.id] && confList[item.id].length?
+                            <Spin tip="Loading..." spinning={isLoading}>
+                            { confList[item.id] && confList[item.id].length?
                             <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }}>
                             {confList[item.id].map(conf=>{
                                 switch (conf.fieldType) {
@@ -198,6 +205,7 @@ const WebConfigForm = (props)=>{
                                             <Form.Item label={conf.name} key={conf.id}>
                                                 {getFieldDecorator(conf.ename, {
                                                     initialValue:conf.value,
+                                                    valuePropName:'file',
                                                 })(
                                                     <Upload
                                                         name={conf.ename}
@@ -211,16 +219,29 @@ const WebConfigForm = (props)=>{
                                                 )}
                                             </Form.Item>    
                                         );
-                                
+                                    default:
+                                        return(
+                                            <Form.Item label={conf.name} key={conf.id}>
+                                                {getFieldDecorator(conf.ename, {
+                                                    initialValue:conf.value,
+                                                })(
+                                                    <Input
+                                                    placeholder={conf.placeholder?conf.placeholder:'请输入...'}
+                                                    size='large'
+                                                    />,
+                                                )}
+                                            </Form.Item>    
+                                        );
                                 } 
 
                             })}
-                             <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
+                            <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
                             <Button type="primary"  size='large' onClick={submitFormData}>
                                 保存
                             </Button>
                             </Form.Item>
                             </Form>: '暂无数据' }
+                            </Spin>
                         </TabPane>
                     )
                 })}
