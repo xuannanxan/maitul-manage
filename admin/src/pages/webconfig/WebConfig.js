@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-22 19:25:04
- * @LastEditTime : 2020-01-23 00:08:54
+ * @LastEditTime : 2020-01-23 17:18:31
  * @LastEditors  : Xuannan
  */
 /*
@@ -105,15 +105,6 @@ const WebConfigForm = (props)=>{
                             <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }}>
                             {confList[item.id].map(conf=>{
                                 switch (conf.fieldType) {
-                                    // <Option key='Input'>文本框</Option>
-                                    // <Option key='Number'>数字输入框</Option>
-                                    // <Option key='Textarea'>文本域</Option>
-                                    // <Option key='Switch'>开关</Option>
-                                    // <Option key='Select'>选择器</Option>
-                                    // <Option key='Checkbox'>多选框</Option>
-                                    // <Option key='Editor'>富文本编辑器</Option>
-                                    // <Option key='ImgUpload'>单图上传</Option>
-                                    // <Option key='Upload'>多文件上传</Option>
                                     case 'Input':
                                         return(
                                             <Form.Item label={conf.name} key={conf.id}>

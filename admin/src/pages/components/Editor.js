@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-21 19:54:46
- * @LastEditTime : 2020-01-15 19:20:57
+ * @LastEditTime : 2020-01-23 17:23:36
  * @LastEditors  : Xuannan
  */
 import React, { useRef,useEffect } from 'react';
@@ -58,7 +58,7 @@ const editorConfig = {
 }; // 编辑器配置项
 
 const  Editor = React.forwardRef((props,ref)=>{
-    const { onChange, propsValue } = props;// 有默认传来的 chang事件，和 value值
+    const { onChange, value } = props;// 有默认传来的 chang事件，和 value值
     //const { getFieldProps, name } = props;
     const elem = useRef()
     const initEditor = () => {
@@ -68,10 +68,10 @@ const  Editor = React.forwardRef((props,ref)=>{
         editor.customConfig.onchange = html => {
             onChange(editor.txt.html())
         }
-        if(propsValue){
-          editor.txt.html(propsValue)
-        }
         editor.create()
+        if(value){
+          editor.txt.html(value)
+        }
     };
     useEffect(()=>{
       initEditor()

@@ -135,7 +135,6 @@ function SubmitForm(props){
                         <Option key='Checkbox'>多选框</Option>
                         <Option key='Editor'>富文本编辑器</Option>
                         <Option key='ImgUpload'>单图上传</Option>
-                        <Option key='Upload'>多文件上传</Option>
                         </Select>,
                     )}
                 </Form.Item>
