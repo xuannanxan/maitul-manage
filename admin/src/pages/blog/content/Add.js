@@ -2,15 +2,15 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-14 17:40:02
- * @LastEditTime : 2020-01-10 16:02:33
+ * @LastEditTime : 2020-01-27 20:13:32
  * @LastEditors  : Xuannan
  */
 
 
 import React, { useState} from 'react';
 import { Row, Col, Input ,Select,Form ,Spin,Button,InputNumber,TreeSelect} from 'antd';
-import '../../static/css/content/add.css'
-import Editor from '../components/Editor'
+import '../../../static/css/blog/content/add.css'
+import Editor from '../../components/Editor'
 
 const treeData = [
     {
@@ -72,7 +72,7 @@ function AddForm(props){
   
     
     return (
-        <div>
+        <div className='main-content'>
             <Spin tip="Loading..." spinning={isLoading}>
                 
                 <Form onSubmit={submitFormData} className="content-form">

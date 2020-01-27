@@ -18,7 +18,7 @@ from app.utils.api_doc import Apidoc
 from app.api_docs.admin import menu_doc as doc
 from flask import g
 
-api = Apidoc('后台菜单配置')
+api = Apidoc('系统-后台菜单配置')
 
 # 单数据操作
 parse_id = reqparse.RequestParser()

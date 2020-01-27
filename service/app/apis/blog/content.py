@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-01-04 20:36:19
+@LastEditTime : 2020-01-27 19:23:50
 @LastEditors  : Xuannan
 '''
 #!/usr/bin/env python
@@ -23,14 +23,17 @@ from app.models.blog import BlogContent,BlogContentTag
 from app.models.base import Crud
 from app.utils import object_to_json,mysql_to_json
 from app.config import PAGINATE_NUM
-from app.apis.admin.common import login_required
+from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.blog import content_doc
 from flask import g
 
-api = Apidoc('博客内容')
+api = Apidoc('博客-内容')
 
-parse_base = reqparse.RequestParser()
+parse_id = reqparse.RequestParser()
+parse_id.add_argument('id')
+
+parse_base = parse_id.copy()
 parse_base.add_argument('title',type=str,required=True,help='请输入标题')
 parse_base.add_argument('sort',type=int,help='排序号只能是数字')
 parse_base.add_argument('keywords')
@@ -68,9 +71,10 @@ def getContent(id):
     return content
 
 
-class BlogContentAdd(Resource):
+class BlogContentResource(Resource):
     @api.doc(api_doc=content_doc.add)
     @login_required
+    @permission_required
     def post(self):
         """
         添加内容
@@ -84,7 +88,6 @@ class BlogContentAdd(Resource):
         tags = args.get('tags')
         sort = args.get('sort')
         category_id = args.get('category_id')
-
         blog_content = BlogContent()
         blog_content.title = title
         blog_content.keywords = keywords
@@ -111,12 +114,30 @@ class BlogContentAdd(Resource):
         abort(RET.BadRequest,msg='添加失败，请重试')
 
         
-class BlogContentList(Resource):
     @api.doc(api_doc=content_doc.lst)
     def get(self):
         '''
         内容列表1
         '''
+        argsById = parse_id.parse_args()
+        id = argsById.get('id')
+        # 如果有id,就返回单个内容
+        if id:
+            sql='''
+                SELECT c.*,GROUP_CONCAT(t.name SEPARATOR ',') as tags
+                FROM blog_content as c
+                    left join blog_tag_relation as r on c.id = r.content_id
+                    left join blog_tag as t on t.id = r.tag_id
+                WHERE c.id = %s and c.is_del = 0;
+                '''%(id)
+            sql_data = Crud.auto_select(sql)
+            data = sql_data.first()
+            if not data:
+                abort(RET.NotFound,msg='内容不存在')
+            return {
+                        'status':RET.OK,
+                        'data':mysql_to_json(dict(data))
+                } 
         args = parse_page.parse_args()
         page = 1
         paginate = PAGINATE_NUM
@@ -163,38 +184,21 @@ class BlogContentList(Resource):
             }
         return data 
 
-    
 
-class BlogContentResource(Resource):
-    @api.doc(api_doc=content_doc.get)
-    def get(self,id):
-        '''
-        单个内容
-        '''
-        sql='''
-        SELECT c.*,GROUP_CONCAT(t.name SEPARATOR ',') as tags
-        FROM blog_content as c
-            left join blog_tag_relation as r on c.id = r.content_id
-            left join blog_tag as t on t.id = r.tag_id
-        WHERE c.id = %s and c.is_del = 0;
-        '''%(id)
-        sql_data = Crud.auto_select(sql)
-        data = sql_data.first()
-        if not data:
-            abort(RET.NotFound,msg='内容不存在')
-        return {
-                    'status':RET.OK,
-                    'data':mysql_to_json(dict(data))
-            } 
+        
     
     @api.doc(api_doc=content_doc.put)
-    @login_required    
-    def put(self,id):
+    @login_required   
+    @permission_required 
+    def put(self):
         '''
         修改内容
         '''
-        blog_content = getContent(id)
         args = parse_base.parse_args()
+        id = args.get('id')
+        if not id:
+            abort(RET.BadRequest,msg='请勿非法操作！！！')
+        blog_content = getContent(id)
         title = args.get('title')
         keywords = args.get('keywords')
         description = args.get('description')
@@ -232,10 +236,15 @@ class BlogContentResource(Resource):
         
     @api.doc(api_doc=content_doc.put)
     @login_required
-    def delete(self,id):
+    @permission_required
+    def delete(self):
         '''
         删除内容
         '''
+        args = parse_id.parse_args()
+        id = args.get('id')
+        if not id:
+            abort(RET.BadRequest,msg='请勿非法操作！！！')
         blog_content = getContent(id)
         blog_content.is_del = blog_content.id
         blog_content.last_editor = g.admin.username

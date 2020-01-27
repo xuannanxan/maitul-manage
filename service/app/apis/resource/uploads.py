@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2020-01-17 10:05:42
-@LastEditTime: 2020-01-17 10:44:25
-@LastEditors: Xuannan
+@LastEditTime : 2020-01-27 20:06:26
+@LastEditors  : Xuannan
 '''
 
 from flask_restful import Resource,reqparse,abort
@@ -17,7 +17,7 @@ from app.utils.api_doc import Apidoc
 from app.api_docs.resource import upload_doc as doc
 
 
-api = Apidoc('上传')
+api = Apidoc('通用-上传')
 parser = reqparse.RequestParser()
 parser.add_argument('file', type=FileStorage, location='files',required=True,help='请上传文件')
 parser.add_argument('width', type=int, help='宽度信息有误')

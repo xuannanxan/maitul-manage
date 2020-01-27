@@ -9,7 +9,7 @@ from app.api_docs.admin import rule_doc as doc
 from flask import g
 from app.config import PAGINATE_NUM
 
-api = Apidoc('权限规则管理')
+api = Apidoc('系统-权限规则管理')
 
 # 单数据操作
 parse_id = reqparse.RequestParser()

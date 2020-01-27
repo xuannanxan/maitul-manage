@@ -18,7 +18,7 @@ from app.api_docs.admin import conf_doc as doc
 from flask import g ,request
 import json
 
-api = Apidoc('配置项')
+api = Apidoc('系统-配置项')
 
 # 单数据操作
 parse_id = reqparse.RequestParser()

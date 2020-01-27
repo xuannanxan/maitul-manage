@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-20 11:21:41
+ * @LastEditTime : 2020-01-27 21:28:24
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -17,6 +17,7 @@ const adspaceUrl = '/api/resource/adspace'
 const adUrl = '/api/resource/ad'
 const configUrl = '/api/admin/config'
 const webconfigUrl = '/api/admin/webconfig'
+const blogTagUrl = '/api/blog/tag'
 //登录
 export const _login = async (username,password,captcha,image_code)=>{
   return await Http.request('/api/login', Method.POST, {
@@ -223,3 +224,25 @@ export const _configDelete = async (id)=>{
 export const _webconfigEdit = async (formData)=>{
   return await Http.request(webconfigUrl, Method.PUT,formData)
 };
+
+
+// 博客标签 blogTagUrl
+// 标签列表 
+export const _blogTagList = async (formData)=>{
+  return await Http.request(blogTagUrl, Method.GET,formData)
+};
+
+//新增标签
+export const _blogTagAdd = async (formData)=>{
+  return await Http.request(blogTagUrl, Method.POST,formData)
+};
+
+//修改标签
+export const _blogTagEdit = async (formData)=>{
+  return await Http.request(blogTagUrl, Method.PUT,formData)
+};
+//删除标签
+export const _blogTagDelete = async (id)=>{
+  return await Http.request(blogTagUrl, Method.DELETE,{id})
+};
+

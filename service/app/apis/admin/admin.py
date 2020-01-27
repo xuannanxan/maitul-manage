@@ -23,7 +23,7 @@ from app.config import PAGINATE_NUM
 from app.utils.api_doc import Apidoc
 from app.api_docs.admin import admin_doc
 
-api = Apidoc('系统管理员')
+api = Apidoc('系统-系统管理员')
 
 # 单数据操作
 parse_id = reqparse.RequestParser()

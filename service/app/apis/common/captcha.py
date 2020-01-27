@@ -14,7 +14,7 @@ from app.ext import cache
 from app.apis.api_constant import *
 from app.utils.api_doc import Apidoc
 from app.api_docs.common import captcha_doc
-api = Apidoc('通用接口')
+api = Apidoc('通用-验证码接口')
 
 parse = reqparse.RequestParser()
 parse.add_argument('image_code',type=str,required=True,help='请传入image_code')

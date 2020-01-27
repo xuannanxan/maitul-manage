@@ -4,23 +4,26 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime: 2019-12-18 16:47:08
-@LastEditors: Xuannan
+@LastEditTime : 2020-01-27 20:02:46
+@LastEditors  : Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
 from app.models.blog import BlogCategory
 from app.utils import object_to_json
 from app.utils.tree import build_tree
-from app.apis.admin.common import login_required
+from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.blog import category_doc
 from flask import g
 
-api = Apidoc('博客分类')
+api = Apidoc('博客-分类')
 
 
-parse_base = reqparse.RequestParser()
+parse_id = reqparse.RequestParser()
+parse_id.add_argument('id')
+
+parse_base = parse_id.copy()
 parse_base.add_argument('pid',type=str,required=True,help='请选择上级分类')
 parse_base.add_argument('name',type=str,required=True,help='请输入分类名称')
 parse_base.add_argument('keywords')
@@ -51,9 +54,10 @@ def getCategory(id):
         abort(RET.NotFound,msg='分类不存在')
     return category
 
-class BlogCategoryAdd(Resource):
+class BlogCategoryResource(Resource):
     @api.doc(api_doc=category_doc.add)
     @login_required
+    @permission_required
     def post(self):
         '''
         添加分类
@@ -88,12 +92,19 @@ class BlogCategoryAdd(Resource):
         abort(RET.BadRequest,msg='添加失败，请重试')
 
         
-class BlogCategoryTree(Resource):
+
     @api.doc(api_doc=category_doc.lst)
     def get(self):
         '''
         获取分类树
         '''
+        args = parse_id.parse_args()
+        id = args.get('id')
+        if  id:
+            return {
+                    'status':RET.OK,
+                    'data':object_to_json(getCategory(id))
+            } 
         cate_list = BlogCategory.query.filter_by(is_del = '0').order_by(BlogCategory.sort.desc()).all()
         if not cate_list:
             abort(RET.BadRequest,msg='暂无数据')
@@ -103,27 +114,20 @@ class BlogCategoryTree(Resource):
             }
         return data 
 
-    
-
-class BlogCategoryResource(Resource):
-    @api.doc(api_doc=category_doc.get)
-    def get(self,id):
-        '''
-        单个分类
-        '''
-        return {
-                    'status':RET.OK,
-                    'data':object_to_json(getCategory(id))
-            } 
+       
     
     @api.doc(api_doc=category_doc.put)
-    @login_required  
-    def put(self,id):
+    @login_required 
+    @permission_required 
+    def put(self):
         '''
         修改分类
         '''
-        blog_cate = getCategory(id)
         args = parse_base.parse_args()
+        id = args.get('id')
+        if not id:
+            abort(RET.BadRequest,msg='请勿非法操作！！！')
+        blog_cate = getCategory(id)
         pid = args.get('pid')
         name = args.get('name')
         keywords = args.get('keywords')
@@ -155,10 +159,15 @@ class BlogCategoryResource(Resource):
         
     @api.doc(api_doc=category_doc.delete)
     @login_required
-    def delete(self,id):
+    @permission_required
+    def delete(self):
         '''
         删除分类
         '''
+        args = parse_id.parse_args()
+        id = args.get('id')
+        if not id:
+            abort(RET.BadRequest,msg='请勿非法操作！！！')
         cate = getCategory(id)
         cate.is_del = cate.id
         cate.last_editor = g.admin.username

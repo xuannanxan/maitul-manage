@@ -11,7 +11,7 @@ from flask import g
 from app.config import PAGINATE_NUM
 import json
 
-api = Apidoc('角色管理')
+api = Apidoc('系统-角色管理')
 
 # 单数据操作
 parse_id = reqparse.RequestParser()

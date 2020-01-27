@@ -9,7 +9,7 @@ from app.api_docs.resource import adspace_doc as doc
 from flask import g
 from app.config import PAGINATE_NUM
 
-api = Apidoc('广告位管理')
+api = Apidoc('通用-广告位管理')
 
 
 # 单数据操作

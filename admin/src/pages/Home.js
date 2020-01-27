@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-01-21 13:47:07
+ * @LastEditTime : 2020-01-27 21:50:28
  * @LastEditors  : Xuannan
  */
 
@@ -11,7 +11,7 @@ import React,{useState,useEffect } from 'react';
 import { Layout, Menu, Breadcrumb, Icon ,Col,Row } from 'antd';
 import '../static/css/home.css'
 import {Route ,Link ,Switch} from 'react-router-dom'
-import AddContent from './content/Add'
+import AddContent from './blog/content/Add'
 import MenuList from './menu/List'
 import RuleList from './rule/List'
 import RoleList from './role/List'
@@ -21,6 +21,7 @@ import AdSpaceList from './adSpace/List'
 import AdList from './ad/List'
 import ConfList from './webconfig/List'
 import WebConfig from './webconfig/WebConfig'
+import BlogTagList from './blog/tag/List'
 import {_menuTree} from '../utils/api'
 import { CSSTransition,TransitionGroup } from 'react-transition-group'
 import {getAllParent,getNode} from '../utils/treeNodes'
@@ -37,7 +38,8 @@ const RouteList = [
   {path:"/ad",component:AdList},
   {path:"/config",component:ConfList},
   {path:"/webconfig",component:WebConfig},
-  {path:"/blog/add",component:AddContent},
+  {path:"/blog/content/add",component:AddContent},
+  {path:"/blog/tag",component:BlogTagList},
 ]
 
 
