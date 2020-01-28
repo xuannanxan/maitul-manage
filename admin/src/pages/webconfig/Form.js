@@ -30,7 +30,7 @@ function SubmitForm(props){
         submitFormData:()=>{
             form.validateFields((err, values) => {
                 if (!err) {
-                    if(values.values){
+                    if(values.values&&values.values.length){
                         values.values = values.values.join(',')
                     }
                     if(params.id){
@@ -53,19 +53,18 @@ function SubmitForm(props){
                     value:params.value,
                 })
                 setFieldType(params.fieldType)
-
-            }
-            if(params.values){
-                form.setFieldsValue({
-                    values:params.values.split(',')
-                })
-                setSelectValue(params.values.split(','))
-            }
-            if(params.sort){
-                form.setFieldsValue({
-                    sort:params.sort,
-                })
-            }
+                if(params.values){
+                    form.setFieldsValue({
+                        values:params.values.split(',')
+                    })
+                    setSelectValue(params.values.split(','))
+                }
+                if(params.sort){
+                    form.setFieldsValue({
+                        sort:params.sort,
+                    })
+                }
+            }  
         }
     }));
 

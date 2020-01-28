@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-27 21:28:24
+ * @LastEditTime : 2020-01-28 20:37:14
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -18,6 +18,12 @@ const adUrl = '/api/resource/ad'
 const configUrl = '/api/admin/config'
 const webconfigUrl = '/api/admin/webconfig'
 const blogTagUrl = '/api/blog/tag'
+const blogCategoryUrl = '/api/blog/category'
+const blogContentUrl = '/api/blog/content'
+
+
+
+
 //登录
 export const _login = async (username,password,captcha,image_code)=>{
   return await Http.request('/api/login', Method.POST, {
@@ -246,3 +252,42 @@ export const _blogTagDelete = async (id)=>{
   return await Http.request(blogTagUrl, Method.DELETE,{id})
 };
 
+//博客分类 blogCategoryUrl 
+// 博客分类列表 
+export const _blogCategoryList = async (formData)=>{
+  return await Http.request(blogCategoryUrl, Method.GET,formData)
+};
+
+//新增博客分类
+export const _blogCategoryAdd = async (formData)=>{
+  return await Http.request(blogCategoryUrl, Method.POST,formData)
+};
+
+//修改博客分类
+export const _blogCategoryEdit = async (formData)=>{
+  return await Http.request(blogCategoryUrl, Method.PUT,formData)
+};
+//删除博客分类
+export const _blogCategoryDelete = async (id)=>{
+  return await Http.request(blogCategoryUrl, Method.DELETE,{id})
+};
+
+//博客内容 blogContentUrl
+// 博客内容列表 
+export const _blogContentList = async (formData)=>{
+  return await Http.request(blogContentUrl, Method.GET,formData)
+};
+
+//新增博客内容
+export const _blogContentAdd = async (formData)=>{
+  return await Http.request(blogContentUrl, Method.POST,formData)
+};
+
+//修改博客内容
+export const _blogContentEdit = async (formData)=>{
+  return await Http.request(blogContentUrl, Method.PUT,formData)
+};
+//删除博客内容
+export const _blogContentDelete = async (id)=>{
+  return await Http.request(blogContentUrl, Method.DELETE,{id})
+};

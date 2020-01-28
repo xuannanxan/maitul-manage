@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-01-27 19:23:50
+@LastEditTime : 2020-01-28 22:22:52
 @LastEditors  : Xuannan
 '''
 #!/usr/bin/env python
@@ -126,7 +126,7 @@ class BlogContentResource(Resource):
             sql='''
                 SELECT c.*,GROUP_CONCAT(t.name SEPARATOR ',') as tags
                 FROM blog_content as c
-                    left join blog_tag_relation as r on c.id = r.content_id
+                    left join blog_content_tag as r on c.id = r.content_id
                     left join blog_tag as t on t.id = r.tag_id
                 WHERE c.id = %s and c.is_del = 0;
                 '''%(id)
@@ -159,7 +159,7 @@ class BlogContentResource(Resource):
             SQL_CALC_FOUND_ROWS c.*,
             GROUP_CONCAT(t.name SEPARATOR ',') as tags
             FROM blog_content as c
-            left join blog_tag_relation as r on c.id = r.content_id
+            left join blog_content_tag as r on c.id = r.content_id
             left join blog_tag as t on t.id = r.tag_id
             WHERE {0} c.is_del = 0
             GROUP BY c.id

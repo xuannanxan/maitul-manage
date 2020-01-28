@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-27 22:45:05
+ * @LastEditTime : 2020-01-28 14:15:21
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -25,10 +25,14 @@ const BlogTagList = ()=>{
 
     //获取权限规则列表
     const getList = (page = currentPage)=>{
+      setIsLoading(true)
       _blogTagList({page:page,paginate:pageSize}).then(res=>{
         setTagList(res.data.data)
         setTagTotal(res.data.paginate.total)
       })
+      setTimeout(()=>{
+        setIsLoading(false)
+      },300)
     }
     
     const getCurrentList = (page)=>{
@@ -79,7 +83,14 @@ const BlogTagList = ()=>{
     }
     
     useEffect(()=>{
-        getList()
+      setIsLoading(true)
+      _blogTagList({page:1,paginate:pageSize}).then(res=>{
+        setTagList(res.data.data)
+        setTagTotal(res.data.paginate.total)
+      })
+      setTimeout(()=>{
+        setIsLoading(false)
+      },300)
       },[])
     const columns = [
         {

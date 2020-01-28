@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-01-27 21:50:28
+ * @LastEditTime : 2020-01-28 22:13:46
  * @LastEditors  : Xuannan
  */
 
@@ -22,6 +22,8 @@ import AdList from './ad/List'
 import ConfList from './webconfig/List'
 import WebConfig from './webconfig/WebConfig'
 import BlogTagList from './blog/tag/List'
+import CategoryList from './blog/category/List'
+import ContentList from './blog/content/List'
 import {_menuTree} from '../utils/api'
 import { CSSTransition,TransitionGroup } from 'react-transition-group'
 import {getAllParent,getNode} from '../utils/treeNodes'
@@ -40,6 +42,8 @@ const RouteList = [
   {path:"/webconfig",component:WebConfig},
   {path:"/blog/content/add",component:AddContent},
   {path:"/blog/tag",component:BlogTagList},
+  {path:"/blog/category",component:CategoryList},
+  {path:"/blog/content",component:ContentList},
 ]
 
 
@@ -50,6 +54,7 @@ function Home(props){
     const [activeMenu,setActiveMenu] = useState([])
     const [openMenu,setOpenMenu] = useState([])
     const [activeTopMenu,setActiveTopMenu] = useState([])
+    const [topMenuName,setTopMenuName] = useState('')
     const location = props.location
     
     const getMenuTree = ()=>{
@@ -63,17 +68,16 @@ function Home(props){
         let allParents = getAllParent(activeNode,res.data.data)
         if(activeNode){
           //当前URL对应的菜单
-          setActiveMenu([activeNode.id])
+          setActiveMenu(activeNode)
         }
         if(allParents){
           //展开的菜单
-          setOpenMenu(allParents.map((item,index)=>{
-            return item.id
-          }))
+          setOpenMenu(allParents)
           //选中的顶级菜单 
           allParents.forEach((item,index)=>{
             if(item.pid==='0'){
-              setActiveTopMenu([item.id])
+              setActiveTopMenu(item)
+              setTopMenuName(item.name)
               setLeftMenu(item.children)
             }
           })
@@ -82,7 +86,7 @@ function Home(props){
     }
     const getChildMenu = (e)=>{
       setLeftMenu(headerMenu[e.key].children)
-      setActiveTopMenu([e.key])
+      setActiveTopMenu(headerMenu[e.key])
     }
     const headerMenuItem = ()=>{
       var arr = []
@@ -100,10 +104,14 @@ function Home(props){
         }
     }
     const openSubMenu = (e)=>{
-      if(openMenu[0]===e.key){
-        setOpenMenu([])
+      if(openMenu&&openMenu.length){
+        if(openMenu[0].id===e.key){
+          setOpenMenu([])
+        }else{
+          setOpenMenu([{id:e.key}])
+        }
       }else{
-        setOpenMenu([e.key])
+        setOpenMenu([{id:e.key}])
       }
     }
     const  recursion = (dataSource)=> {
@@ -119,7 +127,7 @@ function Home(props){
               </SubMenu>
             )
           } else {
-            return (<Menu.Item key={menu.id} onClick={()=>{setActiveMenu([menu.id])}}><Link to={menu.url}><Icon type={menu.icon} /><span>{menu.name}</span></Link></Menu.Item>)
+            return (<Menu.Item key={menu.id} onClick={()=>{setActiveMenu(menu);setTopMenuName(activeTopMenu.name)}}><Link to={menu.url}><Icon type={menu.icon} /><span>{menu.name}</span></Link></Menu.Item>)
           }
         })
       )
@@ -135,7 +143,7 @@ function Home(props){
         <Layout style={{ minHeight: '100vh' }}>
         <Sider  collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ background: '#fff' }}>
           <div className="logo">Maitul Manage</div>
-          <Menu mode="inline" selectedKeys={activeMenu} openKeys={openMenu}>
+          <Menu mode="inline" selectedKeys={[activeMenu.id]} openKeys={openMenu.map(item=>{return item.id})}>
             {leftMenuItem()}
           </Menu>
         </Sider>
@@ -148,7 +156,7 @@ function Home(props){
                   theme="dark"
                   mode="horizontal"
                   style={{ lineHeight: '64px' }}
-                  selectedKeys={activeTopMenu}
+                  selectedKeys={[activeTopMenu.id]}
                   >
                       {headerMenuItem()}
                   </Menu>
@@ -161,8 +169,8 @@ function Home(props){
           </Header>
           <Content style={{ margin: '0 16px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>后台管理</Breadcrumb.Item>
-              <Breadcrumb.Item>工作台</Breadcrumb.Item>
+              <Breadcrumb.Item>{topMenuName}</Breadcrumb.Item>
+              <Breadcrumb.Item>{activeMenu.name}</Breadcrumb.Item>
             </Breadcrumb>
               <TransitionGroup>
                 <CSSTransition
