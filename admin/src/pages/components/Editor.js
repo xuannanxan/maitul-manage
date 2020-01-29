@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-21 19:54:46
- * @LastEditTime : 2020-01-23 17:23:36
+ * @LastEditTime : 2020-01-29 23:04:41
  * @LastEditors  : Xuannan
  */
 import React, { useRef,useEffect } from 'react';
@@ -59,23 +59,19 @@ const editorConfig = {
 
 const  Editor = React.forwardRef((props,ref)=>{
     const { onChange, value } = props;// 有默认传来的 chang事件，和 value值
-    //const { getFieldProps, name } = props;
     const elem = useRef()
-    const initEditor = () => {
-        const editor = new E(elem.current)
-        editor.customConfig = editorConfig
-        // 使用 onchange 函数监听内容的变化，并实时更新到 state 中
-        editor.customConfig.onchange = html => {
-            onChange(editor.txt.html())
-        }
-        editor.create()
-        if(value){
-          editor.txt.html(value)
-        }
-    };
     useEffect(()=>{
-      initEditor()
-    },[])
+      const editor = new E(elem.current)
+      editor.customConfig = editorConfig
+      // 使用 onchange 函数监听内容的变化，并实时更新到 state 中
+      editor.customConfig.onchange = html => {
+          onChange(editor.txt.html())
+      }
+      editor.create()
+      if(value){
+        editor.txt.html(value)
+      }
+    },[onChange, value])
 
     
     return (

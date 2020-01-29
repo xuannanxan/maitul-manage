@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-01-28 22:22:52
+@LastEditTime : 2020-01-29 22:06:50
 @LastEditors  : Xuannan
 '''
 #!/usr/bin/env python
@@ -163,7 +163,7 @@ class BlogContentResource(Resource):
             left join blog_tag as t on t.id = r.tag_id
             WHERE {0} c.is_del = 0
             GROUP BY c.id
-            ORDER BY c.sort DESC
+            ORDER BY c.sort DESC,c.create_time DESC
             LIMIT {1},{2};
         '''.format(query,(page-1)*paginate,paginate)
         sql_data = Crud.auto_select(sql)

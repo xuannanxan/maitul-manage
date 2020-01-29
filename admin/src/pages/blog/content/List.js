@@ -2,12 +2,13 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-28 22:18:54
+ * @LastEditTime : 2020-01-29 23:21:18
  * @LastEditors  : Xuannan
  */
-import React, { useState,useEffect ,useRef} from 'react';
+import React, { useState,useEffect ,useRef , useReducer} from 'react';
 import {_blogCategoryList,_blogContentList,_blogContentDelete} from '../../../utils/api'
 import {Table ,Tree ,Divider ,Icon  ,Button ,Modal,message,Col,Row,Spin} from 'antd';
+import ContentForm from './Form';
 
 const { TreeNode } = Tree;
 const { confirm } = Modal;
@@ -17,13 +18,21 @@ const ContentList = ()=>{
     const [dataOption,setDataOption] = useState([])
     const [contentList,setContentList] = useState([])
     const [categoryId,setCategoryId] = useState('')
-    const [title,setTitle] = useState('新增权限规则')
+    const [title,setTitle] = useState('正在新增内容...')
     const [formData,setFormData] = useState({})
     const formRef = useRef();
+
+    const [content,setContent] = useReducer((state,action)=>{
+      if(action==='list'){
+        return 'list'
+      }
+      return ''
+    },'list');
 
     const getDataTree = ()=>{
         _blogCategoryList().then(res=>{
             setDataTree(res.data.data)
+            setDataOption(initTreeData(res.data.data))
       })
     }
     //获取内容列表
@@ -32,7 +41,14 @@ const ContentList = ()=>{
             _blogContentList({category_id:cateId}).then(res=>{
                 setContentList(res.data.data)
           })
-        } 
+          .catch(error=>{
+            setContentList([])
+          })
+          //如果分类不是当前选中的，就重新设置选中分类
+          if(cateId !== categoryId){
+            setCategoryId(cateId)
+          }
+        }
     }
     const loop = (data) =>{
         return data.map(item => {
@@ -50,6 +66,7 @@ const ContentList = ()=>{
     const showContentList = (selectedKeys, info)  =>{
       setIsLoading(true)
       getContentList(selectedKeys[0]);
+      setCategoryId(selectedKeys[0])
       setTimeout(()=>{
         setIsLoading(false)
       },500) 
@@ -72,7 +89,23 @@ const ContentList = ()=>{
         },
       }); 
     }
-   
+    const handleEdit = (record)=>{
+      setFormData(record)
+      setContent('edit')
+      setTitle(`正在修改【${record.title}】...`)
+      setTimeout(()=>{
+        formRef.current.init()
+      },300)
+    }
+
+    const handleAdd = ()=>{
+      setFormData({category_id:categoryId,sort:1})
+      setContent('add')
+      setTitle('正在新增内容...')
+      setTimeout(()=>{
+        formRef.current.init()
+      },300)
+    }
     const initTreeData = (data)=>{
       return data.map((v,k)=>{
           let children = []
@@ -82,9 +115,7 @@ const ContentList = ()=>{
           return { key: v.id, value: v.id, title: v.name,children:children}
       })
     }
-    useEffect(()=>{
-        getDataTree()
-      },[])
+
     const columns = [
         {
           title: '标题',
@@ -106,46 +137,60 @@ const ContentList = ()=>{
             key: 'action',
             render: (text, record) => (
               <span>
-                <Button type="link" size='small'  ><Icon type="edit" />修改</Button>
+                <Button type="link" size='small' onClick={() => handleEdit(record)} ><Icon type="edit"/>修改</Button>
                 <Divider type="vertical" />
                 <Button type="link" size='small'  onClick={() => deleteData(record.id)}><Icon type="delete" />删除</Button>
               </span>
             ),
         },
-    ];  
+    ]; 
+
+
+    useEffect(()=>{
+      getDataTree()
+    },[])
     return (
         <div className='main-content'>
+          {content && content==='list'?
             <Row>
-                <Col span={4} style={{paddingRight:'10px',borderRight:'1px solid #e8e8e8'}}>
-                <div><h3>内容分类</h3></div>
+            <Col span={4} style={{paddingRight:'10px',borderRight:'1px solid #e8e8e8'}}>
+            <div><h3>内容分类</h3></div>
+            <Divider className='divider'/>
+            {dataTree && dataTree.length?
+            <Tree
+            showIcon
+            blockNode
+            defaultExpandAll={true}
+            onSelect={showContentList}
+            selectedKeys={[categoryId]}
+            >
+                {loop(dataTree)}
+            </Tree>
+            : '暂无数据' }     
+            </Col>
+            <Col span={20} style={{paddingLeft:'10px'}}>
+              {categoryId?
+              <div>
+                <Button type="primary"  size="large" onClick={handleAdd}><Icon type="plus"/> 添加</Button>
                 <Divider className='divider'/>
-                {dataTree && dataTree.length?
-                <Tree
-                showIcon
-                blockNode
-                defaultExpandAll={true}
-                onSelect={showContentList}
-                >
-                    {loop(dataTree)}
-                </Tree>
-                : '暂无数据' }     
-                </Col>
-                
-                <Col span={20} style={{paddingLeft:'10px'}}>
-                  <Button type="primary"  size="large"><Icon type="plus"/> 添加</Button>
-                  <Divider className='divider'/>
-                  <Spin tip="Loading..." spinning={isLoading}>
-                  {contentList && contentList.length? 
-                    <Table rowKey="id" 
-                    dataSource={contentList} 
-                    columns={columns} 
-                    pagination={false} 
-                    defaultExpandAllRows={true}/>
-                      : '暂无数据' }
-                  </Spin>
-                </Col>
-            </Row>
-            
+                <Spin tip="Loading..." spinning={isLoading}>
+                {contentList && contentList.length? 
+                  <Table rowKey="id" 
+                  dataSource={contentList} 
+                  columns={columns} 
+                  pagination={false} 
+                  defaultExpandAllRows={true}/>
+                    : '暂无数据' }
+                </Spin>
+              </div>:<h3><Icon type="arrow-left" /> 请点击左侧分类进行操作...</h3>}
+            </Col>
+          </Row>
+          :
+          <div>
+            <h3>{title}</h3>
+            <ContentForm cRef={formRef} params={formData} dataOption={dataOption} handleCancel={(cateId)=>{setContent('list');getContentList(cateId)}} />
+          </div> 
+        }
         </div>
     )
 }
