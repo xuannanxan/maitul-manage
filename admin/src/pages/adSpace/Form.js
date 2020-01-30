@@ -51,11 +51,7 @@ function SubmitForm(props){
                 form.setFieldsValue({
                     id:params.id,
                     name:params.name,
-                })
-            }
-            if(params.sort){
-                form.setFieldsValue({
-                    sort:params.sort,
+                    sort:params.sort?params.sort:1,
                 })
             }
         }

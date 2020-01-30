@@ -97,6 +97,17 @@ const WebConfigForm = (props)=>{
             setIsLoading(false)
           },300)
     }
+    const beforeUpload=(file)=>{
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+          message.error('只能上传JPG/PNG文件!');
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+          message.error('图片不能超过2MB!');
+        }
+        return isJpgOrPng && isLt2M;
+      }  
     useEffect(()=>{
     initData()
     },[])
@@ -212,7 +223,8 @@ const WebConfigForm = (props)=>{
                                                         listType="picture-card"
                                                         className="avatar-uploader"
                                                         showUploadList={false}
-                                                        customRequest={uploadImg} 
+                                                        customRequest={uploadImg}
+                                                        beforeUpload={beforeUpload} 
                                                     >
                                                         { imgObj[conf.ename] ? <img src={imgObj[conf.ename]} alt={conf.name} style={{ width: '100%' }} /> : uploadButton}
                                                     </Upload>,

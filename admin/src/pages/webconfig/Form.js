@@ -43,6 +43,9 @@ function SubmitForm(props){
         },
         init:()=>{
             if(params.moduleID){
+                if(params.fieldType){
+                    setFieldType(params.fieldType)
+                }
                 form.setFieldsValue({
                     id:params.id,
                     moduleID:params.moduleID,
@@ -51,19 +54,12 @@ function SubmitForm(props){
                     fieldType:params.fieldType,
                     placeholder:params.placeholder,
                     value:params.value,
+                    sort:params.sort?params.sort:1,
+                    values:params.values?params.values.split(','):[],
                 })
-                setFieldType(params.fieldType)
-                if(params.values){
-                    form.setFieldsValue({
-                        values:params.values.split(',')
-                    })
-                    setSelectValue(params.values.split(','))
-                }
-                if(params.sort){
-                    form.setFieldsValue({
-                        sort:params.sort,
-                    })
-                }
+                
+                
+                
             }  
         }
     }));

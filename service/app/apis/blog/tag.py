@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 19:28:32
-@LastEditTime : 2020-01-27 22:43:59
+@LastEditTime : 2020-01-30 18:55:07
 @LastEditors  : Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -86,17 +86,25 @@ class BlogTagResource(Resource):
             page = int(args.get('page'))
         if args.get('paginate'):
             paginate = int(args.get('paginate'))
-        tag_list = BlogTag.query.filter_by(is_del = '0').order_by(BlogTag.sort.desc(),BlogTag.create_time.desc()).paginate(page, paginate, False)
+            tag_list = BlogTag.query.filter_by(is_del = '0').order_by(BlogTag.sort.desc(),BlogTag.create_time.desc()).paginate(page, paginate, False)
+            if not tag_list:
+                abort(RET.BadRequest,msg='暂无数据')
+            data = {
+                        'status':RET.OK,
+                        'paginate':{
+                            'page':tag_list.page,
+                            'per_page':tag_list.per_page,
+                            'total':tag_list.total
+                        },
+                        'data':[object_to_json(v) for v in tag_list.items]
+                }
+            return data 
+        tag_list = BlogTag.query.filter_by(is_del = '0').order_by(BlogTag.sort.desc(),BlogTag.create_time.desc()).all()
         if not tag_list:
             abort(RET.BadRequest,msg='暂无数据')
         data = {
                     'status':RET.OK,
-                    'paginate':{
-                        'page':tag_list.page,
-                        'per_page':tag_list.per_page,
-                        'total':tag_list.total
-                    },
-                    'data':[object_to_json(v) for v in tag_list.items]
+                    'data':[object_to_json(v) for v in tag_list]
             }
         return data 
 

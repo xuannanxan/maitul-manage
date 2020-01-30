@@ -2,16 +2,17 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-29 23:21:18
+ * @LastEditTime : 2020-01-30 22:17:29
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef , useReducer} from 'react';
-import {_blogCategoryList,_blogContentList,_blogContentDelete} from '../../../utils/api'
-import {Table ,Tree ,Divider ,Icon  ,Button ,Modal,message,Col,Row,Spin} from 'antd';
+import {_blogTagList , _blogCategoryList,_blogContentList,_blogContentDelete} from '../../../utils/api'
+import {Table ,Tree ,Divider ,Avatar ,Icon ,Input ,Button ,Modal,message,Col,Row,Spin} from 'antd';
 import ContentForm from './Form';
-
+const pageSize = 8
 const { TreeNode } = Tree;
 const { confirm } = Modal;
+const { Search } = Input;
 const ContentList = ()=>{
     const [isLoading,setIsLoading] = useState(false)
     const [dataTree,setDataTree] = useState([])
@@ -20,6 +21,10 @@ const ContentList = ()=>{
     const [categoryId,setCategoryId] = useState('')
     const [title,setTitle] = useState('正在新增内容...')
     const [formData,setFormData] = useState({})
+    const [tagList,setTagList] = useState([])
+    const [dataTotal,setDataTotal] = useState('')
+    const [searchKeywords,setSearchKeywords] = useState('')
+    const [currentPage,setCurrentPage] = useState(1)
     const formRef = useRef();
 
     const [content,setContent] = useReducer((state,action)=>{
@@ -32,14 +37,18 @@ const ContentList = ()=>{
     const getDataTree = ()=>{
         _blogCategoryList().then(res=>{
             setDataTree(res.data.data)
-            setDataOption(initTreeData(res.data.data))
+      })
+    }
+    const getTagList = ()=>{
+      _blogTagList().then(res=>{
+        setTagList(res.data.data)
       })
     }
     //获取内容列表
-    const getContentList = (cateId = categoryId)=>{
-        if(cateId){
-            _blogContentList({category_id:cateId}).then(res=>{
+    const getContentList = (cateId = categoryId,page = currentPage,search=searchKeywords)=>{
+            _blogContentList({category_id:cateId,page:page,paginate:pageSize,search:search}).then(res=>{
                 setContentList(res.data.data)
+                setDataTotal(res.data.paginate.total)
           })
           .catch(error=>{
             setContentList([])
@@ -48,7 +57,13 @@ const ContentList = ()=>{
           if(cateId !== categoryId){
             setCategoryId(cateId)
           }
-        }
+          if(search){
+            setSearchKeywords(search)
+          }
+    }
+    const getCurrentList = (page)=>{
+      getContentList(categoryId,page)
+      setCurrentPage(page)
     }
     const loop = (data) =>{
         return data.map(item => {
@@ -62,9 +77,11 @@ const ContentList = ()=>{
             return <TreeNode key={item.id} title={item.name} icon={<Icon type={item.icon} />}/>;
           });  
     }
-    //点击树设置menuid展示对应菜单的rule
+    //点击树设置category_id展示对应菜单的内容
     const showContentList = (selectedKeys, info)  =>{
       setIsLoading(true)
+      setCurrentPage(1)
+      setSearchKeywords('')
       getContentList(selectedKeys[0]);
       setCategoryId(selectedKeys[0])
       setTimeout(()=>{
@@ -90,6 +107,7 @@ const ContentList = ()=>{
       }); 
     }
     const handleEdit = (record)=>{
+      setDataOption(initTreeData(dataTree))
       setFormData(record)
       setContent('edit')
       setTitle(`正在修改【${record.title}】...`)
@@ -99,7 +117,8 @@ const ContentList = ()=>{
     }
 
     const handleAdd = ()=>{
-      setFormData({category_id:categoryId,sort:1})
+      setDataOption(initTreeData(dataTree))
+      setFormData({category_id:categoryId})
       setContent('add')
       setTitle('正在新增内容...')
       setTimeout(()=>{
@@ -117,6 +136,16 @@ const ContentList = ()=>{
     }
 
     const columns = [
+        {
+          title: '封面图片',
+          dataIndex: 'cover',
+          key: 'cover',
+          render: (text, record) => (
+            <span>
+              <Avatar shape="square" size="large" src ={record.cover} />
+            </span>
+          ),
+        },
         {
           title: '标题',
           dataIndex: 'title',
@@ -148,6 +177,8 @@ const ContentList = ()=>{
 
     useEffect(()=>{
       getDataTree()
+      getTagList()
+      getContentList()
     },[])
     return (
         <div className='main-content'>
@@ -169,26 +200,37 @@ const ContentList = ()=>{
             : '暂无数据' }     
             </Col>
             <Col span={20} style={{paddingLeft:'10px'}}>
-              {categoryId?
               <div>
-                <Button type="primary"  size="large" onClick={handleAdd}><Icon type="plus"/> 添加</Button>
+                <Button type="primary"  size="large" onClick={handleAdd}><Icon type="plus"/>添加</Button>
+                <Search
+                  placeholder="请输入关键词"
+                  onSearch={value => getContentList(categoryId,currentPage,value)}
+                  style={{ width: 200 ,float:'right'}}
+                  size='large'
+                />
                 <Divider className='divider'/>
                 <Spin tip="Loading..." spinning={isLoading}>
                 {contentList && contentList.length? 
                   <Table rowKey="id" 
                   dataSource={contentList} 
                   columns={columns} 
-                  pagination={false} 
-                  defaultExpandAllRows={true}/>
+                  pagination={{
+                    total: dataTotal,
+                    pageSize:pageSize,
+                    showTotal:(total, range) => `${range[0]}-${range[1]} 总计: ${total} `,
+                    defaultCurrent:currentPage,
+                    current:currentPage,
+                    onChange:(page)=>getCurrentList(page)
+                  }}/>
                     : '暂无数据' }
                 </Spin>
-              </div>:<h3><Icon type="arrow-left" /> 请点击左侧分类进行操作...</h3>}
+              </div>
             </Col>
           </Row>
           :
           <div>
             <h3>{title}</h3>
-            <ContentForm cRef={formRef} params={formData} dataOption={dataOption} handleCancel={(cateId)=>{setContent('list');getContentList(cateId)}} />
+            <ContentForm cRef={formRef} params={formData} tagList={tagList} dataOption={dataOption} handleCancel={(cateId)=>{setContent('list');getContentList(cateId)}} />
           </div> 
         }
         </div>

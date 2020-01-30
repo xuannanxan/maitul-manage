@@ -63,7 +63,6 @@ const AdList = ()=>{
               <Avatar shape="square" size="large" src ={record.img} />
             </span>
           ),
-          
         },
         {
           title: '名称',

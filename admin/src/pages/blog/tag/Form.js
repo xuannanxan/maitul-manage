@@ -50,7 +50,7 @@ function SubmitForm(props){
                 form.setFieldsValue({
                     id:params.id,
                     name:params.name,
-                    sort:params.sort,
+                    sort:params.sort?params.sort:1,
                 })
             }
         }

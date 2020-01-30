@@ -47,12 +47,8 @@ function SubmitForm(props){
                     pid:params.pid,
                     name:params.name,
                     icon:params.icon,
-                    url:params.url
-                })
-            }
-            if(params.sort){
-                form.setFieldsValue({
-                    sort:params.sort,
+                    url:params.url,
+                    sort:params.sort?params.sort:1,
                 })
             }
         }

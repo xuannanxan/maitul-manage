@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-29 21:28:58
+ * @LastEditTime : 2020-01-30 20:49:51
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -26,7 +26,6 @@ const RuleList = ()=>{
     const getMenuTree = ()=>{
       _menuTree().then(res=>{
           setMenuTree(res.data.data)
-          setMenuOption(initTreeData(res.data.data))
       })
     }
     //获取权限规则列表
@@ -57,6 +56,7 @@ const RuleList = ()=>{
       
     }
     const showModal=(record)=>{
+      setMenuOption(initTreeData(menuTree))
       if(record.id){
           setFormData(record)         
           setTitle('修改权限规则【'+record.name+'】')

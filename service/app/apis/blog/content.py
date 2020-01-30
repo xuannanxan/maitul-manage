@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-01-29 22:06:50
+@LastEditTime : 2020-01-30 19:47:13
 @LastEditors  : Xuannan
 '''
 #!/usr/bin/env python
@@ -157,7 +157,8 @@ class BlogContentResource(Resource):
         sql = '''
             SELECT 
             SQL_CALC_FOUND_ROWS c.*,
-            GROUP_CONCAT(t.name SEPARATOR ',') as tags
+            GROUP_CONCAT(t.id SEPARATOR ',') as tags,
+            GROUP_CONCAT(t.name SEPARATOR ',') as tags_name
             FROM blog_content as c
             left join blog_content_tag as r on c.id = r.content_id
             left join blog_tag as t on t.id = r.tag_id

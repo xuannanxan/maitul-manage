@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-17 10:30:37
- * @LastEditTime : 2020-01-20 16:51:16
+ * @LastEditTime : 2020-01-30 20:29:10
  * @LastEditors  : Xuannan
  */
 import React, { useState ,useImperativeHandle} from 'react';
@@ -93,14 +93,10 @@ function SubmitForm(props){
                     name:params.name,
                     info:params.info,
                     url:params.url,
-                    img:params.img, 
+                    img:params.img,
+                    sort:params.sort?params.sort:1 
                 })
                 setImageUrl(params.img)
-            }
-            if(params.sort){
-                form.setFieldsValue({
-                    sort:params.sort,
-                })
             }
             if(adSpaceList){
                 setSpaceList(adSpaceList.map((item,index)=>{

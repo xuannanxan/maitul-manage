@@ -52,17 +52,9 @@ function SubmitForm(props){
                     name:params.name,
                     icon:params.icon,
                     description:params.description,
+                    keywords:params.keywords?params.keywords.split(','):[],
+                    sort:params.sort?params.sort:1
                 })
-                if(params.sort){
-                    form.setFieldsValue({
-                        sort:params.sort,
-                    })
-                }
-                if(params.keywords){
-                    form.setFieldsValue({
-                        keywords:params.keywords.split(','),
-                    })
-                }
             }
             
         }
