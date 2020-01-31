@@ -43,23 +43,22 @@ sing_tag_fields = {
     'data':fields.Nested(tag_fields)
 }
 
-tagModel = ''
-def getTag(id):
+
+def getTag(id,tagModel):
     tag = tagModel.query.filter_by(id = id , is_del = '0').first()
     if not tag :
         abort(RET.NotFound,msg='标签不存在')
     return tag
 
 def setModel(site):
-    global tagModel
     if site == 'blog':
-        tagModel = BlogTag
+        return BlogTag
     elif site == 'maitul':
-        tagModel = MaitulTag
+        return MaitulTag
     elif site == 'info':
-        tagModel = InfoTag
+        return InfoTag
     elif site == 'metalparts':
-        tagModel = MetalpartsTag
+        return MetalpartsTag
     else:
         abort(RET.NotFound,msg='请勿非法操作...')
 
@@ -72,7 +71,7 @@ class TagResource(Resource):
         """
         添加标签
         """
-        setModel(site)
+        tagModel = setModel(site)
         args = parse_base.parse_args()
         name = args.get('name')
         sort = args.get('sort')
@@ -98,7 +97,7 @@ class TagResource(Resource):
         '''
         标签列表
         '''
-        setModel(site)
+        tagModel = setModel(site)
         args = parse_page.parse_args()
         page = 1
         paginate = PAGINATE_NUM
@@ -136,14 +135,14 @@ class TagResource(Resource):
         '''
         修改标签
         '''
-        setModel(site)
+        tagModel = setModel(site)
         args = parse_base.parse_args()
         id = args.get('id')
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
         name = args.get('name')
         sort = args.get('sort')
-        blog_tag = getTag(id)
+        blog_tag = getTag(id,tagModel)
         # 如果名称存在，并且ID不是当前ID
         tag = tagModel.query.filter(tagModel.id != id , tagModel.is_del == '0',tagModel.name == name).first()
         if tag:
@@ -168,12 +167,12 @@ class TagResource(Resource):
         '''
         删除标签
         '''
-        setModel(site)
+        tagModel = setModel(site)
         args = parse_id.parse_args()
         id = args.get('id')
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
-        tag = getTag(id)
+        tag = getTag(id,tagModel)
         tag.is_del = tag.id
         tag.last_editor = g.admin.username
         result = tagModel().updata()

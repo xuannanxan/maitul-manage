@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-01-31 14:28:34
+@LastEditTime : 2020-01-31 14:57:11
 @LastEditors  : Xuannan
 '''
 
@@ -58,13 +58,9 @@ sing_content_fields = {
     'data':fields.Nested(content_fields)
 }
 
-contentModel = ''
-contentTagModel = ''
-contentTable = ''
-contentTagTable = ''
-TagTable = ''
 
-def getContent(id):
+
+def getContent(id,contentModel):
     content = contentModel.query.filter_by(id = id , is_del = '0').first()
     if not content :
         abort(RET.NotFound,msg='内容不存在')
@@ -72,31 +68,14 @@ def getContent(id):
 
 def setModel(site):
     # 动态设置表名和模型
-    global contentModel,contentTagModel,contentTable,contentTagTable,TagTable
     if site == 'blog':
-        contentModel = BlogContent
-        contentTagModel = BlogContentTag
-        contentTable = 'blog_content'
-        contentTagTable = 'blog_content_tag'
-        TagTable = 'blog_tag'
+        return BlogContent, BlogContentTag,'blog_content','blog_content_tag','blog_tag'
     elif site == 'maitul':
-        contentModel = MaitulContent
-        contentTagModel = MaitulContentTag
-        contentTable = 'maitul_content'
-        contentTagTable = 'maitul_content_tag'
-        TagTable = 'maitul_tag'
+        return MaitulContent,MaitulContentTag,'maitul_content', 'maitul_content_tag','maitul_tag'
     elif site == 'info':
-        contentModel = InfoContent
-        contentTagModel = InfoContentTag
-        contentTable = 'info_content'
-        contentTagTable = 'info_content_tag'
-        TagTable = 'info_tag'
+        return InfoContent,InfoContentTag,'info_content','info_content_tag','info_tag'
     elif site == 'metalparts':
-        contentModel = MetalpartsContent
-        contentTagModel = MetalpartsContentTag
-        contentTable = 'metalparts_content'
-        contentTagTable = 'metalparts_content_tag'
-        TagTable = 'metalparts_tag'
+        return MetalpartsContent,MetalpartsContentTag, 'metalparts_content','metalparts_content_tag','metalparts_tag'
     else:
         abort(RET.NotFound,msg='请勿非法操作...')
 
@@ -108,7 +87,7 @@ class ContentResource(Resource):
         """
         添加内容
         """
-        setModel(site)
+        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable = setModel(site)
         args = parse_base.parse_args()
         title = args.get('title')
         keywords = args.get('keywords')
@@ -128,7 +107,7 @@ class ContentResource(Resource):
         _content.sort = sort
         _content.author = g.admin.username
         _content.last_editor = g.admin.username
-        if contentModel.add():
+        if _content.add():
             data = {
                     'status':RET.Created,
                     'msg':'添加成功',
@@ -149,7 +128,7 @@ class ContentResource(Resource):
         '''
         内容列表1
         '''
-        setModel(site)
+        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable = setModel(site)
         argsById = parse_id.parse_args()
         id = argsById.get('id')
         # 如果有id,就返回单个内容
@@ -226,12 +205,12 @@ class ContentResource(Resource):
         '''
         修改内容
         '''
-        setModel(site)
+        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable = setModel(site)
         args = parse_base.parse_args()
         id = args.get('id')
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
-        _content = getContent(id)
+        _content = getContent(id,contentModel)
         title = args.get('title')
         keywords = args.get('keywords')
         description = args.get('description')
@@ -274,12 +253,12 @@ class ContentResource(Resource):
         '''
         删除内容
         '''
-        setModel(site)
+        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable = setModel(site)
         args = parse_id.parse_args()
         id = args.get('id')
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
-        _content = getContent(id)
+        _content = getContent(id,contentModel)
         _content.is_del = _content.id
         _content.last_editor = g.admin.username
         result = contentModel().updata()

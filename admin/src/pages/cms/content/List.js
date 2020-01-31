@@ -6,14 +6,14 @@
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef , useReducer} from 'react';
-import {_blogTagList , _blogCategoryList,_blogContentList,_blogContentDelete} from '../../../utils/api'
+import {_cmsTagList , _cmsCategoryList,_cmsContentList,_cmsContentDelete} from '../../../utils/api'
 import {Table ,Tree ,Divider ,Avatar ,Icon ,Input ,Button ,Modal,message,Col,Row,Spin} from 'antd';
 import ContentForm from './Form';
 const pageSize = 8
 const { TreeNode } = Tree;
 const { confirm } = Modal;
 const { Search } = Input;
-const ContentList = ()=>{
+const ContentList = (props)=>{
     const [isLoading,setIsLoading] = useState(false)
     const [dataTree,setDataTree] = useState([])
     const [dataOption,setDataOption] = useState([])
@@ -35,18 +35,18 @@ const ContentList = ()=>{
     },'list');
 
     const getDataTree = ()=>{
-        _blogCategoryList().then(res=>{
+        _cmsCategoryList({},props.match.params.site).then(res=>{
             setDataTree(res.data.data)
       })
     }
     const getTagList = ()=>{
-      _blogTagList().then(res=>{
+      _cmsTagList({},props.match.params.site).then(res=>{
         setTagList(res.data.data)
       })
     }
     //获取内容列表
     const getContentList = (cateId = categoryId,page = currentPage,search=searchKeywords)=>{
-            _blogContentList({category_id:cateId,page:page,paginate:pageSize,search:search}).then(res=>{
+            _cmsContentList({category_id:cateId,page:page,paginate:pageSize,search:search},props.match.params.site).then(res=>{
                 setContentList(res.data.data)
                 setDataTotal(res.data.paginate.total)
           })
@@ -94,7 +94,7 @@ const ContentList = ()=>{
         title: '删除确认?',
         content: '删除后无法恢复，请谨慎操作！！',
         onOk() {
-            _blogContentDelete(id).then(res=>{
+            _cmsContentDelete(id,props.match.params.site).then(res=>{
             if(res.data.status===200){
               message.success(res.data.msg)
               getContentList()
@@ -230,7 +230,14 @@ const ContentList = ()=>{
           :
           <div>
             <h3>{title}</h3>
-            <ContentForm cRef={formRef} params={formData} tagList={tagList} dataOption={dataOption} handleCancel={(cateId)=>{setContent('list');getContentList(cateId)}} />
+            <ContentForm 
+            cRef={formRef} 
+            params={formData} 
+            tagList={tagList} 
+            dataOption={dataOption} 
+            site={props.match.params.site} 
+            handleCancel={(cateId)=>{setContent('list');getContentList(cateId)}} 
+            />
           </div> 
         }
         </div>

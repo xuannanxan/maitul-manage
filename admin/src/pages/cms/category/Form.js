@@ -1,15 +1,14 @@
 import React, { useState ,useImperativeHandle} from 'react';
 import { Input ,Form ,InputNumber,TreeSelect,Select,message} from 'antd';
-import {_blogCategoryAdd,_blogCategoryEdit} from '../../../utils/api'
+import {_cmsCategoryAdd,_cmsCategoryEdit} from '../../../utils/api'
 const {TextArea} = Input
 
 function SubmitForm(props){
-    let { form,params,dataTree ,handleCancel} = props
+    let { form,params,dataTree,site,handleCancel} = props
     const { getFieldDecorator } = form; //表单内容
     const [treeData,setTreeData] = useState([])
-
     const edit= (formData) => {
-        _blogCategoryEdit(formData).then(res=>{
+        _cmsCategoryEdit(formData,site).then(res=>{
             if(res.data.status === 200){
                 message.success(res.data.msg)
                 handleCancel()
@@ -18,7 +17,7 @@ function SubmitForm(props){
         
     }
     const add=(formData)=>{
-        _blogCategoryAdd(formData).then(res=>{
+        _cmsCategoryAdd(formData,site).then(res=>{
             if(res.data.status === 201){
                 message.success(res.data.msg)
                 handleCancel()

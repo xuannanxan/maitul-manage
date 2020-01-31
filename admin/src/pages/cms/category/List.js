@@ -2,17 +2,17 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-28 13:59:22
+ * @LastEditTime : 2020-01-31 20:22:12
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
 import {Table ,Divider ,Icon ,Button ,Modal,message} from 'antd';
-import {_blogCategoryList ,_blogCategoryDelete } from '../../../utils/api'
+import {_cmsCategoryList ,_cmsCategoryDelete } from '../../../utils/api'
 import CategoryForm from './Form'
 
 const { confirm } = Modal;
 
-function CategoryList(){
+function CategoryList(props){
     const [dataTree,setDataTree] = useState([])
     const [visible,setVisible] = useState(false)
     const [confirmLoading,setConfirmLoading] = useState(false)
@@ -21,7 +21,7 @@ function CategoryList(){
     const formRef = useRef();
     // 获取分类树
     const getCategoryTree = ()=>{
-      _blogCategoryList().then(res=>{
+      _cmsCategoryList({},props.match.params.site).then(res=>{
           setDataTree(res.data.data)
         })
       }
@@ -64,7 +64,7 @@ function CategoryList(){
         title: '删除确认?',
         content: '删除后无法恢复，请谨慎操作！！',
         onOk() {
-          _blogCategoryDelete(id).then(res=>{
+          _cmsCategoryDelete(id,props.match.params.site).then(res=>{
             if(res.data.status===200){
               message.success(res.data.msg)
               getCategoryTree()
@@ -126,7 +126,13 @@ function CategoryList(){
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             >
-            <CategoryForm cRef={formRef} params={editData} dataTree={dataTree} handleCancel={handleCancel} />
+            <CategoryForm 
+            cRef={formRef} 
+            params={editData} 
+            site={props.match.params.site} 
+            dataTree={dataTree} 
+            handleCancel={handleCancel} 
+            />
             </Modal>
         </div>
         

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-28 20:37:14
+ * @LastEditTime : 2020-01-31 20:04:13
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -17,9 +17,9 @@ const adspaceUrl = '/api/resource/adspace'
 const adUrl = '/api/resource/ad'
 const configUrl = '/api/admin/config'
 const webconfigUrl = '/api/admin/webconfig'
-const blogTagUrl = '/api/blog/tag'
-const blogCategoryUrl = '/api/blog/category'
-const blogContentUrl = '/api/blog/content'
+const blogTagUrl = '/api/cms/blog/tag'
+const blogCategoryUrl = '/api/cms/blog/category'
+const blogContentUrl = '/api/cms/blog/content'
 
 
 
@@ -290,4 +290,67 @@ export const _blogContentEdit = async (formData)=>{
 //删除博客内容
 export const _blogContentDelete = async (id)=>{
   return await Http.request(blogContentUrl, Method.DELETE,{id})
+};
+
+
+
+
+// CMS-标签
+// 标签列表 
+export const _cmsTagList = async (formData,site)=>{
+  return await Http.request(`/api/cms/${site}/tag`, Method.GET,formData)
+};
+
+//新增标签
+export const _cmsTagAdd = async (formData,site)=>{
+  return await Http.request(`/api/cms/${site}/tag`, Method.POST,formData)
+};
+
+//修改标签
+export const _cmsTagEdit = async (formData,site)=>{
+  return await Http.request(`/api/cms/${site}/tag`, Method.PUT,formData)
+};
+//删除标签
+export const _cmsTagDelete = async (id,site)=>{
+  return await Http.request(`/api/cms/${site}/tag`, Method.DELETE,{id})
+};
+
+//cms-分类
+// 分类列表 
+export const _cmsCategoryList = async (formData,site)=>{
+  return await Http.request(`/api/cms/${site}/category`, Method.GET,formData)
+};
+
+//新增分类
+export const _cmsCategoryAdd = async (formData,site)=>{
+  return await Http.request(`/api/cms/${site}/category`, Method.POST,formData)
+};
+
+//修改分类
+export const _cmsCategoryEdit = async (formData,site)=>{
+  return await Http.request(`/api/cms/${site}/category`, Method.PUT,formData)
+};
+//删除分类
+export const _cmsCategoryDelete = async (id,site)=>{
+  return await Http.request(`/api/cms/${site}/category`, Method.DELETE,{id})
+};
+
+//cms-内容 
+// 内容列表 
+export const _cmsContentList = async (formData,site)=>{
+  return await Http.request(`/api/cms/${site}/content`, Method.GET,formData)
+};
+
+//新增内容
+export const _cmsContentAdd = async (formData,site)=>{
+  return await Http.request(`/api/cms/${site}/content`, Method.POST,formData)
+};
+
+//修改内容
+export const _cmsContentEdit = async (formData,site)=>{
+  return await Http.request(`/api/cms/${site}/content`, Method.PUT,formData)
+};
+//删除内容
+export const _cmsContentDelete = async (id,site)=>{
+  return await Http.request(`/api/cms/${site}/content`, Method.DELETE,{id})
 };

@@ -7,16 +7,16 @@
  */
 import React, {useImperativeHandle} from 'react';
 import { Input ,Form ,InputNumber,message} from 'antd';
-import {_blogTagAdd,_blogTagEdit} from '../../../utils/api'
+import {_cmsTagAdd,_cmsTagEdit} from '../../../utils/api'
 
 
 function SubmitForm(props){
-    let { form,params ,handleCancel} = props
+    let { form,params,site ,handleCancel} = props
     const { getFieldDecorator } = form; //表单内容
     
 
     const edit= (formData) => {
-        _blogTagEdit(formData).then(res=>{
+        _cmsTagEdit(formData,site).then(res=>{
             if(res.data.status === 200){
                 message.success(res.data.msg)
                 handleCancel()
@@ -25,7 +25,7 @@ function SubmitForm(props){
         
     }
     const add=(formData)=>{
-        _blogTagAdd(formData).then(res=>{
+        _cmsTagAdd(formData,site).then(res=>{
             if(res.data.status === 201){
                 message.success(res.data.msg)
                 handleCancel()
@@ -85,5 +85,5 @@ function SubmitForm(props){
         </div>
     )
 }
-const BlogTagForm = Form.create({ name: 'blog_tag_form' })(SubmitForm);
-export default BlogTagForm
+const TagForm = Form.create({ name: 'tag_form' })(SubmitForm);
+export default TagForm

@@ -50,24 +50,23 @@ sing_cate_fields = {
     'data':fields.Nested(cate_fields)
 }
 
-categoryModel = ''
 
-def getCategory(id):
+
+def getCategory(id,categoryModel):
     category = categoryModel.query.filter_by(id = id , is_del = '0').first()
     if not category :
         abort(RET.NotFound,msg='分类不存在')
     return category
  
 def setModel(site):
-    global categoryModel
     if site == 'blog':
-        categoryModel = BlogCategory
+        return BlogCategory
     elif site == 'maitul':
-        categoryModel = MaitulCategory
+        return MaitulCategory
     elif site == 'info':
-        categoryModel = InfoCategory
+        return InfoCategory
     elif site == 'metalparts':
-        categoryModel = MetalpartsCategory
+        return MetalpartsCategory
     else:
         abort(RET.NotFound,msg='请勿非法操作...')
     
@@ -80,7 +79,7 @@ class CategoryResource(Resource):
         '''
         添加分类
         '''
-        setModel(site)
+        categoryModel = setModel(site)
         args = parse_base.parse_args()
         pid = args.get('pid')
         name = args.get('name')
@@ -117,13 +116,13 @@ class CategoryResource(Resource):
         '''
         获取分类树
         '''
-        setModel(site)
+        categoryModel = setModel(site)
         args = parse_id.parse_args()
         id = args.get('id')
         if  id:
             return {
                     'status':RET.OK,
-                    'data':object_to_json(getCategory(id))
+                    'data':object_to_json(getCategory(id,categoryModel))
             } 
         cate_list = categoryModel.query.filter_by(is_del = '0').order_by(categoryModel.sort.desc()).all()
         if not cate_list:
@@ -143,12 +142,12 @@ class CategoryResource(Resource):
         '''
         修改分类
         '''
-        setModel(site)
+        categoryModel = setModel(site)
         args = parse_base.parse_args()
         id = args.get('id')
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
-        blog_cate = getCategory(id)
+        blog_cate = getCategory(id,categoryModel)
         pid = args.get('pid')
         name = args.get('name')
         keywords = args.get('keywords')
@@ -185,12 +184,12 @@ class CategoryResource(Resource):
         '''
         删除分类
         '''
-        setModel(site)
+        categoryModel = setModel(site)
         args = parse_id.parse_args()
         id = args.get('id')
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
-        cate = getCategory(id)
+        cate = getCategory(id,categoryModel)
         cate.is_del = cate.id
         cate.last_editor = g.admin.username
         result = categoryModel().updata()

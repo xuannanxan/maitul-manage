@@ -2,17 +2,17 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-30 19:56:44
+ * @LastEditTime : 2020-01-31 20:35:22
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
-import {_blogTagList,_blogTagDelete} from '../../../utils/api'
+import {_cmsTagList,_cmsTagDelete} from '../../../utils/api'
 import {Table ,Divider ,Icon  ,Button ,Modal,message,Spin} from 'antd';
-import RuleForm from './Form'
+import TagForm from './Form'
 
 const pageSize = 8
 const { confirm } = Modal;
-const BlogTagList = ()=>{
+const TagList = (props)=>{
     const [isLoading,setIsLoading] = useState(false)
     const [tagList,setTagList] = useState([])
     const [visible,setVisible] = useState(false)
@@ -26,7 +26,7 @@ const BlogTagList = ()=>{
     //获取权限规则列表
     const getList = (page = currentPage)=>{
       setIsLoading(true)
-      _blogTagList({page:page,paginate:pageSize}).then(res=>{
+      _cmsTagList({page:page,paginate:pageSize},props.match.params.site).then(res=>{
         setTagList(res.data.data)
         setTagTotal(res.data.paginate.total)
       })
@@ -57,7 +57,7 @@ const BlogTagList = ()=>{
         title: '删除确认?',
         content: '删除后无法恢复，请谨慎操作！！',
         onOk() {
-          _blogTagDelete(id).then(res=>{
+          _cmsTagDelete(id,props.match.params.site).then(res=>{
             if(res.data.status===200){
               message.success(res.data.msg)
               getList()
@@ -83,7 +83,7 @@ const BlogTagList = ()=>{
     
     useEffect(()=>{
       setIsLoading(true)
-      _blogTagList({page:1,paginate:pageSize}).then(res=>{
+      _cmsTagList({page:1,paginate:pageSize},props.match.params.site).then(res=>{
         setTagList(res.data.data)
         setTagTotal(res.data.paginate.total)
       })
@@ -147,9 +147,13 @@ const BlogTagList = ()=>{
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             >
-            <RuleForm cRef={formRef} params={formData}  handleCancel={handleCancel}/>
+            <TagForm 
+            cRef={formRef} 
+            params={formData}  
+            site = {props.match.params.site}
+            handleCancel={handleCancel}/>
             </Modal>
         </div>
     )
 }
-export default BlogTagList
+export default TagList

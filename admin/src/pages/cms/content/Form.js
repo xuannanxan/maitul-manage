@@ -8,7 +8,7 @@
 
 
 import React, { useState,useImperativeHandle} from 'react';
-import {_blogContentEdit,_blogContentAdd,_fileUpload} from '../../../utils/api'
+import {_cmsContentEdit,_cmsContentAdd,_fileUpload} from '../../../utils/api'
 import { Row, Col, Input ,Icon ,Select,Form ,Upload ,Spin,Button,InputNumber,TreeSelect ,message} from 'antd';
 import Editor from '../../components/Editor'
 
@@ -18,11 +18,11 @@ const { TextArea } = Input
 function SubmitForm(props){
     const [imageUrl ,setImageUrl ] = useState('')
     const [loading ,setLoading ] = useState(false)
-    const {form,params,tagList,dataOption,handleCancel} = props
+    const {form,params,tagList,dataOption,site,handleCancel} = props
     const { getFieldDecorator } = form; //表单内容
     const [isLoading, setIsLoading] = useState(false)
     const edit= (formData) => {
-        _blogContentEdit(formData).then(res=>{
+        _cmsContentEdit(formData,site).then(res=>{
             if(res.data.status === 200){
                 message.success(res.data.msg)
                 setTimeout(()=>{
@@ -33,7 +33,7 @@ function SubmitForm(props){
         
     }
     const add=(formData)=>{
-        _blogContentAdd(formData).then(res=>{
+        _cmsContentAdd(formData,site).then(res=>{
             if(res.data.status === 201){
                 message.success(res.data.msg)
                 setTimeout(()=>{
