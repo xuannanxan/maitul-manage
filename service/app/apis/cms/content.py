@@ -4,22 +4,13 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-01-30 19:47:13
-@LastEditors  : Xuannan
-'''
-#!/usr/bin/env python
-# coding=utf-8
-'''
-@Description: 
-@Author: Xuannan
-@Date: 2019-12-08 19:28:32
-@LastEditTime : 2020-01-03 23:56:59
+@LastEditTime : 2020-01-31 14:28:34
 @LastEditors  : Xuannan
 '''
 
+
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
-from app.models.blog import BlogContent,BlogContentTag
 from app.models.base import Crud
 from app.utils import object_to_json,mysql_to_json
 from app.config import PAGINATE_NUM
@@ -28,7 +19,9 @@ from app.utils.api_doc import Apidoc
 from app.api_docs.blog import content_doc
 from flask import g
 
-api = Apidoc('博客-内容')
+from app.models import BlogContent,BlogContentTag, MaitulContent,MaitulContentTag,InfoContent,InfoContentTag,MetalpartsContent,MetalpartsContentTag
+
+api = Apidoc('内容管理-内容')
 
 parse_id = reqparse.RequestParser()
 parse_id.add_argument('id')
@@ -64,21 +57,58 @@ sing_content_fields = {
     'msg':fields.String,
     'data':fields.Nested(content_fields)
 }
+
+contentModel = ''
+contentTagModel = ''
+contentTable = ''
+contentTagTable = ''
+TagTable = ''
+
 def getContent(id):
-    content = BlogContent.query.filter_by(id = id , is_del = '0').first()
+    content = contentModel.query.filter_by(id = id , is_del = '0').first()
     if not content :
         abort(RET.NotFound,msg='内容不存在')
     return content
 
+def setModel(site):
+    # 动态设置表名和模型
+    global contentModel,contentTagModel,contentTable,contentTagTable,TagTable
+    if site == 'blog':
+        contentModel = BlogContent
+        contentTagModel = BlogContentTag
+        contentTable = 'blog_content'
+        contentTagTable = 'blog_content_tag'
+        TagTable = 'blog_tag'
+    elif site == 'maitul':
+        contentModel = MaitulContent
+        contentTagModel = MaitulContentTag
+        contentTable = 'maitul_content'
+        contentTagTable = 'maitul_content_tag'
+        TagTable = 'maitul_tag'
+    elif site == 'info':
+        contentModel = InfoContent
+        contentTagModel = InfoContentTag
+        contentTable = 'info_content'
+        contentTagTable = 'info_content_tag'
+        TagTable = 'info_tag'
+    elif site == 'metalparts':
+        contentModel = MetalpartsContent
+        contentTagModel = MetalpartsContentTag
+        contentTable = 'metalparts_content'
+        contentTagTable = 'metalparts_content_tag'
+        TagTable = 'metalparts_tag'
+    else:
+        abort(RET.NotFound,msg='请勿非法操作...')
 
-class BlogContentResource(Resource):
+class ContentResource(Resource):
     @api.doc(api_doc=content_doc.add)
     @login_required
     @permission_required
-    def post(self):
+    def post(self,site):
         """
         添加内容
         """
+        setModel(site)
         args = parse_base.parse_args()
         title = args.get('title')
         keywords = args.get('keywords')
@@ -88,25 +118,25 @@ class BlogContentResource(Resource):
         tags = args.get('tags')
         sort = args.get('sort')
         category_id = args.get('category_id')
-        blog_content = BlogContent()
-        blog_content.title = title
-        blog_content.keywords = keywords
-        blog_content.description = description
-        blog_content.content = content
-        blog_content.cover = cover
-        blog_content.category_id = category_id
-        blog_content.sort = sort
-        blog_content.author = g.admin.username
-        blog_content.last_editor = g.admin.username
-        if blog_content.add():
+        _content = contentModel()
+        _content.title = title
+        _content.keywords = keywords
+        _content.description = description
+        _content.content = content
+        _content.cover = cover
+        _content.category_id = category_id
+        _content.sort = sort
+        _content.author = g.admin.username
+        _content.last_editor = g.admin.username
+        if contentModel.add():
             data = {
                     'status':RET.Created,
                     'msg':'添加成功',
-                    'data':blog_content
+                    'data':_content
             }
             if tags:
-                tag_data = [BlogContentTag(
-                    content_id = blog_content.id,
+                tag_data = [contentTagModel(
+                    content_id = _content.id,
                     tag_id =v
                 ) for v in tags.split(',') ]
                 Crud.add_all(tag_data)
@@ -115,21 +145,22 @@ class BlogContentResource(Resource):
 
         
     @api.doc(api_doc=content_doc.lst)
-    def get(self):
+    def get(self,site):
         '''
         内容列表1
         '''
+        setModel(site)
         argsById = parse_id.parse_args()
         id = argsById.get('id')
         # 如果有id,就返回单个内容
         if id:
             sql='''
                 SELECT c.*,GROUP_CONCAT(t.name SEPARATOR ',') as tags
-                FROM blog_content as c
-                    left join blog_content_tag as r on c.id = r.content_id
-                    left join blog_tag as t on t.id = r.tag_id
+                FROM %s as c
+                    left join %s as r on c.id = r.content_id
+                    left join %s as t on t.id = r.tag_id
                 WHERE c.id = %s and c.is_del = 0;
-                '''%(id)
+                '''%(contentTable,contentTagTable,TagTable,id)
             sql_data = Crud.auto_select(sql)
             data = sql_data.first()
             if not data:
@@ -159,14 +190,14 @@ class BlogContentResource(Resource):
             SQL_CALC_FOUND_ROWS c.*,
             GROUP_CONCAT(t.id SEPARATOR ',') as tags,
             GROUP_CONCAT(t.name SEPARATOR ',') as tags_name
-            FROM blog_content as c
-            left join blog_content_tag as r on c.id = r.content_id
-            left join blog_tag as t on t.id = r.tag_id
-            WHERE {0} c.is_del = 0
+            FROM {0} as c
+            left join {1} as r on c.id = r.content_id
+            left join {2} as t on t.id = r.tag_id
+            WHERE {3} c.is_del = 0
             GROUP BY c.id
             ORDER BY c.sort DESC,c.create_time DESC
-            LIMIT {1},{2};
-        '''.format(query,(page-1)*paginate,paginate)
+            LIMIT {4},{5};
+        '''.format(contentTable,contentTagTable,TagTable,query,(page-1)*paginate,paginate)
         sql_data = Crud.auto_select(sql)
         # 查询总数
         count_num = Crud.auto_select("SELECT FOUND_ROWS() as countnum")
@@ -191,15 +222,16 @@ class BlogContentResource(Resource):
     @api.doc(api_doc=content_doc.put)
     @login_required   
     @permission_required 
-    def put(self):
+    def put(self,site):
         '''
         修改内容
         '''
+        setModel(site)
         args = parse_base.parse_args()
         id = args.get('id')
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
-        blog_content = getContent(id)
+        _content = getContent(id)
         title = args.get('title')
         keywords = args.get('keywords')
         description = args.get('description')
@@ -207,28 +239,28 @@ class BlogContentResource(Resource):
         cover = args.get('cover')
         tags = args.get('tags')
         category_id = args.get('category_id')
-        blog_content.title = title if title else blog_content.title
-        blog_content.keywords = keywords if keywords else blog_content.keywords
-        blog_content.description = description if description else blog_content.description
-        blog_content.content = content if content else blog_content.content
-        blog_content.cover = cover if cover else blog_content.cover
-        blog_content.category_id = category_id if category_id else blog_content.category_id
-        blog_content.last_editor = g.admin.username
-        result = BlogContent().updata()
+        _content.title = title if title else _content.title
+        _content.keywords = keywords if keywords else _content.keywords
+        _content.description = description if description else _content.description
+        _content.content = content if content else _content.content
+        _content.cover = cover if cover else _content.cover
+        _content.category_id = category_id if category_id else _content.category_id
+        _content.last_editor = g.admin.username
+        result = contentModel().updata()
         if result:
             data =  {
                 'status':RET.OK,
                 'msg':'修改成功',
-                'data':blog_content
+                'data':_content
             }
             # 清空原来的tags
-            old_tag_data = BlogContentTag.query.filter_by(content_id = id ).all()
-            if old_tag_data :
-                Crud.clean_all(old_tag_data)
+            old_data = contentTagModel.query.filter_by(content_id = id ).all()
+            if old_data :
+                Crud.clean_all(old_data)
             # 重新添加tags
             if tags:
-                new_tag_data = [BlogContentTag(
-                        content_id = blog_content.id,
+                new_tag_data = [contentTagModel(
+                        content_id = _content.id,
                         tag_id =v
                     ) for v in tags.split(',') ]
                 Crud.add_all(new_tag_data)
@@ -238,18 +270,19 @@ class BlogContentResource(Resource):
     @api.doc(api_doc=content_doc.put)
     @login_required
     @permission_required
-    def delete(self):
+    def delete(self,site):
         '''
         删除内容
         '''
+        setModel(site)
         args = parse_id.parse_args()
         id = args.get('id')
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
-        blog_content = getContent(id)
-        blog_content.is_del = blog_content.id
-        blog_content.last_editor = g.admin.username
-        result = BlogContent().updata()
+        _content = getContent(id)
+        _content.is_del = _content.id
+        _content.last_editor = g.admin.username
+        result = contentModel().updata()
         if result:
             return {
                 'status':RET.OK,

@@ -10,8 +10,7 @@
 
 
 from flask_restful import Resource,reqparse,fields,marshal,abort,inputs
-from app.models.admin import Admin,AdminLog,AdminRole
-from app.models.base import Crud
+from app.models import Admin,AdminLog,AdminRole, Crud
 from app.apis.api_constant import *
 from .common import get_admin,login_required,logout,permission_required
 import uuid,datetime,json

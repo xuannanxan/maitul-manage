@@ -7,8 +7,7 @@
 @LastEditTime : 2020-01-16 14:08:40
 @LastEditors  : Xuannan
 '''
-from app.models.admin import Admin
-from app.models.base import Crud
+from app.models import Admin, Crud
 from flask import g,request
 from flask_restful import abort,reqparse
 from app.ext import cache

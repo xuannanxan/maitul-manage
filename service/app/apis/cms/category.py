@@ -4,12 +4,11 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime : 2020-01-27 20:02:46
+@LastEditTime : 2020-01-31 14:03:52
 @LastEditors  : Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
-from app.models.blog import BlogCategory
 from app.utils import object_to_json
 from app.utils.tree import build_tree
 from app.apis.admin.common import login_required,permission_required
@@ -17,7 +16,10 @@ from app.utils.api_doc import Apidoc
 from app.api_docs.blog import category_doc
 from flask import g
 
-api = Apidoc('博客-分类')
+from app.models import BlogCategory,MaitulCategory,MetalpartsCategory,InfoCategory
+
+
+api = Apidoc('内容管理-分类')
 
 
 parse_id = reqparse.RequestParser()
@@ -48,20 +50,37 @@ sing_cate_fields = {
     'data':fields.Nested(cate_fields)
 }
 
+categoryModel = ''
+
 def getCategory(id):
-    category = BlogCategory.query.filter_by(id = id , is_del = '0').first()
+    category = categoryModel.query.filter_by(id = id , is_del = '0').first()
     if not category :
         abort(RET.NotFound,msg='分类不存在')
     return category
+ 
+def setModel(site):
+    global categoryModel
+    if site == 'blog':
+        categoryModel = BlogCategory
+    elif site == 'maitul':
+        categoryModel = MaitulCategory
+    elif site == 'info':
+        categoryModel = InfoCategory
+    elif site == 'metalparts':
+        categoryModel = MetalpartsCategory
+    else:
+        abort(RET.NotFound,msg='请勿非法操作...')
+    
 
-class BlogCategoryResource(Resource):
+class CategoryResource(Resource):
     @api.doc(api_doc=category_doc.add)
     @login_required
     @permission_required
-    def post(self):
+    def post(self,site):
         '''
         添加分类
         '''
+        setModel(site)
         args = parse_base.parse_args()
         pid = args.get('pid')
         name = args.get('name')
@@ -70,10 +89,10 @@ class BlogCategoryResource(Resource):
         icon = args.get('icon')
         cover = args.get('cover')
         sort = args.get('sort')
-        cate = BlogCategory.query.filter_by(name = name,is_del = '0').first()
+        cate = categoryModel.query.filter_by(name = name,is_del = '0').first()
         if cate:
             abort(RET.Forbidden,msg='分类已存在')
-        blog_cate = BlogCategory()
+        blog_cate = categoryModel()
         blog_cate.pid = pid
         blog_cate.name = name
         blog_cate.keywords = keywords
@@ -94,10 +113,11 @@ class BlogCategoryResource(Resource):
         
 
     @api.doc(api_doc=category_doc.lst)
-    def get(self):
+    def get(self,site):
         '''
         获取分类树
         '''
+        setModel(site)
         args = parse_id.parse_args()
         id = args.get('id')
         if  id:
@@ -105,7 +125,7 @@ class BlogCategoryResource(Resource):
                     'status':RET.OK,
                     'data':object_to_json(getCategory(id))
             } 
-        cate_list = BlogCategory.query.filter_by(is_del = '0').order_by(BlogCategory.sort.desc()).all()
+        cate_list = categoryModel.query.filter_by(is_del = '0').order_by(categoryModel.sort.desc()).all()
         if not cate_list:
             abort(RET.BadRequest,msg='暂无数据')
         data = {
@@ -119,10 +139,11 @@ class BlogCategoryResource(Resource):
     @api.doc(api_doc=category_doc.put)
     @login_required 
     @permission_required 
-    def put(self):
+    def put(self,site):
         '''
         修改分类
         '''
+        setModel(site)
         args = parse_base.parse_args()
         id = args.get('id')
         if not id:
@@ -136,7 +157,7 @@ class BlogCategoryResource(Resource):
         cover = args.get('cover')
         sort = args.get('sort')
         # 如果名称存在，并且ID不是当前ID
-        cate = BlogCategory.query.filter(BlogCategory.id != id , BlogCategory.is_del == '0',BlogCategory.name == name).first()
+        cate = categoryModel.query.filter(categoryModel.id != id , categoryModel.is_del == '0',categoryModel.name == name).first()
         if cate:
             abort(RET.Forbidden,msg='标签已存在')
         blog_cate.name = name
@@ -147,7 +168,7 @@ class BlogCategoryResource(Resource):
         blog_cate.cover = cover if cover else blog_cate.cover
         blog_cate.sort = sort if sort else blog_cate.sort
         blog_cate.last_editor = g.admin.username
-        result = BlogCategory().updata()
+        result = categoryModel().updata()
         if result:
             data =  {
                 'status':RET.OK,
@@ -160,10 +181,11 @@ class BlogCategoryResource(Resource):
     @api.doc(api_doc=category_doc.delete)
     @login_required
     @permission_required
-    def delete(self):
+    def delete(self,site):
         '''
         删除分类
         '''
+        setModel(site)
         args = parse_id.parse_args()
         id = args.get('id')
         if not id:
@@ -171,7 +193,7 @@ class BlogCategoryResource(Resource):
         cate = getCategory(id)
         cate.is_del = cate.id
         cate.last_editor = g.admin.username
-        result = BlogCategory().updata()
+        result = categoryModel().updata()
         if result:
             return {
                 'status':RET.OK,

@@ -10,7 +10,7 @@
 
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
-from app.models.admin import Menu
+from app.models import Menu
 from app.utils import object_to_json
 from app.utils.tree import build_tree,getParent
 from app.apis.admin.common import login_required,permission_required

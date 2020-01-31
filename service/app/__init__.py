@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2020-01-17 10:50:27
+@LastEditTime : 2020-01-31 14:35:19
 @LastEditors  : Xuannan
 '''
 # -*- coding: utf-8 -*- 
@@ -24,7 +24,7 @@ from app.apis.admin import admin_api
 from app.apis.company import company_api
 from app.apis.common import common_api
 from app.apis.resource import resource_api
-from app.apis.blog import blog_api
+from app.apis.cms import cms_api
 
 DEFAULT_BLUEPRINT = (
     (admin,'/admin'),
@@ -38,8 +38,8 @@ def init_api(app):
     client_api.init_app(app)
     company_api.init_app(app)
     admin_api.init_app(app)
-    blog_api.init_app(app)
     resource_api.init_app(app)
+    cms_api.init_app(app)
 
 def app_log(app):
     log_dir_name = "logs"

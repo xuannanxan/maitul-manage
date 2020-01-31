@@ -1,8 +1,7 @@
 
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
-from app.models.admin import Role,RoleRule
-from app.models.base import Crud
+from app.models import Role,RoleRule, Crud
 from app.utils import object_to_json,mysql_to_json
 from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
