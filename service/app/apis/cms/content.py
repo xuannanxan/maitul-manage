@@ -16,7 +16,7 @@ from app.utils import object_to_json,mysql_to_json
 from app.config import PAGINATE_NUM
 from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
-from app.api_docs.blog import content_doc
+from app.api_docs.cms import content_doc
 from flask import g
 
 from app.models import BlogContent,BlogContentTag, MaitulContent,MaitulContentTag,InfoContent,InfoContentTag,MetalpartsContent,MetalpartsContentTag

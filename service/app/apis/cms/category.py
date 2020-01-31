@@ -13,7 +13,7 @@ from app.utils import object_to_json
 from app.utils.tree import build_tree
 from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
-from app.api_docs.blog import category_doc
+from app.api_docs.cms import category_doc
 from flask import g
 
 from app.models import BlogCategory,MaitulCategory,MetalpartsCategory,InfoCategory
