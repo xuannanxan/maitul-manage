@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-02-01 22:13:16
+ * @LastEditTime : 2020-02-01 23:37:46
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -77,7 +77,7 @@ const MessageList = (props)=>{
     
     useEffect(()=>{
       setIsLoading(true)
-      _messageList({page:currentPage,paginate:pageSize,site:props.match.params.site}).then(res=>{
+      _messageList({page:1,paginate:pageSize,site:props.match.params.site}).then(res=>{
         setMessageList(res.data.data)
         setMessageTotal(res.data.paginate.total)
       })

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:28
- * @LastEditTime : 2020-01-02 14:04:10
+ * @LastEditTime : 2020-02-01 23:44:55
  * @LastEditors  : Xuannan
  */
 
@@ -55,11 +55,16 @@ export const request = (api, method = Method.GET, params = {}, config = {}) => {
     })
       .catch(error => {
         console.dir(error);
-        message.error(error.response.data.msg ? error.response.data.msg : JSON.stringify(error.response.data));
+        
         //如果没有登录或被T，跳回登录页面
         if(error.response.data.status === 1403){
           localStorage.removeItem('jwToken') 
           window.location = '/login';
+        }
+        else if(error.response.status === 500){
+          message.error('服务器连接失败...');
+        }else{
+          message.error(error.response.data.msg ? error.response.data.msg : JSON.stringify(error.response.data));
         }
         reject(error);
       });
