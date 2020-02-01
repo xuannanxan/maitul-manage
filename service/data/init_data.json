@@ -146,7 +146,7 @@
         },
         {
             "id":"20190101000001005",
-            "name":"通用",
+            "name":"营销",
             "icon":"interaction",
             "url":"",
             "pid":"0",
@@ -168,6 +168,51 @@
             "icon":"picture",
             "url":"/ad",
             "pid":"20190101000001005",
+            "sort":1,
+            "is_del":0
+        },
+        {
+            "id":"20190101010050003",
+            "name":"留言管理",
+            "icon":"mail",
+            "url":"/message",
+            "pid":"20190101000001005",
+            "sort":1,
+            "is_del":0
+        },
+        {
+            "id":"20190101010050004",
+            "name":"博客",
+            "icon":"edit",
+            "url":"/message/blog",
+            "pid":"20190101010050003",
+            "sort":1,
+            "is_del":0
+        },
+        {
+            "id":"20190101010050005",
+            "name":"官网",
+            "icon":"ie",
+            "url":"/message/maitul",
+            "pid":"20190101010050003",
+            "sort":1,
+            "is_del":0
+        },
+        {
+            "id":"20190101010050006",
+            "name":"Metalparts门户",
+            "icon":"windows",
+            "url":"/message/metalparts",
+            "pid":"20190101010050003",
+            "sort":1,
+            "is_del":0
+        },
+        {
+            "id":"20190101010050007",
+            "name":"资讯门户",
+            "icon":"profile",
+            "url":"/message/info",
+            "pid":"20190101010050003",
             "sort":1,
             "is_del":0
         },

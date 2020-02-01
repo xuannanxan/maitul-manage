@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-01-31 20:04:13
+ * @LastEditTime : 2020-02-01 21:32:26
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -20,7 +20,7 @@ const webconfigUrl = '/api/admin/webconfig'
 const blogTagUrl = '/api/cms/blog/tag'
 const blogCategoryUrl = '/api/cms/blog/category'
 const blogContentUrl = '/api/cms/blog/content'
-
+const messageUrl = '/api/message'
 
 
 
@@ -353,4 +353,19 @@ export const _cmsContentEdit = async (formData,site)=>{
 //删除内容
 export const _cmsContentDelete = async (id,site)=>{
   return await Http.request(`/api/cms/${site}/content`, Method.DELETE,{id})
+};
+
+
+//留言 
+// 留言列表 
+export const _messageList = async (formData)=>{
+  return await Http.request(messageUrl, Method.GET,formData)
+};
+//回复留言
+export const _messageReply = async (formData)=>{
+  return await Http.request(messageUrl, Method.PUT,formData)
+};
+//删除留言
+export const _messageDelete = async (formData)=>{
+  return await Http.request(messageUrl, Method.DELETE,formData)
 };

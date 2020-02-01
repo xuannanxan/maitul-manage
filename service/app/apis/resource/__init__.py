@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2020-01-17 10:34:59
-@LastEditTime : 2020-02-01 16:54:50
+@LastEditTime : 2020-02-01 23:14:28
 @LastEditors  : Xuannan
 '''
 from flask_restful import Api
@@ -13,6 +13,7 @@ from app.apis.resource.ad_space import AdSpaceResource
 from app.apis.resource.ad import AdResource
 from app.apis.resource.uploads import UploadResource
 from app.apis.resource.captcha import CaptchaResource
+from app.apis.resource.message import MessageResource,ShowMessageResource
 
 
 
@@ -28,3 +29,9 @@ resource_api.add_resource(AdResource,'/resource/ad')
 resource_api.add_resource(UploadResource,'/upload')
 # 验证码
 resource_api.add_resource(CaptchaResource,'/captcha')
+
+# 留言
+resource_api.add_resource(MessageResource,'/message')
+
+# 用于展示的留言
+resource_api.add_resource(ShowMessageResource,'/message/show')

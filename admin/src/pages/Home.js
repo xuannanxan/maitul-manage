@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-02-01 13:35:40
+ * @LastEditTime : 2020-02-01 22:05:00
  * @LastEditors  : Xuannan
  */
 
@@ -23,6 +23,7 @@ import WebConfig from './webconfig/WebConfig'
 import TagList from './cms/tag/List'
 import CategoryList from './cms/category/List'
 import ContentList from './cms/content/List'
+import MessageList from './message/List'
 import {_menuTree} from '../utils/api'
 import { CSSTransition,TransitionGroup } from 'react-transition-group'
 import {getAllParent,getNode} from '../utils/treeNodes'
@@ -39,10 +40,10 @@ const RouteList = [
   {path:"/ad",component:AdList},
   {path:"/config",component:ConfList},
   {path:"/webconfig",component:WebConfig},
-
   {path:"/cms/:site/tag",component:TagList},
   {path:"/cms/:site/category",component:CategoryList},
   {path:"/cms/:site/content",component:ContentList},
+  {path:"/message/:site",component:MessageList},
 ]
 
 

@@ -4,11 +4,10 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2020-02-01 17:12:41
+@LastEditTime : 2020-02-01 21:23:13
 @LastEditors  : Xuannan
 '''
-# -*- coding: utf-8 -*- 
-# Created by xuannan on 2019-01-01.
+
 
 from flask import Flask,render_template
 from app.ext import init_ext

@@ -44,3 +44,6 @@
 .w-e-text-container{
   height: 380px !important;
 }
+.ant-form-item{
+  margin-bottom: 15px;
+}
