@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# coding=utf-8
+'''
+@Description: 
+@Author: Xuannan
+@Date: 2019-12-08 10:03:49
+@LastEditTime : 2020-02-01 17:13:52
+@LastEditors  : Xuannan
+'''
 
 #!/usr/bin/env python
 # coding=utf-8
@@ -13,7 +22,7 @@ from .base import Crud
 
 from .user import User
 from .city import City
-
+from .message import Message
 from .blog import BlogCategory,BlogContent,BlogTag,BlogContentTag
 from .maitul import MaitulCategory, MaitulContent,MaitulContentTag, MaitulTag
 from .info import InfoTag, InfoContentTag,InfoContent,InfoCategory

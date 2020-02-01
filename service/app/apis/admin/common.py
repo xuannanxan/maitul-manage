@@ -4,14 +4,14 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2020-01-16 14:08:40
+@LastEditTime : 2020-02-01 17:21:48
 @LastEditors  : Xuannan
 '''
 from app.models import Admin, Crud
 from flask import g,request
 from flask_restful import abort,reqparse
 from app.ext import cache
-from app.apis.common.auth import Auth
+from app.apis.common import Auth
 from app.apis.api_constant import *
 import datetime
 

@@ -73,11 +73,11 @@ def init_data():
         check = input("确认添加初始化吗？如果二次初始化，可能会导致数据重复，1为确认，其他为取消：")
         if check == '1':
             init_json = load_data('./data/init_data.json')
-            city_json = load_data('./data/cities.json')
+            # city_json = load_data('./data/cities.json')
             insert_rules(init_json)
             insert_menus(init_json)
             
-            insert_cities(city_json)
+            # insert_cities(city_json)
             print("初始化成功")
         else:
             print("已取消操作")

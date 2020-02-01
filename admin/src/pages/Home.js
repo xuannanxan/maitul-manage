@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-01-31 20:42:12
+ * @LastEditTime : 2020-02-01 13:35:40
  * @LastEditors  : Xuannan
  */
 
@@ -56,33 +56,7 @@ function Home(props){
     const [topMenuName,setTopMenuName] = useState('')
     const location = props.location
     
-    const getMenuTree = ()=>{
-      _menuTree().then(res=>{
-        const menuData = []
-        res.data.data.forEach((item,index)=>{
-          menuData[item.id]=item
-        })
-        setHeaderMenu(menuData)
-        let activeNode = getNode(res.data.data,location.pathname,'url')
-        let allParents = getAllParent(activeNode,res.data.data)
-        if(activeNode){
-          //当前URL对应的菜单
-          setActiveMenu(activeNode)
-        }
-        if(allParents){
-          //展开的菜单
-          setOpenMenu(allParents)
-          //选中的顶级菜单 
-          allParents.forEach((item,index)=>{
-            if(item.pid==='0'){
-              setActiveTopMenu(item)
-              setTopMenuName(item.name)
-              setLeftMenu(item.children)
-            }
-          })
-        }
-      })
-    }
+ 
     const getChildMenu = (e)=>{
       setLeftMenu(headerMenu[e.key].children)
       setActiveTopMenu(headerMenu[e.key])
@@ -136,8 +110,32 @@ function Home(props){
     };
 
     useEffect(()=>{
-      getMenuTree()
-    },[])
+      _menuTree().then(res=>{
+        const menuData = []
+        res.data.data.forEach((item,index)=>{
+          menuData[item.id]=item
+        })
+        setHeaderMenu(menuData)
+        let activeNode = getNode(res.data.data,location.pathname,'url')
+        let allParents = getAllParent(activeNode,res.data.data)
+        if(activeNode){
+          //当前URL对应的菜单
+          setActiveMenu(activeNode)
+        }
+        if(allParents){
+          //展开的菜单
+          setOpenMenu(allParents)
+          //选中的顶级菜单 
+          allParents.forEach((item,index)=>{
+            if(item.pid==='0'){
+              setActiveTopMenu(item)
+              setTopMenuName(item.name)
+              setLeftMenu(item.children)
+            }
+          })
+        }
+      })
+    },[location])
     return(
         <Layout style={{ minHeight: '100vh' }}>
         <Sider  collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ background: '#fff' }}>

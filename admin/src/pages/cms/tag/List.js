@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-31 20:35:22
+ * @LastEditTime : 2020-02-01 13:05:52
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -90,7 +90,7 @@ const TagList = (props)=>{
       setTimeout(()=>{
         setIsLoading(false)
       },300)
-      },[])
+      },[props.match.params.site])
     const columns = [
         {
           title: '标签名称',

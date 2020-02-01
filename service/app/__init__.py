@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2020-01-31 14:35:19
+@LastEditTime : 2020-02-01 17:12:41
 @LastEditors  : Xuannan
 '''
 # -*- coding: utf-8 -*- 
@@ -15,28 +15,20 @@ from app.ext import init_ext
 from app.config import envs
 import logging,os,time
 from logging.handlers import RotatingFileHandler
-from .admin import admin
-from .home import home
 from app.apis import api_blueprint
 from app.utils.file import make_dir
 from app.apis.client import client_api
 from app.apis.admin import admin_api
-from app.apis.company import company_api
-from app.apis.common import common_api
 from app.apis.resource import resource_api
 from app.apis.cms import cms_api
 
 DEFAULT_BLUEPRINT = (
-    (admin,'/admin'),
-    (home,''),
-    (api_blueprint,'/api')
-
+    (api_blueprint,'/api'),
 )
 
 
 def init_api(app):
     client_api.init_app(app)
-    company_api.init_app(app)
     admin_api.init_app(app)
     resource_api.init_app(app)
     cms_api.init_app(app)

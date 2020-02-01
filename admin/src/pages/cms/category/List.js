@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-31 20:22:12
+ * @LastEditTime : 2020-02-01 13:07:06
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -104,8 +104,10 @@ function CategoryList(props){
     }
 
     useEffect(()=>{
-        getCategoryTree()
-      },[])
+      _cmsCategoryList({},props.match.params.site).then(res=>{
+        setDataTree(res.data.data)
+      })
+      },[props.match.params.site])
     return(
         <div className='main-content'>
             <Button type="primary" onClick={showFormModal} size="large"><Icon type="plus"/> 添加</Button>

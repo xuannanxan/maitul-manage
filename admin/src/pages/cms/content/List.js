@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-30 22:17:29
+ * @LastEditTime : 2020-02-01 13:19:11
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef , useReducer} from 'react';
@@ -34,16 +34,7 @@ const ContentList = (props)=>{
       return ''
     },'list');
 
-    const getDataTree = ()=>{
-        _cmsCategoryList({},props.match.params.site).then(res=>{
-            setDataTree(res.data.data)
-      })
-    }
-    const getTagList = ()=>{
-      _cmsTagList({},props.match.params.site).then(res=>{
-        setTagList(res.data.data)
-      })
-    }
+
     //获取内容列表
     const getContentList = (cateId = categoryId,page = currentPage,search=searchKeywords)=>{
             _cmsContentList({category_id:cateId,page:page,paginate:pageSize,search:search},props.match.params.site).then(res=>{
@@ -81,8 +72,8 @@ const ContentList = (props)=>{
     const showContentList = (selectedKeys, info)  =>{
       setIsLoading(true)
       setCurrentPage(1)
-      setSearchKeywords('')
-      getContentList(selectedKeys[0]);
+      
+      getContentList(selectedKeys[0],1,'');
       setCategoryId(selectedKeys[0])
       setTimeout(()=>{
         setIsLoading(false)
@@ -176,10 +167,17 @@ const ContentList = (props)=>{
 
 
     useEffect(()=>{
-      getDataTree()
-      getTagList()
-      getContentList()
-    },[])
+      _cmsCategoryList({},props.match.params.site).then(res=>{
+        setDataTree(res.data.data)
+      })
+      _cmsTagList({},props.match.params.site).then(res=>{
+        setTagList(res.data.data)
+      })
+      _cmsContentList({category_id:'',page:1,paginate:pageSize},props.match.params.site).then(res=>{
+        setContentList(res.data.data)
+        setDataTotal(res.data.paginate.total)
+      })
+    },[props.match.params.site])
     return (
         <div className='main-content'>
           {content && content==='list'?
