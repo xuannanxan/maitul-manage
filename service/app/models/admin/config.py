@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-13 17:29:28
-@LastEditTime : 2020-01-20 10:33:13
+@LastEditTime : 2020-02-02 22:02:43
 @LastEditors  : Xuannan
 '''
 # -*- coding: utf-8 -*- 
@@ -18,7 +18,7 @@ class WebConfig(BaseModel):
     __tablename__ = "web_config"
     name = db.Column(db.String(100), nullable=False)
     ename = db.Column(db.String(100), nullable=False)
-    moduleID = db.Column(db.String(32), nullable=False) # 配置类型，如系统配置，站点配置
+    site = db.Column(db.String(32), nullable=False) # 配置类型，如系统配置，站点配置
     fieldType = db.Column(db.String(32), nullable=False)  # 字段类型，如文本，数字,文本域，下拉单选，下拉多选，图片，富文本
     placeholder = db.Column(db.String(100))
     values = db.Column(db.Text) #可选值

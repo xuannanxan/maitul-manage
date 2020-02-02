@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-13 17:25:03
- * @LastEditTime : 2020-01-11 11:13:15
+ * @LastEditTime : 2020-02-02 21:28:55
  * @LastEditors  : Xuannan
  */
 import React , {useState,useEffect} from 'react';
@@ -10,7 +10,7 @@ import 'antd/dist/antd.css';
 import { Card, Input, Icon,Button ,Spin ,Checkbox,Form} from 'antd';
 import '../static/css/login.css'
 import {_login,_captcha} from '../utils/api'
-
+import {adminConfig} from './config'
 
 function LoginForm(props){
     const { getFieldDecorator } = props.form;
@@ -49,7 +49,7 @@ function LoginForm(props){
     return (
         <div className='login'>
             <Spin tip="Loading..." spinning={isLoading}>              
-                <Card title="Maitul Manage" bordered={true} style={{ width: 400 }} >
+                <Card title={adminConfig.name} bordered={true} style={{ width: 400 }} >
                     <Form onSubmit={checkLogin} className="login-form">
                         <Form.Item>
                         {getFieldDecorator('username', {

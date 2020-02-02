@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-06 22:01:20
- * @LastEditTime: 2019-12-08 19:18:44
- * @LastEditors: Xuannan
+ * @LastEditTime : 2020-02-02 22:46:23
+ * @LastEditors  : Xuannan
  */
 /*
  * @Description: 
@@ -15,18 +15,18 @@
 import React ,{ useState } from 'react';
 import { Row,Col,Menu,Icon, Input ,Button,Drawer} from 'antd';
 import '../static/style/components/header.less'
-import './webconfig'
 const { Search } = Input;
 
 
 function Header(props){
+    const {isdown,webconfig} = props
     const [ visible , setVisible ] = useState(false);
     return (
-        <div className ={props.isdown?'header isdown':'header'} >
+        <div className ={isdown?'header isdown':'header'} >
             <Row type='flex' justify='center'>
                 <Col  xs={12} sm={12} md={6} lg={6} xl={6}>
-                    <div className="header-logo">{webcongfig.name}</div>
-                    <div className="header-txt">{webcongfig.slogan}</div> 
+                    <div className="header-logo">{webconfig.blogName}</div>
+                    <div className="header-txt">{webconfig.blogSlogan}</div> 
                 </Col>
                 <Col className="header-menu" xs={0} sm={0} md={9} lg={9} xl={9}>
                     <Menu  mode="horizontal" className="f-right">

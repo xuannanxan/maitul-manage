@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-13 10:35:39
-@LastEditTime : 2020-01-20 11:13:32
+@LastEditTime : 2020-02-02 15:08:28
 @LastEditors  : Xuannan
 '''
 from flask_restful import Api
@@ -34,5 +34,5 @@ admin_api.add_resource(RoleResource,'/admin/role')
 admin_api.add_resource(RoleAuthResource,'/admin/role/auth')
 
 # 配置项
-admin_api.add_resource(WebConfigResource,'/admin/webconfig')
+admin_api.add_resource(WebConfigResource,'/webconfig')
 admin_api.add_resource(ConfigResource,'/admin/config')

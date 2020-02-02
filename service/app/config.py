@@ -11,6 +11,10 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static/uploads')
 WATER_MARK = os.path.join(BASE_DIR, 'static/watermark.png')
 # 每页的数量
 PAGINATE_NUM = 10
+# 允许跨域地址
+ACCESS_ORIGIN = 'http://localhost:3000'
+# 允许跨域请求的方法
+ACCESS_METHODS = 'GET,POST'
 # 通用配置
 class config:
     DEBUG = False

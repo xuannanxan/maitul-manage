@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-02-01 22:05:00
+ * @LastEditTime : 2020-02-02 21:32:04
  * @LastEditors  : Xuannan
  */
 
@@ -11,6 +11,7 @@ import React,{useState,useEffect } from 'react';
 import { Layout, Menu, Breadcrumb, Icon ,Col,Row } from 'antd';
 import '../static/css/home.css'
 import {Route ,Link ,Switch} from 'react-router-dom'
+import {adminConfig} from './config'
 import MenuList from './menu/List'
 import RuleList from './rule/List'
 import RoleList from './role/List'
@@ -140,7 +141,7 @@ function Home(props){
     return(
         <Layout style={{ minHeight: '100vh' }}>
         <Sider  collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ background: '#fff' }}>
-          <div className="logo">Maitul Manage</div>
+          <div className="logo">{adminConfig.name}</div>
           <Menu mode="inline" selectedKeys={[activeMenu.id]} openKeys={openMenu.map(item=>{return item.id})}>
             {leftMenuItem()}
           </Menu>
@@ -188,7 +189,7 @@ function Home(props){
                 </CSSTransition>
               </TransitionGroup>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>Maitul.com</Footer>
+          <Footer style={{ textAlign: 'center' }}>{adminConfig.footInfo}</Footer>
         </Layout>
       </Layout>
     )

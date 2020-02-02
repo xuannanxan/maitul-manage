@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-02-01 21:32:26
+ * @LastEditTime : 2020-02-02 14:51:31
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
@@ -16,7 +16,7 @@ const adminUrl = '/api/admin'
 const adspaceUrl = '/api/resource/adspace'
 const adUrl = '/api/resource/ad'
 const configUrl = '/api/admin/config'
-const webconfigUrl = '/api/admin/webconfig'
+const webconfigUrl = '/api/webconfig'
 const blogTagUrl = '/api/cms/blog/tag'
 const blogCategoryUrl = '/api/cms/blog/category'
 const blogContentUrl = '/api/cms/blog/content'

@@ -2,20 +2,20 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-01-30 20:20:09
+ * @LastEditTime : 2020-02-02 22:32:20
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
-import {_menuTree,_configList,_configDelete} from '../../utils/api'
+import {_configList,_configDelete} from '../../utils/api'
 import {Table ,Divider ,Icon ,Menu ,Button ,Modal,message,Col,Row,Spin} from 'antd';
 import ConfForm from './Form'
+import {webSites} from '../config'
 
 const { confirm } = Modal;
 const ConfList = ()=>{
     const [isLoading,setIsLoading] = useState(false)
-    const [menuTree,setMenuTree] = useState([])
     const [confList,setConfList] = useState([])
-    const [menuId,setMenuId] = useState('')
+    const [site,setSite] = useState('')
     const [visible,setVisible] = useState(false)
     const [confirmLoading,setConfirmLoading] = useState(false)
     const [title,setTitle] = useState('新增权限规则')
@@ -23,25 +23,22 @@ const ConfList = ()=>{
     const formRef = useRef();
 
     const initData = ()=>{
-      _menuTree().then(res=>{
-          setMenuTree(res.data.data)
-      })
       _configList().then(res=>{
         setConfList(res.data.data)
       })
     }
    
-    const menuItem = ()=>{
+    const sitesItem = ()=>{
       return (
-        menuTree.map((item, index) => {
-          return (<Menu.Item key={item.id}>{item.name}</Menu.Item>)
+        webSites.map((item, index) => {
+          return (<Menu.Item key={item.site}>{item.name}</Menu.Item>)
         })
       )
     }
     //点击树设置menuid展示对应菜单的config
     const showConfigItem = (e)  =>{
       setIsLoading(true)
-      setMenuId(e.key);
+      setSite(e.key);
       setTimeout(()=>{
         setIsLoading(false)
       },500)
@@ -52,7 +49,7 @@ const ConfList = ()=>{
           setFormData(record)         
           setTitle('修改配置项【'+record.name+'】')
       }else{
-        setFormData({moduleID:menuId})
+        setFormData({site:site})
         setTitle('新增配置项')
       }
       setTimeout(()=>{
@@ -126,11 +123,11 @@ const ConfList = ()=>{
                 <Col span={4} style={{paddingRight:'10px',borderRight:'1px solid #e8e8e8'}}>
                 <div><h3>模块</h3></div>
                 <Divider className='divider'/>    
-                {menuTree && menuTree.length?
+                {webSites && webSites.length?
                   <Menu 
                   onClick = {showConfigItem}
                   >
-                    {menuItem()}
+                    {sitesItem()}
                   </Menu>
                   : '暂无数据' }   
                 </Col>
@@ -139,9 +136,9 @@ const ConfList = ()=>{
                   <Button type="primary" onClick={showModal} size="large"><Icon type="plus"/> 添加</Button>
                   <Divider className='divider'/>
                   <Spin tip="Loading..." spinning={isLoading}>
-                  {confList[menuId] && confList[menuId].length? 
+                  {confList[site] && confList[site].length? 
                     <Table rowKey="id" 
-                    dataSource={confList[menuId]} 
+                    dataSource={confList[site]} 
                     columns={columns} 
                     pagination={false} 
                     />
@@ -157,7 +154,7 @@ const ConfList = ()=>{
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             >
-            <ConfForm cRef={formRef} params={formData} menuOption={menuTree} handleCancel={handleCancel}/>
+            <ConfForm cRef={formRef} params={formData}  handleCancel={handleCancel}/>
             </Modal>
         </div>
     )

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-13 10:35:39
-@LastEditTime : 2020-01-10 17:49:28
+@LastEditTime : 2020-02-02 22:20:47
 @LastEditors  : Xuannan
 '''
 # -*- coding: utf-8 -*- 
@@ -54,6 +54,23 @@ def insert_menus(data):
         cursor.execute("insert into menu(id,name,icon,url,pid,sort,is_del) values('%s','%s','%s','%s','%s','%d','%d');"%(id,name,icon,url,pid,sort,is_del))
     db.commit()
 
+def insert_webconfig(data):
+    webconfig = data.get('webconfig')
+    cursor = db.cursor()
+    for v in webconfig:
+        id = v.get("id")
+        name = v.get("name")
+        ename = v.get("ename")
+        site = v.get("site")
+        fieldType = v.get("fieldType")
+        placeholder = v.get("placeholder")
+        values = v.get("values")
+        value = v.get("value")
+        sort = int(v.get("sort"))
+        is_del = int(v.get("is_del"))
+        cursor.execute("insert into web_config(id,name,ename,site,fieldType,placeholder,`values`,`value`,sort,is_del) values('%s','%s','%s','%s','%s','%s','%s','%s','%d','%d');"%(id,name,ename,site,fieldType,placeholder,values,value,sort,is_del))
+    db.commit()
+
 def insert_rules(data):
     rules = data.get('rules')
     cursor = db.cursor()
@@ -76,7 +93,7 @@ def init_data():
             # city_json = load_data('./data/cities.json')
             insert_rules(init_json)
             insert_menus(init_json)
-            
+            insert_webconfig(init_json)
             # insert_cities(city_json)
             print("初始化成功")
         else:

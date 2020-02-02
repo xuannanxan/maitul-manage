@@ -4,14 +4,14 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2020-02-01 21:23:13
+@LastEditTime : 2020-02-02 18:58:52
 @LastEditors  : Xuannan
 '''
 
 
 from flask import Flask,render_template
 from app.ext import init_ext
-from app.config import envs
+from app.config import envs,ACCESS_METHODS,ACCESS_ORIGIN
 import logging,os,time
 from logging.handlers import RotatingFileHandler
 from app.apis import api_blueprint
@@ -63,11 +63,18 @@ def config_blueprint(app):
 #     @app.errorhandler(404)
 #     def page_not_found(e):
 #         return render_template('admin/404.html',e=e)
+# 跨域
+def after_request(resp):
+    resp.headers['Access-Control-Allow-Origin'] = ACCESS_ORIGIN
+    resp.headers['Access-Control-Allow-Methods'] = ACCESS_METHODS
+    resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type,Authorization'
+    return resp
 
 # 将创建app的动作封装成一个函数
 def create_app(env):
     # 创建app实例对象
     app = Flask(__name__)
+    
     # 加载配置
     app.config.from_object( envs.get(env))
     
@@ -79,7 +86,8 @@ def create_app(env):
     init_api(app=app)
     # 配置蓝本
     config_blueprint(app)
-
+    # 跨域
+    app.after_request(after_request)
 
     # # 配置全局错误处理
     # config_errorhandler(app)

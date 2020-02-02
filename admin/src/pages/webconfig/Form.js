@@ -1,10 +1,11 @@
 import React, { useState ,useImperativeHandle} from 'react';
 import { Input ,Form ,Select,InputNumber,message} from 'antd';
 import {_configAdd,_configEdit} from '../../utils/api'
+import {webSites} from '../config'
 const { Option } = Select;
 
 function SubmitForm(props){
-    let { form,params,menuOption ,handleCancel} = props
+    let { form,params,handleCancel} = props
     const [fieldType,setFieldType] = useState('')
     const [selectValue,setSelectValue] = useState([])
     const { getFieldDecorator } = form; //表单内容
@@ -25,7 +26,7 @@ function SubmitForm(props){
             }
         })
     }
-    useImperativeHandle(props.cRef, () => ({
+    useImperativeHandle(props.cRef, ()=>({
         // 暴露给父组件的方法
         submitFormData:()=>{
             form.validateFields((err, values) => {
@@ -42,13 +43,13 @@ function SubmitForm(props){
             });
         },
         init:()=>{
-            if(params.moduleID){
+            if(params.site){
                 if(params.fieldType){
                     setFieldType(params.fieldType)
                 }
                 form.setFieldsValue({
                     id:params.id,
-                    moduleID:params.moduleID,
+                    site:params.site,
                     name:params.name,
                     ename:params.ename,
                     fieldType:params.fieldType,
@@ -57,9 +58,6 @@ function SubmitForm(props){
                     sort:params.sort?params.sort:1,
                     values:params.values?params.values.split(','):[],
                 })
-                
-                
-                
             }  
         }
     }));
@@ -69,7 +67,7 @@ function SubmitForm(props){
             <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
                 <Form.Item  {...getFieldDecorator('id')}/>
                 <Form.Item label='所属模块'>
-                    {getFieldDecorator('moduleID', {
+                    {getFieldDecorator('site', {
                         rules: [{ required: true, message: '请选择所属模块..' }],
                     })(
                         <Select
@@ -80,10 +78,10 @@ function SubmitForm(props){
                                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                               }
                         >
-                        {menuOption && menuOption.length? 
-                        menuOption.map((item,index)=>{
+                        {webSites && webSites.length? 
+                        webSites.map((item,index)=>{
                             return(
-                                <Option key={item.id}>{item.name}</Option>
+                                <Option key={item.site}>{item.name}</Option>
                             )
                         }):''}
                         </Select>,

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime : 2020-01-23 00:09:22
+@LastEditTime : 2020-02-02 22:22:26
 @LastEditors  : Xuannan
 '''
 
@@ -23,10 +23,10 @@ api = Apidoc('系统-配置项')
 # 单数据操作
 parse_id = reqparse.RequestParser()
 parse_id.add_argument('id',type=str)
-parse_id.add_argument('moduleID',type=str)
+parse_id.add_argument('site',type=str)
 
 parse_base = parse_id.copy()
-parse_base.add_argument('moduleID',type=str,required=True,help='请选择所属模块')
+parse_base.add_argument('site',type=str,required=True,help='请选择所属模块')
 parse_base.add_argument('name',type=str,required=True,help='请输入名称')
 parse_base.add_argument('ename',type=str,required=True,help='请输入调用名称')
 parse_base.add_argument('fieldType',type=str,required=True,help='请选择字段类型')
@@ -40,7 +40,7 @@ parse_conf = reqparse.RequestParser()
 parse_conf.add_argument('data',location='json')
 
 _fields = {
-    'moduleID':fields.String,
+    'site':fields.String,
     'name':fields.String,
     'ename':fields.String,
     'fieldType':fields.String,
@@ -71,7 +71,7 @@ class ConfigResource(Resource):
         添加配置项
         '''
         args = parse_base.parse_args()
-        moduleID = args.get('moduleID')
+        site = args.get('site')
         name = args.get('name')
         ename = args.get('ename')
         fieldType = args.get('fieldType')
@@ -79,11 +79,11 @@ class ConfigResource(Resource):
         values = args.get('values')
         value = args.get('value')
         sort = args.get('sort')
-        _data = WebConfig.query.filter_by(ename = ename,moduleID=moduleID,is_del = '0').first()
+        _data = WebConfig.query.filter_by(ename = ename,site=site,is_del = '0').first()
         if _data:
             abort(RET.Forbidden,msg='配置项已存在')
         model_data = WebConfig()
-        model_data.moduleID = moduleID
+        model_data.site = site
         model_data.name = name
         model_data.ename = ename
         model_data.fieldType = fieldType
@@ -113,7 +113,7 @@ class ConfigResource(Resource):
         if not id:
             abort(RET.Forbidden,msg='请勿非法操作')
         sing_data = getSingData(id)
-        moduleID = args.get('moduleID')
+        site = args.get('site')
         name = args.get('name')
         ename = args.get('ename')
         fieldType = args.get('fieldType')
@@ -122,12 +122,12 @@ class ConfigResource(Resource):
         value = args.get('value')
         sort = args.get('sort')
         # 如果名称存在，并且ID不是当前ID
-        _data = WebConfig.query.filter(WebConfig.id != id , WebConfig.is_del == '0',WebConfig.ename == ename,WebConfig.moduleID == moduleID).first()
+        _data = WebConfig.query.filter(WebConfig.id != id , WebConfig.is_del == '0',WebConfig.ename == ename,WebConfig.site == site).first()
         if _data:
             abort(RET.Forbidden,msg='配置项已存在')
         sing_data.ename = ename
         sing_data.name = name
-        sing_data.moduleID = moduleID
+        sing_data.site = site
         sing_data.fieldType = fieldType
         sing_data.placeholder = placeholder if placeholder else sing_data.placeholder
         sing_data.values = values if values else sing_data.values
@@ -156,10 +156,10 @@ class ConfigResource(Resource):
         if not _list:
             abort(RET.BadRequest,msg='暂无数据')
         for v in _list:
-            if v.moduleID in list_by_menu.keys():
-                list_by_menu[v.moduleID].append(object_to_json(v))
+            if v.site in list_by_menu.keys():
+                list_by_menu[v.site].append(object_to_json(v))
             else:
-                list_by_menu[v.moduleID] = [object_to_json(v)] 
+                list_by_menu[v.site] = [object_to_json(v)] 
         data = {
                     'status':RET.OK,
                     'data':list_by_menu
@@ -197,11 +197,13 @@ class WebConfigResource(Resource):
         获取配置列表
         '''
         args_id = parse_id.parse_args()
-        moduleID = args_id.get('moduleID')
-        _list = WebConfig.query.filter_by(is_del = '0',moduleID=moduleID).order_by(WebConfig.sort.desc()).all()
+        site = args_id.get('site')
+        _list = WebConfig.query.filter_by(is_del = '0',site=site).order_by(WebConfig.sort.desc()).all()
         if not _list:
             abort(RET.BadRequest,msg='暂无数据')
-        configData = [{v.ename:v.value} for v in _list]
+        configData = {}
+        for v in _list:
+            configData[v.ename] = v.value
         data = {
                     'status':RET.OK,
                     'data':configData

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-22 19:25:04
- * @LastEditTime : 2020-01-23 20:13:40
+ * @LastEditTime : 2020-02-02 22:01:35
  * @LastEditors  : Xuannan
  */
 /*
@@ -13,8 +13,9 @@
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useReducer } from 'react';
-import {_menuTree,_configList,_fileUpload,_webconfigEdit} from '../../utils/api'
+import {_configList,_fileUpload,_webconfigEdit} from '../../utils/api'
 import Editor from '../components/Editor'
+import {webSites} from '../config'
 import {Select,InputNumber,Input,Form ,Tabs ,Upload,Checkbox,Icon  ,Button ,message,Col,Row,Spin} from 'antd';
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -24,7 +25,6 @@ const WebConfigForm = (props)=>{
     const { getFieldDecorator } = form; //表单内容
     const [isLoading,setIsLoading] = useState(false)
     const [loading,setLoading] = useState(false)
-    const [menuTree,setMenuTree] = useState([])
     const [confList,setConfList] = useState([])
     const [activeTab,setActiveTab] = useState('')
     const [imgObj, uploadImg] = useReducer((state, e) => {
@@ -52,11 +52,8 @@ const WebConfigForm = (props)=>{
     const initData = ()=>{
         setIsLoading(true)
         let activeId = ''
-        _menuTree().then(res=>{
-            setMenuTree(res.data.data)
-            activeId = res.data.data[0].id
-            setActiveTab(activeId)
-        })
+        activeId = webSites[0].site
+        setActiveTab(activeId)
         _configList().then(res=>{
           setConfList(res.data.data)
           for (var i in res.data.data) {
@@ -113,15 +110,15 @@ const WebConfigForm = (props)=>{
     },[])
     return(
         <div className='main-content'>
-            {menuTree && menuTree.length?
+            {webSites && webSites.length?
                 <Tabs defaultActiveKey={activeTab} onChange={(key)=>{setActiveTab(key)}}>
-                {menuTree.map(item=>{
+                {webSites.map(item=>{
                     return (
-                        <TabPane tab={item.name} key={item.id}>
+                        <TabPane tab={item.name} key={item.site}>
                             <Spin tip="Loading..." spinning={isLoading}>
-                            { confList[item.id] && confList[item.id].length?
+                            { confList[item.site] && confList[item.site].length?
                             <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }}>
-                            {confList[item.id].map(conf=>{
+                            {confList[item.site].map(conf=>{
                                 switch (conf.fieldType) {
                                     case 'Input':
                                         return(
