@@ -1,24 +1,18 @@
-/*
- * @Description: 
- * @Author: Xuannan
- * @Date: 2019-12-06 22:01:20
- * @LastEditTime : 2020-02-02 22:46:23
- * @LastEditors  : Xuannan
- */
+
 /*
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-05 21:52:00
- * @LastEditTime: 2019-12-07 15:54:42
- * @LastEditors: Xuannan
+ * @LastEditTime : 2020-02-03 20:07:53
+ * @LastEditors  : Xuannan
  */
 import React ,{ useState } from 'react';
 import { Row,Col,Menu,Icon, Input ,Button,Drawer} from 'antd';
-import '../static/style/components/header.less'
+import '../public/style/components/header.less'
 const { Search } = Input;
 
 
-function Header(props){
+function TopNav(props){
     const {isdown,webconfig} = props
     const [ visible , setVisible ] = useState(false);
     return (
@@ -80,4 +74,4 @@ function Header(props){
     )
 }
 
-export default Header
+export default TopNav

@@ -2,12 +2,19 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-07 19:44:05
+ * @LastEditTime : 2020-02-03 14:54:39
+ * @LastEditors  : Xuannan
+ */
+/*
+ * @Description: 
+ * @Author: Xuannan
+ * @Date: 2019-12-07 19:44:05
  * @LastEditTime: 2019-12-07 21:25:19
  * @LastEditors: Xuannan
  */
 import React ,{useState} from 'react';
 import {List,Icon } from 'antd'
-import '../static/style/components/article-list.less'
+import '../public/style/components/article-list.less'
 
 function ArticleList(){
     const [ mylist , setMylist ] = useState(

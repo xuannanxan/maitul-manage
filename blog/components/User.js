@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import {Avatar,Divider,Col} from 'antd'
-import '../static/style/components/user.less'
+import '../public/style/components/user.less'
 
 function User(){
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Col} from 'antd'
-import '../static/style/components/advert.less'
+import '../public/style/components/advert.less'
 function Advert(){
 
     return(

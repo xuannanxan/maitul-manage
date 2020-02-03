@@ -1,6 +1,6 @@
 import React from 'react';
 import {Carousel} from 'antd'
-import '../static/style/components/banner.less'
+import '../public/style/components/banner.less'
 function Banner(){
 
     return(
