@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-03 18:22:44
- * @LastEditTime : 2020-02-03 19:53:59
+ * @LastEditTime : 2020-02-04 15:33:28
  * @LastEditors  : Xuannan
  */
 import React from 'react'
@@ -18,7 +18,7 @@ const NotFound = ()=>{
             <div className="w3layouts-right">
                 <div className="w3ls-text">
                     <h3>we're sorry!</h3>
-                    <h4 className="w3-agileits2">the server down.</h4>
+                    <h4 className="w3-agileits2">Unable to connect server.</h4>
                     <p>Please contact us at <a href="mailto:admin@maitul.com">admin@maitul.com</a></p>
         
                 </div>

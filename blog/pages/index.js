@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-06 22:01:20
- * @LastEditTime : 2020-02-03 23:27:37
+ * @LastEditTime : 2020-02-04 20:04:35
  * @LastEditors  : Xuannan
  */
 
@@ -17,9 +17,10 @@ import User from '../components/User'
 import Footer from '../components/Footer'
 import Api from '../config/api'
 import axios from 'axios'
+import Router from 'next/router'
 function Home(props){
-  console.log(props)
-  const {webconfig} = props
+  const webconfig = props.webconfig?props.webconfig:{}
+  const category = props.category?props.category:[]
   const [ isdown , setIsdown ] = useState(false)
   //如果滚动了就改变header的状态
   const onScroll = () => {
@@ -42,9 +43,9 @@ function Home(props){
 
   return (
     <div>
-      <MyHeader params = {{title:webconfig.blogName,keywords:webconfig.blogKeywords,description:webconfig.blogDescription}}/>
+      <MyHeader webconfig={webconfig} />
       <div className="comm-main">
-        <TopNav isdown = {isdown} webconfig={webconfig}/>
+        <TopNav isdown = {isdown} webconfig={webconfig} category={category}/>
         <Row  type="flex" justify="center">
           <Col className="banner-left" xs={24} sm={24} md={16} lg={15} xl={15}  >
             <Banner/>
@@ -66,7 +67,7 @@ function Home(props){
     </div>
   )
 }
-Home.getInitialProps = async (context)=>{
+Home.getInitialProps = async ({req,res})=>{
   let date=new Date();
   let month=date.getMonth();
   let day=date.getDate();
@@ -75,22 +76,24 @@ Home.getInitialProps = async (context)=>{
   let second=date.getSeconds();
   let time=month+'/'+day+'/'+hour+':'+minute+':'+second
   console.log('----->'+time+':Visit the Index page')
- 
-  const promise = new Promise((resolve)=>{
-    const data = {}
-    axios({url:Api.webconfigUrl,method:'GET',params:Api.site}).then((res)=>{
-      data['webconfig']=res.data.data
-      axios({url:Api.webconfigUrl,method:'GET',params:Api.site}).then((res)=>{
-        data['abc']=res.data.data
-        resolve(data)
-      }).catch(error=>{
-        console.log(error)
-      })
-    }).catch(error=>{
-      console.log(error)
-    })
+  const timeout = (ms, result) => {
+    return new Promise(resolve => setTimeout(() => resolve(result), ms));
+  };  
+  const data = {}
+  axios({url:Api.webconfigUrl,method:'GET',params:Api.site}).then((resolve)=>{
+    if(resolve.data.status===200){
+      data['webconfig']=resolve.data.data
+    }
+  }).catch(error=>{
+    console.log(error.response)
   })
-
-  return await promise
+  axios({url:Api.categoryUrl,method:'GET',params:Api.site}).then((resolve)=>{
+    if(resolve.data.status===200){
+      data['category']=resolve.data.data
+    }
+  }).catch(error=>{
+    console.log(error.response)
+  })
+  return await timeout(300, data);
 }
 export default Home
