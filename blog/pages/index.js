@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-06 22:01:20
- * @LastEditTime : 2020-02-04 20:04:35
+ * @LastEditTime : 2020-02-05 21:56:59
  * @LastEditors  : Xuannan
  */
 
@@ -21,6 +21,9 @@ import Router from 'next/router'
 function Home(props){
   const webconfig = props.webconfig?props.webconfig:{}
   const category = props.category?props.category:[]
+  const banner = props.banner?props.banner:[]
+  const content = props.content?props.content:[]
+  const right_ad = props.right_ad?props.right_ad:[]
   const [ isdown , setIsdown ] = useState(false)
   //如果滚动了就改变header的状态
   const onScroll = () => {
@@ -48,17 +51,17 @@ function Home(props){
         <TopNav isdown = {isdown} webconfig={webconfig} category={category}/>
         <Row  type="flex" justify="center">
           <Col className="banner-left" xs={24} sm={24} md={16} lg={15} xl={15}  >
-            <Banner/>
+            <Banner banner={banner}/>
           </Col>
           <Col xs={0} sm={0} md={7} lg={5} xl={5}>
-            <Advert/>
+            <Advert />
           </Col>
           <Col className="comm-left" xs={24} sm={24} md={16} lg={15} xl={15}  >
-            <ArticleList/>
+            <ArticleList content={content}/>
           </Col>
 
           <Col xs={0} sm={0} md={7} lg={5} xl={5}>
-            <User/>
+            <User webconfig={webconfig}/>
           </Col>
         </Row>
       </div>
@@ -90,6 +93,27 @@ Home.getInitialProps = async ({req,res})=>{
   axios({url:Api.categoryUrl,method:'GET',params:Api.site}).then((resolve)=>{
     if(resolve.data.status===200){
       data['category']=resolve.data.data
+    }
+  }).catch(error=>{
+    console.log(error.response)
+  })
+  axios({url:Api.adUrl,method:'GET',params:Api.blogBaner}).then((resolve)=>{
+    if(resolve.data.status===200){
+      data['banner']=resolve.data.data
+    }
+  }).catch(error=>{
+    console.log(error.response)
+  })
+  axios({url:Api.adUrl,method:'GET',params:Api.blogRightAd}).then((resolve)=>{
+    if(resolve.data.status===200){
+      data['right_ad']=resolve.data.data
+    }
+  }).catch(error=>{
+    console.log(error.response)
+  })
+  axios({url:Api.contentUrl,method:'GET',params:Api.site}).then((resolve)=>{
+    if(resolve.data.status===200){
+      data['content']=resolve.data.data
     }
   }).catch(error=>{
     console.log(error.response)

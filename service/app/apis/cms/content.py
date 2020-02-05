@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-02-05 13:30:24
+@LastEditTime : 2020-02-05 21:44:06
 @LastEditors  : Xuannan
 '''
 
@@ -69,13 +69,13 @@ def getContent(id,contentModel):
 def setModel(site):
     # 动态设置表名和模型
     if site == 'blog':
-        return BlogContent, BlogContentTag,'blog_content','blog_content_tag','blog_tag'
+        return BlogContent, BlogContentTag,'blog_content','blog_content_tag','blog_tag','blog_category'
     elif site == 'maitul':
-        return MaitulContent,MaitulContentTag,'maitul_content', 'maitul_content_tag','maitul_tag'
+        return MaitulContent,MaitulContentTag,'maitul_content', 'maitul_content_tag','maitul_tag','maitul_category'
     elif site == 'info':
-        return InfoContent,InfoContentTag,'info_content','info_content_tag','info_tag'
+        return InfoContent,InfoContentTag,'info_content','info_content_tag','info_tag','info_category'
     elif site == 'metalparts':
-        return MetalpartsContent,MetalpartsContentTag, 'metalparts_content','metalparts_content_tag','metalparts_tag'
+        return MetalpartsContent,MetalpartsContentTag, 'metalparts_content','metalparts_content_tag','metalparts_tag','metalparts_category'
     else:
         abort(RET.NotFound,msg='请勿非法操作...')
 
@@ -87,7 +87,7 @@ class ContentResource(Resource):
         """
         添加内容
         """
-        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable = setModel(site)
+        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable,categoryTable= setModel(site)
         args = parse_base.parse_args()
         title = args.get('title')
         keywords = args.get('keywords')
@@ -128,7 +128,7 @@ class ContentResource(Resource):
         '''
         内容列表1
         '''
-        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable = setModel(site)
+        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable,categoryTable = setModel(site)
         argsById = parse_id.parse_args()
         id = argsById.get('id')
         # 如果有id,就返回单个内容
@@ -168,15 +168,18 @@ class ContentResource(Resource):
             SELECT 
             SQL_CALC_FOUND_ROWS c.*,
             GROUP_CONCAT(t.id SEPARATOR ',') as tags,
-            GROUP_CONCAT(t.name SEPARATOR ',') as tags_name
+            GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
+            a.name as category_name,
+            a.icon as category_icon
             FROM {0} as c
             left join {1} as r on c.id = r.content_id
             left join {2} as t on t.id = r.tag_id
-            WHERE {3} c.is_del = 0
+            left join {3} as a on a.id = c.category_id
+            WHERE {4} c.is_del = 0
             GROUP BY c.id
             ORDER BY c.sort DESC,c.create_time DESC
-            LIMIT {4},{5};
-        '''.format(contentTable,contentTagTable,TagTable,query,(page-1)*paginate,paginate)
+            LIMIT {5},{6};
+        '''.format(contentTable,contentTagTable,TagTable,categoryTable,query,(page-1)*paginate,paginate)
         sql_data = Crud.auto_select(sql)
         # 查询总数
         count_num = Crud.auto_select("SELECT FOUND_ROWS() as countnum")
@@ -205,7 +208,7 @@ class ContentResource(Resource):
         '''
         修改内容
         '''
-        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable = setModel(site)
+        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable,categoryTable = setModel(site)
         args = parse_base.parse_args()
         id = args.get('id')
         if not id:
@@ -253,7 +256,7 @@ class ContentResource(Resource):
         '''
         删除内容
         '''
-        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable = setModel(site)
+        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable,categoryTable = setModel(site)
         args = parse_id.parse_args()
         id = args.get('id')
         if not id:
