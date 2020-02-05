@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime : 2020-01-31 14:03:52
+@LastEditTime : 2020-02-05 13:34:28
 @LastEditors  : Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -167,7 +167,7 @@ class CategoryResource(Resource):
         blog_cate.cover = cover if cover else blog_cate.cover
         blog_cate.sort = sort if sort else blog_cate.sort
         blog_cate.last_editor = g.admin.username
-        result = categoryModel().updata()
+        result = blog_cate.updata()
         if result:
             data =  {
                 'status':RET.OK,
@@ -190,9 +190,8 @@ class CategoryResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
         cate = getCategory(id,categoryModel)
-        cate.is_del = cate.id
         cate.last_editor = g.admin.username
-        result = categoryModel().updata()
+        result = cate.delete()
         if result:
             return {
                 'status':RET.OK,

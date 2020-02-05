@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime : 2020-01-15 19:07:54
+@LastEditTime : 2020-02-05 13:42:42
 @LastEditors  : Xuannan
 '''
 
@@ -293,9 +293,8 @@ class AdminResource(Resource):
             abort(RET.BadRequest,msg='用户不存在!!!')
         if admin.is_super == 1:
             abort(RET.BadRequest,msg='删除失败，无法删除超级管理员!!!')
-        admin.is_del = admin.id
         admin.last_editor = g.admin.username
-        result = Admin().updata()
+        result = admin.delete()
         if result:
             # 清除用户登录状态
             cache.delete(admin.id) 

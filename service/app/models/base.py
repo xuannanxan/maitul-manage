@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# coding=utf-8
+'''
+@Description: 
+@Author: Xuannan
+@Date: 2019-12-08 10:03:50
+@LastEditTime: 2020-02-05 13:29:50
+@LastEditors: Xuannan
+'''
 # -*- coding: utf-8 -*- 
 # Created by xuannan on 2019-01-26.
 __author__ = 'Allen xu'
@@ -30,54 +39,31 @@ class BaseModel(db.Model):
         # setattr(self,'create_time',datetime.now)
 
     def add(self):
-        try:
+        with db.autoCommit():
             db.session.add(self)
-            db.session.commit()
-            return True
-        except Exception as e:
-            db.session.rollback()
-            print(e)
-            current_app.logger.error(e)
-            return False
-
+        return True
 
     def updata(self):
-        try:
-            db.session.commit()
+        with db.autoCommit():
             return True
-        except Exception as e:
-            db.session.rollback()
-            print(e)
-            current_app.logger.error(e)
-            return False
 
     def clean(self):
         '''
         清除数据，物理删除，谨慎操作
         '''
-        try:
+        with db.autoCommit():
             db.session.delete(self)
-            db.session.commit()
-            return True
-        except Exception as e:
-            db.session.rollback()
-            print(e)
-            current_app.logger.error(e)
-            return False
+        return True
+       
 
     def delete(self):
         '''
         逻辑删除
         '''
-        try:
+        with db.autoCommit():
             self.is_del = self.id
-            db.session.commit()
-            return True
-        except Exception as e:
-            db.session.rollback()
-            print(e)
-            current_app.logger.error(e)
-            return False
+        return True
+
 
 
 class Crud:
@@ -97,177 +83,11 @@ class Crud:
             db.session.rollback()
             current_app.logger.info(e)
             return False
-
-
-
-    def easy_add(data):
-        try:
-            db.session.add(data)
-            db.session.commit()
-            return data
-        except Exception as e:
-            db.session.rollback()
-            current_app.logger.info(e)
-            return False
-
+        
     def add_all(data):
-        try:
+        with db.autoCommit():
             db.session.add_all(data)
-            db.session.commit()
-            return data
-        except Exception as e:
-            db.session.rollback()
-            current_app.logger.info(e)
-            return False
-
-    def add(model,data,not_repeat = None):
-        """
-        添加
-        :param :
-        :return: 提示信息
-        """
-        try:
-            if not_repeat != None:
-                count = model.query.filter(model.is_del == 0,getattr(model, not_repeat)==data[not_repeat]).count()
-                if count > 0:
-                    return  False
-            model_data = model()
-            model_data.set_attrs(data)
-            db.session.add(model_data)
-            db.session.commit()
-            return model_data
-        except Exception as e:
-            db.session.rollback()
-            current_app.logger.info(e)
-            return False
-
-    def get_data_paginate(model, sort="id", page=None, number=10):
-        """
-        获取列表信息，带分页
-        :param sort: 排序字段
-        :param page: 页面
-        :param number: 每页数量
-        :return:带分页的数据
-        """
-        if page is None:
-            page = 1
-        page_data = model.query.filter(
-            model.is_del == 0
-        ).order_by(
-                sort
-        ).paginate(page, per_page=number)
-        return page_data
-
-    def get_data(model, sort="id"):
-        """
-        获取不带分页的数据
-        :param sort: 排序字段
-        :return: 不分页的全部数据
-        """
-        data = model.query.filter(model.is_del == 0).order_by(sort).all()
         return data
-
-    def get_data_by_id(model, id):
-        """
-        按ID获取数据
-        :param id:
-        :return:
-        """
-        data = model.query.get_or_404(id)
-        return data
-
-    def search_data(model, queries=[], sort="id",number=0):
-        """
-
-        :param queries:
-        :return:
-        """
-        param = []
-        if not isinstance(queries,list):
-            #如果不是数组输入，就转为数组
-            param.append(queries)
-        else:
-            param = queries
-        param.append(model.is_del == 0)
-        if number > 0:
-            return  model.query.filter(*param).order_by(sort).limit(number).all()
-        else:
-            return model.query.filter(*param).order_by(sort).all()
-
-    def search_data_paginate(model, queries=[], sort="id",page=None, number=10):
-        """
-
-        :param queries:
-        :return:
-        """
-        param = []
-        if not isinstance(queries,list):
-            #如果不是数组输入，就转为数组
-            param.append(queries)
-        else:
-            param = queries
-        param.append(model.is_del == 0)
-        data = model.query.filter(*param).order_by(sort).paginate(page, per_page=number)
-        return data
-
-
-    def update(model,data,not_repeat = None):
-        """
-        更新
-        :param :
-        :return: 提示信息
-        """
-        try:
-            model_data = Crud.get_data_by_id(model, data["id"])
-            copy_data = deepcopy(model_data)
-            if not_repeat != None:
-                count = model.query.filter(model.is_del == 0,getattr(model, not_repeat)==data[not_repeat]).count()
-                if count == 1 and object_to_dict(copy_data)[not_repeat] != data[not_repeat]:
-                    return  False
-            model_data.set_attrs(data)
-            db.session.commit()
-            return model_data
-        except Exception as e:
-            db.session.rollback()
-            current_app.logger.info(e)
-            return False
-
-    def easy_update(data):
-        try:
-            db.session.commit()
-            return data
-        except Exception as e:
-            db.session.rollback()
-            current_app.logger.info(e)
-            return False
-
-    def delete(data):
-        """
-        删除
-        :param id:
-        :return: 提示信息
-        """
-        try:
-            data.is_del = data.id
-            db.session.commit()
-            return data
-        except Exception as e:
-            db.session.rollback()
-            current_app.logger.info(e)
-            return False
-
-
-    def clean(data):
-        # 彻底删除
-        try:
-            db.session.delete(data)
-            # 提交数据库会话
-            db.session.commit()
-            return data
-        except Exception as e:
-            db.session.rollback()
-            current_app.logger.info(e)
-            return False
 
     def clean_all(lst):
         # 彻底删除多行

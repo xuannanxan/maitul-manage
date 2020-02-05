@@ -103,7 +103,7 @@ class AdResource(Resource):
         sing_data.info = info if info else sing_data.info
         sing_data.img = img if img else sing_data.img
         sing_data.last_editor = g.admin.username
-        result = Ad().updata()
+        result =sing_data.updata()
         if result:
             data =  {
                 'status':RET.OK,
@@ -153,9 +153,8 @@ class AdResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
-        sing_data.is_del = sing_data.id
         sing_data.last_editor = g.admin.username
-        result = Ad().updata()
+        result = sing_data.delete()
         if result:
             return {
                 'status':RET.OK,

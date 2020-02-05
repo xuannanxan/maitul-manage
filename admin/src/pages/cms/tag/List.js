@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-02-01 13:05:52
+ * @LastEditTime : 2020-02-05 13:17:46
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -45,6 +45,7 @@ const TagList = (props)=>{
           setFormData(record)         
           setTitle('修改博客标签【'+record.name+'】')
       }else{
+        setFormData({})  
         setTitle('新增博客标签')
       }
       setTimeout(()=>{

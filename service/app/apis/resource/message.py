@@ -106,7 +106,7 @@ class MessageResource(Resource):
         sing_data.reply = reply if reply else sing_data.reply
         sing_data.show = show if show else sing_data.show
         sing_data.last_editor = g.admin.username
-        result = Message().updata()
+        result = sing_data.updata()
         if result:
             if sing_data.email and sendmail:
                 subject = 'RE:%s'%(sing_data.info[0:20])
@@ -170,9 +170,8 @@ class MessageResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
-        sing_data.is_del = sing_data.id
         sing_data.last_editor = g.admin.username
-        result = Message().updata()
+        result = sing_data.delete()
         if result:
             return {
                 'status':RET.OK,

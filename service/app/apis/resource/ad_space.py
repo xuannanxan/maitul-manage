@@ -85,7 +85,7 @@ class AdSpaceResource(Resource):
         sing_data.name = name
         sing_data.sort = sort if sort else sing_data.sort
         sing_data.last_editor = g.admin.username
-        result = AdSpace().updata()
+        result = sing_data.updata()
         if result:
             data =  {
                 'status':RET.OK,
@@ -131,9 +131,8 @@ class AdSpaceResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
-        sing_data.is_del = sing_data.id
         sing_data.last_editor = g.admin.username
-        result = AdSpace().updata()
+        result = sing_data.delete()
         if result:
             return {
                 'status':RET.OK,

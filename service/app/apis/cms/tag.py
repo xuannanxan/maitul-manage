@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 19:28:32
-@LastEditTime : 2020-01-31 14:37:11
+@LastEditTime : 2020-02-05 13:26:40
 @LastEditors  : Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -150,7 +150,7 @@ class TagResource(Resource):
         blog_tag.name = name
         blog_tag.sort = sort if sort else blog_tag.sort
         blog_tag.last_editor = g.admin.username
-        result = tagModel().updata()
+        result = blog_tag.updata()
         if result:
             data =  {
                 'status':RET.OK,
@@ -173,9 +173,8 @@ class TagResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
         tag = getTag(id,tagModel)
-        tag.is_del = tag.id
         tag.last_editor = g.admin.username
-        result = tagModel().updata()
+        result = tag.delete()
         if result:
             return {
                 'status':RET.OK,

@@ -2,16 +2,10 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-22 19:25:04
- * @LastEditTime : 2020-02-02 22:01:35
+ * @LastEditTime : 2020-02-05 13:56:11
  * @LastEditors  : Xuannan
  */
-/*
- * @Description: 
- * @Author: Xuannan
- * @Date: 2020-01-21 11:59:51
- * @LastEditTime : 2020-01-22 19:46:15
- * @LastEditors  : Xuannan
- */
+
 import React, { useState,useEffect ,useReducer } from 'react';
 import {_configList,_fileUpload,_webconfigEdit} from '../../utils/api'
 import Editor from '../components/Editor'

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-01-31 14:57:11
+@LastEditTime : 2020-02-05 13:30:24
 @LastEditors  : Xuannan
 '''
 
@@ -225,7 +225,7 @@ class ContentResource(Resource):
         _content.cover = cover if cover else _content.cover
         _content.category_id = category_id if category_id else _content.category_id
         _content.last_editor = g.admin.username
-        result = contentModel().updata()
+        result = _content.updata()
         if result:
             data =  {
                 'status':RET.OK,
@@ -259,9 +259,8 @@ class ContentResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
         _content = getContent(id,contentModel)
-        _content.is_del = _content.id
         _content.last_editor = g.admin.username
-        result = contentModel().updata()
+        result = _content.delete()
         if result:
             return {
                 'status':RET.OK,

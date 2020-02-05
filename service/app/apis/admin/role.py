@@ -73,7 +73,7 @@ class RoleAuthResource(Resource):
         ) for v in rules ]
         if Crud.add_all(relation_data):
             sing_data.last_editor = g.admin.username
-            Role().updata()
+            sing_data.updata()
             return {
                     'status':RET.OK,
                     'msg':'权限设置成功'
@@ -128,7 +128,7 @@ class RoleResource(Resource):
         sing_data.name = name
         sing_data.info = info
         sing_data.last_editor = g.admin.username
-        result = Role().updata()
+        result = sing_data.updata()
         if result:
             data =  {
                 'status':RET.OK,
@@ -184,9 +184,8 @@ class RoleResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
-        sing_data.is_del = sing_data.id
         sing_data.last_editor = g.admin.username
-        result = Role().updata()
+        result = sing_data.delete()
         # 清空原来的授权
         _auth = RoleRule.query.filter_by(role_id = id ).all()
         if _auth :

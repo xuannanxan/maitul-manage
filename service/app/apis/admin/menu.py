@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime : 2020-01-16 14:00:08
+@LastEditTime : 2020-02-05 13:40:37
 @LastEditors  : Xuannan
 '''
 
@@ -111,7 +111,7 @@ class MenuResource(Resource):
         sing_data.icon = icon if icon else sing_data.icon
         sing_data.sort = sort if sort else sing_data.sort
         sing_data.last_editor = g.admin.username
-        result = Menu().updata()
+        result = sing_data.updata()
         if result:
             data =  {
                 'status':RET.OK,
@@ -162,7 +162,7 @@ class MenuResource(Resource):
         sing_data = getSingData(id)
         sing_data.is_del = sing_data.id
         sing_data.last_editor = g.admin.username
-        result = Menu().updata()
+        result = sing_data.delete()
         if result:
             return {
                 'status':RET.OK,

@@ -98,7 +98,7 @@ class RuleResource(Resource):
         sing_data.menu_id = menu_id if menu_id else sing_data.menu_id
         sing_data.method = method if method else sing_data.method
         sing_data.last_editor = g.admin.username
-        result = Rule().updata()
+        result = sing_data.updata()
         if result:
             data =  {
                 'status':RET.OK,
@@ -157,9 +157,8 @@ class RuleResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
-        sing_data.is_del = sing_data.id
         sing_data.last_editor = g.admin.username
-        result = Rule().updata()
+        result = sing_data.delete()
         if result:
             return {
                 'status':RET.OK,
