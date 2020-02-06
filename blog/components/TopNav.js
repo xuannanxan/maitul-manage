@@ -2,29 +2,51 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-06 22:01:20
- * @LastEditTime: 2020-02-05 14:34:58
- * @LastEditors: Xuannan
+ * @LastEditTime : 2020-02-06 22:52:13
+ * @LastEditors  : Xuannan
  */
 
 
-import React ,{ useState } from 'react';
+import React ,{ useState ,useEffect} from 'react';
 import { Row,Col,Menu,Icon, Input ,Button,Drawer} from 'antd';
 import '../public/style/components/header.less'
+import {_category} from '../config/api'
+import Router from 'next/router'
+import Link from 'next/link'
+
 const { Search } = Input;
 
 
 function TopNav(props){
-    const {isdown,webconfig,category} = props
+    const {isdown,webconfig} = props
+    const [category,setCategory] = useState([]);
     const [ visible , setVisible ] = useState(false);
+    const handleClick = (e)=>{
+        if(e.key=='home'){
+            Router.push('/index')
+        }else{
+            Router.push('/list?id='+e.key)
+        }
+    }
+    useEffect(()=>{
+        _category().then(res=>{
+            setCategory(res.data.data)
+          })
+          .catch(error=>{
+            setCategory([])
+          })
+      },[])
     return (
         <div className ={isdown?'header isdown':'header'} >
             <Row type='flex' justify='center'>
                 <Col  xs={12} sm={12} md={6} lg={6} xl={6}>
-                    <div className="header-logo">{webconfig.blogName?webconfig.blogName:"Allen's Blog"}</div>
+                    <Link href={{pathname:'/index'}}>
+                        <div className="header-logo">{webconfig.blogName?webconfig.blogName:"Allen's Blog"}</div>
+                    </Link>
                     <div className="header-txt">{webconfig.blogSlogan?webconfig.blogSlogan:'Welcome to my blog.'}</div> 
                 </Col>
                 <Col className="header-menu" xs={0} sm={0} md={9} lg={9} xl={9}>
-                    <Menu  mode="horizontal" className="f-right">
+                    <Menu  mode="horizontal" className="f-right" onClick={handleClick}>
                         <Menu.Item key="home">
                             <Icon type="home" />
                             首页

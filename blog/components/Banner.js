@@ -1,10 +1,18 @@
-import React from 'react';
+import React,{useState,useEffect}from 'react';
 import {Carousel,Button} from 'antd'
-import Link from 'next/link'
+import {_banner} from '../config/api'
 import '../public/style/components/banner.less'
 
-function Banner(props){
-    const {banner} = props
+function Banner(){
+    const [banner,setBanner] = useState([])
+    useEffect(()=>{
+        _banner().then(res=>{
+            setBanner(res.data.data)
+          })
+          .catch(error=>{
+            setBanner([])
+          })
+      },[])
     return(
         <div>
             <Carousel autoplay>
