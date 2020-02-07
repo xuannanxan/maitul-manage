@@ -2,18 +2,17 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-07 19:44:05
- * @LastEditTime : 2020-02-07 20:24:07
+ * @LastEditTime : 2020-02-07 19:24:19
  * @LastEditors  : Xuannan
  */
 
 import React ,{useState,useEffect} from 'react';
 import {List,Icon ,Spin ,Breadcrumb} from 'antd'
 import {_contentList} from '../config/api'
-import '../public/style/components/article-list.less'
-import Link from 'next/link'
+
 
 let pageSize = 10
-function ArticleList(props){
+function Content(props){
     const [contentList,setContentList] = useState([])
     const [currentPage,setCurrentPage] = useState(1)
     const [total,setTotal] = useState(1)
@@ -62,37 +61,9 @@ function ArticleList(props){
     },[props.categoryId,props.search])
     return (
         <Spin spinning={isLoadding}>
-        <List
-          header={<div>{props.search?'搜索结果':(props.categoryId?breadcrumb:'最新文章')}</div>}
-          itemLayout="vertical"
-          dataSource={contentList}
-          pagination={{
-            onChange: page => {
-              getCurrentList(page);
-            },
-          pageSize: pageSize,
-          total:total,
-          defaultCurrent:currentPage,
-          current:currentPage,
-          }}
-          renderItem={item => (
-            <List.Item>
-              <div className="list-title">
-                <Link href={{pathname:'/detail',query:{id:item.id}}}>
-                  <a>{item.title}</a>
-                </Link>
-              </div>
-              <div className="list-icon">
-                <span><Icon type="calendar" /> {item.create_time}</span>
-                <span><Icon type={item.category_icon?item.category_icon:"folder"} /> {item.category_name}</span>
-                <span><Icon type="fire" /> {item.click}人</span>
-              </div>
-              <div className="list-context">{item.description}</div>  
-            </List.Item>
-          )}
-        />   
+        
         </Spin>
     )
 }
 
-export default ArticleList
+export default Content

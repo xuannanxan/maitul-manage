@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-02-05 21:44:06
+@LastEditTime : 2020-02-07 20:42:20
 @LastEditors  : Xuannan
 '''
 
@@ -134,14 +134,21 @@ class ContentResource(Resource):
         # 如果有id,就返回单个内容
         if id:
             sql='''
-                SELECT c.*,GROUP_CONCAT(t.name SEPARATOR ',') as tags
+                SELECT c.*,GROUP_CONCAT(t.id SEPARATOR ',') as tags,
+                GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
+                a.name as category_name,
+                a.icon as category_icon
                 FROM %s as c
                     left join %s as r on c.id = r.content_id
                     left join %s as t on t.id = r.tag_id
+                    left join %s as a on a.id = c.category_id
                 WHERE c.id = %s and c.is_del = 0;
-                '''%(contentTable,contentTagTable,TagTable,id)
+                '''%(contentTable,contentTagTable,TagTable,categoryTable,id)
             sql_data = Crud.auto_select(sql)
             data = sql_data.first()
+            _content = getContent(id,contentModel)
+            _content.click = _content.click+1
+            _content.updata()
             if not data:
                 abort(RET.NotFound,msg='内容不存在')
             return {

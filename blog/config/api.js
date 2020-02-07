@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-02-06 20:25:48
+ * @LastEditTime : 2020-02-07 15:44:16
  * @LastEditors  : Xuannan
  */
 import {Method} from "../utils/http";

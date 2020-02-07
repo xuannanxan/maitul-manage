@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-02-06 19:27:18
+ * @LastEditTime : 2020-02-07 13:22:30
  * @LastEditors  : Xuannan
  */
 import React, { useState,useEffect ,useRef , useReducer} from 'react';
@@ -72,7 +72,6 @@ const ContentList = (props)=>{
     const showContentList = (selectedKeys, info)  =>{
       setIsLoading(true)
       setCurrentPage(1)
-      
       getContentList(selectedKeys[0],1,'');
       setCategoryId(selectedKeys[0])
       setTimeout(()=>{

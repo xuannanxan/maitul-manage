@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-07 22:22:10
- * @LastEditTime: 2020-02-03 14:54:46
- * @LastEditors: Xuannan
+ * @LastEditTime : 2020-02-07 15:49:51
+ * @LastEditors  : Xuannan
  */
 /*
  * @Description: 
@@ -19,7 +19,7 @@ function Footer(){
 
     return (
         <div className="footer-div">
-            <div>系统由 React+Node+Ant Desgin驱动 </div>
+            <div>系统由 React+Python+Ant Desgin驱动 </div>
             <div>Maitul.com</div>
         </div>
     )

@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: Xuannan
+ * @Date: 2019-12-07 16:12:26
+ * @LastEditTime: 2020-02-07 13:29:37
+ * @LastEditors: Xuannan
+ */
 import React,{useState,useEffect}from 'react';
 import {Carousel,Button} from 'antd'
 import {_banner} from '../config/api'
@@ -25,7 +32,7 @@ function Banner(){
                                 <div className='info'>
                                     <h1>{item.name}</h1>
                                     <p>{item.info}</p>
-                                    <Button  target="_blank" href={item.url} type="primary" size='large'>learn more</Button>
+                                    <Button  target="_blank" href={item.url} type="primary" size='large'>Learn More</Button>
                                 </div>
 
 
