@@ -2,22 +2,14 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-07 21:23:24
- * @LastEditTime : 2020-02-06 22:16:29
+ * @LastEditTime : 2020-02-08 21:04:38
  * @LastEditors  : Xuannan
  */
-import React,{useState,useEffect}from 'react';
-import {Col,Button} from 'antd'
+import React from 'react';
+import {Button} from 'antd'
 import {_rightAd} from '../config/api'
-function Advert(){
-    const [ad,setAd] = useState([])
-    useEffect(()=>{
-        _rightAd().then(res=>{
-            setAd(res.data.data)
-          })
-          .catch(error=>{
-            setAd([])
-          })
-      },[])
+function Advert(props){
+    const ad = props.ad?props.ad:[]
     return(
         <div >
             {ad&&ad.length?

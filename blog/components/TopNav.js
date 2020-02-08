@@ -2,13 +2,13 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-06 22:01:20
- * @LastEditTime : 2020-02-08 13:45:07
+ * @LastEditTime : 2020-02-08 22:07:02
  * @LastEditors  : Xuannan
  */
 
 
 import React ,{ useState } from 'react';
-import { Row,Col,Menu,Icon, Input ,Button,Drawer} from 'antd';
+import { Row,Col,Menu,Icon, Input ,Button,Drawer,List,Divider} from 'antd';
 import Router from 'next/router'
 import Link from 'next/link'
 
@@ -18,6 +18,7 @@ const { Search } = Input;
 function TopNav(props){
     const {isdown,webconfig,categoryId,category} = props
     const [ visible , setVisible ] = useState(false);
+    const contentList=props.contentList.data?props.contentList.data:[]
     const handleClick = (e)=>{
         if(e.key=='home'){
             Router.push('/index')
@@ -73,16 +74,44 @@ function TopNav(props){
                     >
                     </Button>
                     <Drawer
-                    title="Basic Drawer"
+                    title="快速导航"
                     placement="right"
                     closable={false}
                     onClose={()=>{setVisible(false)}}
                     visible={visible}
                     closable={true}
                     >
-                        <p>Some contents...</p>
-                        <p>Some contents...</p>
-                        <p>Some contents...</p>
+                        <List
+                        size="small"
+                        header={<h2>Menu</h2>}
+                        itemLayout="vertical"
+                        dataSource={category}
+                        renderItem={item => (
+                            <List.Item>
+                            <Link href={{pathname:'/list',query:{id:item.id}}} passHref>
+                                <div className='right-list' title={item.name} >
+                                    <a className={item.id===categoryId?'active':'' }>{item.name}</a>
+                                </div>
+                            </Link>
+                            </List.Item>
+                        )}
+                        />  
+                        <Divider />
+                        <List
+                        size="small"
+                        header={<div>最新推荐</div>}
+                        itemLayout="vertical"
+                        dataSource={contentList}
+                        renderItem={item => (
+                            <List.Item>
+                            <Link href={{pathname:'/detail',query:{id:item.id}}} passHref>
+                                <div className='right-list' title={item.title} >
+                                    <a >{item.title}</a>
+                                </div>
+                            </Link>
+                            </List.Item>
+                        )}
+                        />  
                     </Drawer>
                 </Col>
 
