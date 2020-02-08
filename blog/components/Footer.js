@@ -13,7 +13,7 @@
  * @LastEditors: Xuannan
  */
 import React from 'react';
-import '../public/style/components/footer.less'
+
 
 function Footer(){
 

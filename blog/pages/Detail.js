@@ -2,11 +2,11 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-05 21:31:52
- * @LastEditTime : 2020-02-07 21:53:02
+ * @LastEditTime : 2020-02-08 15:02:35
  * @LastEditors  : Xuannan
  */
 import React,{useState,useEffect} from 'react'
-import { Affix,Row,Col,Icon ,List} from 'antd'
+import { Affix,Row,Col,Icon ,List,Button,Skeleton} from 'antd'
 import TopNav from '../components/TopNav'
 import Header from '../components/Header'
 import Api from '../config/api'
@@ -14,37 +14,23 @@ import {_contentList} from '../config/api'
 import axios from 'axios'
 import Author from '../components/Author'
 import Error from './_error'
-import Link from 'next/link'
-import '../public/style/pages/detail.less'
+
 let pageSize = 10
 const Detail = (props) => {
   if (props.webconfig.status) {
     return <Error statusCode={props.status} />
   }
-  console.log(props)
   const webconfig = props.webconfig?props.webconfig:{}
   const category = props.category?props.category:[]
-
+  const [ loading , setLoading ] = useState(false)
+  const [ initLoading , setInitLoading ] = useState(false)
   const [ isdown , setIsdown ] = useState(false)
   const [ content , setContent ] = useState(props.content?props.content:{})
   const [contentList,setContentList] = useState([])
   const [currentPage,setCurrentPage] = useState(1)
   const [total,setTotal] = useState(1)
   const [categoryId,setCategoryId] = useState(props.content.category_id?props.content.category_id:'')
-//获取内容列表
-const getContentList = (cateId = categoryId,page = currentPage)=>{
-  _contentList({category_id:cateId,page:page,paginate:pageSize}).then(res=>{
-    setContentList(res.data.data)
-    setTotal(res.data.paginate.total)
-  })
-  .catch(error=>{
-    setContentList([])
-  })
-  //如果分类不是当前选中的，就重新设置选中分类
-  if(cateId !== categoryId){
-    setCategoryId(cateId)
-  }
-}
+
   //如果滚动了就改变header的状态
   const onScroll = () => {
     var t = document.documentElement.scrollTop || document.body.scrollTop;
@@ -55,9 +41,58 @@ const getContentList = (cateId = categoryId,page = currentPage)=>{
       setIsdown(false)
     }
   }
- //监听滚动动作
- useEffect(() => {
-  getContentList(categoryId,1)
+  const  onLoadMore = () => {
+    setInitLoading(true)
+    if(total/pageSize>currentPage){
+      setCurrentPage(currentPage+1)
+      setContentList(contentList.concat([...new Array(pageSize)].map(() => ({ loading: true, name: {} }))))
+      _contentList({page:currentPage+1,paginate:pageSize}).then(res=>{
+        setContentList(contentList.concat(res.data.data))
+        setTotal(res.data.paginate.total)
+        setInitLoading(false)
+      })
+    }
+    setTimeout(() => {
+      setInitLoading(false)
+    }, 500);
+  };
+  const loadMore =
+      !initLoading && !loading ? (
+        <div
+          style={{
+            textAlign: 'center',
+            marginTop: 12,
+            height: 32,
+            lineHeight: '32px',
+          }}
+        >
+          {total/pageSize>currentPage?
+          <Button onClick={onLoadMore}>More</Button>
+          :(contentList&&contentList.length?'只有这么多了...':'')}
+        </div>
+      ) : null;
+  const showContent=(item)=>{
+    setLoading(true)
+    _contentList({id:item.id}).then(res=>{
+      setContent(res.data.data)
+      setLoading(false)
+    })
+    setCategoryId(item.category_id)
+    setTimeout(() => {
+      setLoading(false)
+    }, 500);
+  }
+  //监听滚动动作
+  useEffect(() => {
+    setLoading(true)
+    _contentList({paginate:pageSize}).then(res=>{
+      setContentList(res.data.data)
+      setTotal(res.data.paginate.total)
+      setLoading(false)
+    })
+    setTimeout(() => {
+      setLoading(false)
+    }, 500);
   document.addEventListener('scroll', onScroll, false);
     return () => {
       document.removeEventListener('scroll', onScroll, false);
@@ -71,10 +106,10 @@ const getContentList = (cateId = categoryId,page = currentPage)=>{
         <Row className="comm-main" type="flex" justify="center">
           <Col className="comm-left" xs={24} sm={24} md={16} lg={15} xl={15}  >
           <div>
+            <Skeleton loading={loading} active>
             <div className="detail-title">
             {content.title?content.title:'.....'}
             </div>
-
             <div className="list-icon center">
               <span><Icon type="calendar" /> {content.create_time?content.create_time:'.....'}</span>
               <span><Icon type={content.category_icon?content.category_icon:"folder"} /> {content.category_name?content.category_name:'.....'}</span>
@@ -82,29 +117,31 @@ const getContentList = (cateId = categoryId,page = currentPage)=>{
             </div>
             <div className="detail-content" dangerouslySetInnerHTML={{__html: content.content?content.content:'...'}}>
             </div>
+            </Skeleton> 
           </div>
           </Col>
-
           <Col xs={0} sm={0} md={7} lg={5} xl={5}>
             <Author webconfig={webconfig}/>
             <Affix offsetTop={60}>
               <div className="comm-right" >
                 <List
+                  loading={initLoading}
+                  loadMore={loadMore}
                   size="small"
-                  header={<div>相关推荐</div>}
+                  header={<div>最新推荐</div>}
                   itemLayout="vertical"
                   dataSource={contentList}
                   renderItem={item => (
+                    <Skeleton title={false} loading={item.loading} active>
                     <List.Item>
-                      <div>
-                          <a onClick = {()=>{setContent(item)}}>{item.title}</a>
+                      <div className='right-list' title={item.title} >
+                          <a className={item.id===content.id?'active':'' } onClick = {()=>{showContent(item)}}>{item.title}</a>
                       </div>
-                      
                     </List.Item>
+                    </Skeleton> 
                   )}
-                />   
+                />  
               </div>
-            
             </Affix>
           </Col>
         </Row>

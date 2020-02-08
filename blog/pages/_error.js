@@ -6,7 +6,7 @@
  * @LastEditors  : Xuannan
  */
 import React from 'react'
-import '../public/style/pages/error.less'
+import '../public/style/error.less'
 const Error  = (props) =>{
     return (
                 <div className="w3layouts-bg">

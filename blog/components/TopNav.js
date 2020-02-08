@@ -2,14 +2,13 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-06 22:01:20
- * @LastEditTime : 2020-02-07 15:45:18
+ * @LastEditTime : 2020-02-08 13:45:07
  * @LastEditors  : Xuannan
  */
 
 
 import React ,{ useState } from 'react';
 import { Row,Col,Menu,Icon, Input ,Button,Drawer} from 'antd';
-import '../public/style/components/header.less'
 import Router from 'next/router'
 import Link from 'next/link'
 

@@ -7,6 +7,6 @@
  */
 import App from 'next/app'
 import '../public/style/theme.less'
-import '../public/style/pages/common.less'
+import '../public/style/common.less'
 
 export default App

@@ -7,7 +7,6 @@
  */
 import React from 'react';
 import {Avatar,Divider,Popover,Tooltip  } from 'antd'
-import '../public/style/components/author.less'
 
 function Author(props){
     const {webconfig} = props

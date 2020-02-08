@@ -8,7 +8,7 @@
 import React,{useState,useEffect}from 'react';
 import {Carousel,Button} from 'antd'
 import {_banner} from '../config/api'
-import '../public/style/components/banner.less'
+
 
 function Banner(){
     const [banner,setBanner] = useState([])

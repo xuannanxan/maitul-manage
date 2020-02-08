@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-14 17:40:02
- * @LastEditTime : 2020-01-30 23:10:51
+ * @LastEditTime : 2020-02-08 10:44:23
  * @LastEditors  : Xuannan
  */
 
@@ -152,7 +152,10 @@ function SubmitForm(props){
                         <Col span={16}>
                             <Form.Item hasFeedback  wrapperCol={{ span:24 }}>
                             {getFieldDecorator('title', {
-                                rules: [{ required: true, message: '请输入标题!' }],
+                                rules: [
+                                    { required: true, message: '请输入标题!' }, 
+                                    {max:50,message: '标题不能大于50个字符',
+                                  }],
                             })(
                                 <Input
                                 addonBefore={categorySelector}

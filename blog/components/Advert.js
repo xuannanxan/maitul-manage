@@ -8,7 +8,6 @@
 import React,{useState,useEffect}from 'react';
 import {Col,Button} from 'antd'
 import {_rightAd} from '../config/api'
-import '../public/style/components/advert.less'
 function Advert(){
     const [ad,setAd] = useState([])
     useEffect(()=>{
