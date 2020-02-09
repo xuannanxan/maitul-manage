@@ -2,15 +2,13 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-07 21:23:24
- * @LastEditTime : 2020-02-08 21:04:38
+ * @LastEditTime : 2020-02-09 22:28:43
  * @LastEditors  : Xuannan
  */
 import React from 'react';
 import {Button} from 'antd'
 import {_rightAd} from '../config/api'
-function Advert(props){
-    const ad = props.ad?props.ad:[]
-    return(
+const Advert=({ad})=>
         <div >
             {ad&&ad.length?
             ad.map(item=>{
@@ -20,11 +18,7 @@ function Advert(props){
                         <Button type="link" href={item.url} target="_blank" >{item.name}</Button>
                     </div>
                 )
-            }):''}
-            
-           
+            }):''} 
         </div>
-    )
 
-}
 export default Advert

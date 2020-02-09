@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-05 21:31:52
- * @LastEditTime : 2020-02-08 19:22:23
+ * @LastEditTime : 2020-02-09 23:28:11
  * @LastEditors  : Xuannan
  */
 import React,{useState,useEffect} from 'react'
@@ -19,7 +19,7 @@ const List = (props) => {
   if (props.webconfig.status) {
     return <Error statusCode={props.status} />
   }
-  const {webconfig,category,contentList,rightAd,categoryId,search} = props
+  const {webconfig,category,contentList,rightAd,categoryId,search,tag} = props
   const [ isdown , setIsdown ] = useState(false)
   const getCurrenCategory = ()=>{
     for (var i =0; i<category.length; i++) {
@@ -52,7 +52,7 @@ const List = (props) => {
         <TopNav isdown = {isdown} webconfig={webconfig} categoryId={categoryId} category={category} contentList={contentList}/>
         <Row className="comm-main" type="flex" justify="center">
           <Col className="comm-left" xs={24} sm={24} md={16} lg={15} xl={15}  >
-            <ArticleList contentList={contentList} categoryId={categoryId} search={search} currentCategory={getCurrenCategory()}/>
+            <ArticleList contentList={contentList} categoryId={categoryId} search={search} tag={tag} currentCategory={getCurrenCategory()}/>
           </Col>
 
           <Col xs={0} sm={0} md={7} lg={5} xl={5}>
@@ -84,6 +84,7 @@ List.getInitialProps = async (content)=>{
     paginate:pageSize,
     search:content.query.search,
     category_id:content.query.id,
+    tag:content.query.tag,
   })
   const rightAd = await _Api(_Url.adUrl,{space_id:_Url.blogRightAd})
   return  {
@@ -93,6 +94,7 @@ List.getInitialProps = async (content)=>{
     rightAd:rightAd.data?rightAd.data:[],
     categoryId:content.query.id?content.query.id:'',
     search:content.query.search?content.query.search:'',
+    tag:content.query.tag?content.query.tag:'',
   }
 }
 export default List

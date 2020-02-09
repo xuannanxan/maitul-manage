@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-02-07 15:44:16
+ * @LastEditTime : 2020-02-09 19:12:02
  * @LastEditors  : Xuannan
  */
 import axios from 'axios';
@@ -19,6 +19,7 @@ export const _Url = {
   categoryUrl:proxy+'/cms/blog/category',//博客分类
   contentUrl:proxy+'/cms/blog/content',//博客内容
   adUrl:proxy+'/resource/ad',//博客广告
+  captchaUrl:proxy+'/captcha'
 }
 
 export const _Method = {

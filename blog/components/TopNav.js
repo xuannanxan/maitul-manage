@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-06 22:01:20
- * @LastEditTime : 2020-02-08 22:07:02
+ * @LastEditTime : 2020-02-09 16:10:18
  * @LastEditors  : Xuannan
  */
 
@@ -31,7 +31,7 @@ function TopNav(props){
             <Row type='flex' justify='center'>
                 <Col  xs={12} sm={12} md={6} lg={6} xl={6}>
                     <Link href={{pathname:'/index'}} passHref>
-                        <div className="header-logo">{webconfig.blogName?webconfig.blogName:"Allen's Blog"}</div>
+                        <a className="header-logo">{webconfig.blogName?webconfig.blogName:"Allen's Blog"}</a>
                     </Link>
                     <div className="header-txt">{webconfig.blogSlogan?webconfig.blogSlogan:'Welcome to my blog.'}</div> 
                 </Col>

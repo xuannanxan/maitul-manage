@@ -2,15 +2,13 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-07 21:32:44
- * @LastEditTime : 2020-02-07 21:38:23
+ * @LastEditTime : 2020-02-09 22:29:38
  * @LastEditors  : Xuannan
  */
 import React from 'react';
 import {Avatar,Divider,Popover,Tooltip  } from 'antd'
 
-function Author(props){
-    const {webconfig} = props
-    return (
+const Author = ({webconfig})=>
             <div className='user-div comm-right'>
                 <div> <Avatar size={100} src={webconfig.blogAvatar?webconfig.blogAvatar:'/images/user.png'}/></div>
                 <div className="user-introduction">
@@ -24,7 +22,5 @@ function Author(props){
                     </Popover>
                 </div>
             </div>   
-    )
-}
 
 export default Author

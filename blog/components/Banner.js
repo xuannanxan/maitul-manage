@@ -2,17 +2,14 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-07 16:12:26
- * @LastEditTime: 2020-02-07 13:29:37
- * @LastEditors: Xuannan
+ * @LastEditTime : 2020-02-09 22:27:38
+ * @LastEditors  : Xuannan
  */
-import React,{useState,useEffect}from 'react';
+import React from 'react';
 import {Carousel,Button} from 'antd'
+import {_Api,_Url} from '../config/api'
 
-
-
-function Banner(props){
-    const banner=props.banner?props.banner:[]
-    return(
+const Banner = ({banner}) =>
         <div>
             <Carousel autoplay>
                 {banner && banner.length?
@@ -32,11 +29,8 @@ function Banner(props){
                         </div>
                     )
                 })
-                : <div><h3>No Image</h3></div>}
-              
+                : <div><h3>No Image</h3></div>} 
             </Carousel>  
         </div>
-    )
 
-}
 export default Banner
