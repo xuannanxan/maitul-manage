@@ -2,14 +2,16 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-07 19:44:05
- * @LastEditTime : 2020-02-09 23:51:03
+ * @LastEditTime : 2020-02-10 00:16:43
  * @LastEditors  : Xuannan
  */
 
 import React ,{useState,useEffect} from 'react';
 import {List,Icon ,Breadcrumb,Skeleton,Tag,Pagination} from 'antd'
 import Link from 'next/link'
-import Router from 'next/router'
+
+const tagColor = ['magenta','red','volcano','orange','gold','lime','green','cyan','blue','geekblue','purple']
+
 function ArticleList(props){
     const contentList=props.contentList.data?props.contentList.data:[]
     const paginate = props.contentList.paginate?props.contentList.paginate:{}
@@ -65,20 +67,18 @@ function ArticleList(props){
                 <span><Icon type={item.category_icon?item.category_icon:"folder"} /> {item.category_name}</span>
                 <span><Icon type="fire" /> {item.click}人</span>
               </div>
-              {item.cover?<div className="list-context"><img src={item.cover}/></div>:'' }
-              <div className="list-context">{item.description}</div> 
-              <div className="list-context">
-                {item.tags_name?
-                item.tags_name.split(',').map((tag_name,index)=>{
+              {item.cover?<div className="list-context"><img src={item.cover} alt={item.title} title={item.title}/></div>:'' }
+              {item.description?<div className="list-context">{item.description}</div> :''}
+              {item.tags_name?
+                <div className="list-context">
+                {item.tags_name.split(',').map((tag_name,index)=>{
                   return (
                     <Link key={index+tag_name} href={{pathname:'/list',query:{tag:tag_name}}} passHref>
-                      <Tag color="magenta" onClick={goLoading}  >{tag_name}</Tag>
+                      <Tag color={tagColor[Math.floor((Math.random()*tagColor.length))]} onClick={goLoading}  >{tag_name}</Tag>
                     </Link>
                   )
-                })
-                
-                :item.tags_name}
-                </div>
+                })}
+                </div>:''}
             </List.Item>
             </Skeleton> 
           )}

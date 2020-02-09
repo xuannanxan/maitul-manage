@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-06 22:01:20
- * @LastEditTime : 2020-02-09 16:10:18
+ * @LastEditTime : 2020-02-10 00:06:03
  * @LastEditors  : Xuannan
  */
 
@@ -19,13 +19,6 @@ function TopNav(props){
     const {isdown,webconfig,categoryId,category} = props
     const [ visible , setVisible ] = useState(false);
     const contentList=props.contentList.data?props.contentList.data:[]
-    const handleClick = (e)=>{
-        if(e.key=='home'){
-            Router.push('/index')
-        }else{
-            Router.push('/list?id='+e.key) 
-        }
-    }
     return (
         <div className ={isdown?'header isdown':'header'} >
             <Row type='flex' justify='center'>
@@ -39,19 +32,20 @@ function TopNav(props){
                     <Menu  
                     mode="horizontal" 
                     className="f-right" 
-                    onClick={handleClick}
                     selectedKeys={categoryId?categoryId:'home'}
                     >
                         <Menu.Item key="home">
-                            <Icon type="home" />
-                            首页
+                            <a href="/index">
+                                <Icon type="home" />首页
+                            </a>
                         </Menu.Item>
                         {category && category.length?
                         category.map(item=>{
                             return(
                                 <Menu.Item key={item.id}>
-                                    <Icon type={item.icon} />
-                                    {item.name}
+                                    <a href={`/list?id=${item.id}`}>
+                                        <Icon type={item.icon} />{item.name}
+                                    </a>
                                 </Menu.Item>
                             )
                         }):''}

@@ -2,18 +2,18 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-05 21:31:52
- * @LastEditTime : 2020-02-08 22:19:37
+ * @LastEditTime : 2020-02-10 00:24:46
  * @LastEditors  : Xuannan
  */
 import React,{useState,useEffect} from 'react'
-import { Affix,Row,Col,Icon ,List,Button,Skeleton} from 'antd'
+import { Affix,Row,Col,Icon ,List,Tag,Skeleton} from 'antd'
 import TopNav from '../components/TopNav'
 import Header from '../components/Header'
 import {_Api,_Url} from '../config/api'
 import Author from '../components/Author'
 import Error from './_error'
 import Link from 'next/link'
-
+const tagColor = ['magenta','red','volcano','orange','gold','lime','green','cyan','blue','geekblue','purple']
 const Detail = (props) => {
   if (props.webconfig.status) {
     return <Error statusCode={props.status} />
@@ -34,6 +34,9 @@ const Detail = (props) => {
       setIsdown(false)
     }
   }
+  const goLoading= ()=>{
+    setLoading(true)
+  }
   //监听滚动动作
   useEffect(() => {
     setLoading(false)
@@ -41,7 +44,7 @@ const Detail = (props) => {
     return () => {
       document.removeEventListener('scroll', onScroll, false);
     };
-  }, []);
+  }, [props]);
   return(
     <div>
       <Header  webconfig={webconfig} content={content}/>
@@ -59,8 +62,19 @@ const Detail = (props) => {
               <span><Icon type={content.category_icon?content.category_icon:"folder"} /> {content.category_name?content.category_name:'.....'}</span>
               <span><Icon type="fire" /> {content.click?content.click:'0'}人</span>
             </div>
+            {content.tags_name?
+            <div className="list-context center">
+            {content.tags_name.split(',').map((tag_name,index)=>{
+              return (
+                <Link key={index+tag_name} href={{pathname:'/list',query:{tag:tag_name}}} passHref>
+                  <Tag color={tagColor[Math.floor((Math.random()*tagColor.length))]} onClick={goLoading}  >{tag_name}</Tag>
+                </Link>
+              )
+            })}
+            </div>:''}
             <div className="detail-content" dangerouslySetInnerHTML={{__html: content.content?content.content:'...'}}>
             </div>
+           
             </Skeleton> 
           </div>
           </Col>
@@ -77,7 +91,7 @@ const Detail = (props) => {
                   renderItem={item => (
                     <List.Item>
                       <Link href={{pathname:'/detail',query:{id:item.id}}} passHref>
-                        <div className='right-list' title={item.title} >
+                        <div className='right-list' title={item.title} onClick={goLoading}>
                             <a className={item.id===content.id?'active':'' }>{item.title}</a>
                         </div>
                       </Link>
