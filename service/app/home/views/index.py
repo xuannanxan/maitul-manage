@@ -155,9 +155,8 @@ def selectSubData(tableName,query,page,num):
         ORDER BY {tableName}.sort DESC
         LIMIT {1},{2};
         '''.format(query,(page-1)*num,num,tableName=tableName)
-    sql_data = Crud.auto_select(sql)
-    count_num = Crud.auto_select("SELECT FOUND_ROWS() as countnum")
-    count = int((count_num.first()).countnum)
+    sql_data,count = Crud.auto_select(sql,count=True)
+
     if sql_data:
         return Pagination(page,num,count,sql_data.fetchall())
     return False

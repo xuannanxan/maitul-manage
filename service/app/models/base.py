@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 10:03:50
-@LastEditTime: 2020-02-05 13:29:50
-@LastEditors: Xuannan
+@LastEditTime : 2020-02-11 13:33:28
+@LastEditors  : Xuannan
 '''
 # -*- coding: utf-8 -*- 
 # Created by xuannan on 2019-01-26.
@@ -14,8 +14,6 @@ import traceback
 from copy import deepcopy
 from app.utils import object_to_dict,diyId
 from sqlalchemy.sql import and_,or_,not_
-
-
 import uuid
 from datetime import datetime
 from flask import current_app
@@ -67,7 +65,7 @@ class BaseModel(db.Model):
 
 
 class Crud:
-    def auto_select(sql,commit=False):
+    def auto_select(sql,commit=False,count=False):
         """
         提交sql语句
         :sql :
@@ -78,11 +76,18 @@ class Crud:
             if commit:
                 db.session.commit()
             db.session.close()
+            if count:
+                countData = db.session.execute("SELECT FOUND_ROWS() as countnum;")
+                countNumber = int((countData.first()).countnum)
+                return data,countNumber
             return data
         except Exception as e:
             db.session.rollback()
             current_app.logger.info(e)
+            if count:
+                return False,0
             return False
+            
         
     def add_all(data):
         with db.autoCommit():

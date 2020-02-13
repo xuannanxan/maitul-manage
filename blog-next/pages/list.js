@@ -1,10 +1,11 @@
 /*
  * @Description: 
  * @Author: Xuannan
- * @Date: 2019-12-05 21:31:52
- * @LastEditTime : 2020-02-09 23:28:11
+ * @Date: 2019-12-07 00:18:02
+ * @LastEditTime : 2020-02-11 14:01:18
  * @LastEditors  : Xuannan
  */
+
 import React,{useState,useEffect} from 'react'
 import { Affix,Row,Col } from 'antd'
 import TopNav from '../components/TopNav'
@@ -17,7 +18,7 @@ import Error from './_error'
 const pageSize=10
 const List = (props) => {
   if (props.webconfig.status) {
-    return <Error statusCode={props.status} />
+    return <Error statusCode={props.webconfig.status} />
   }
   const {webconfig,category,contentList,rightAd,categoryId,search,tag} = props
   const [ isdown , setIsdown ] = useState(false)

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime : 2020-02-05 13:42:42
+@LastEditTime : 2020-02-11 13:12:59
 @LastEditors  : Xuannan
 '''
 
@@ -199,10 +199,7 @@ class AdminResource(Resource):
         GROUP BY a.id
         LIMIT {0},{1};
         '''.format((page-1)*paginate,paginate)
-        sql_data = Crud.auto_select(sql)
-        # 查询总数
-        count_num = Crud.auto_select("SELECT FOUND_ROWS() as countnum")
-        count = int((count_num.first()).countnum)
+        sql_data,count = Crud.auto_select(sql,count=True)
         fetchall_data = sql_data.fetchall()
         if not fetchall_data:
             abort(RET.NotFound,msg='暂无数据')

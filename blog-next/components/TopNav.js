@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-06 22:01:20
- * @LastEditTime : 2020-02-10 00:06:03
+ * @LastEditTime : 2020-02-10 23:28:49
  * @LastEditors  : Xuannan
  */
 
@@ -43,9 +43,10 @@ function TopNav(props){
                         category.map(item=>{
                             return(
                                 <Menu.Item key={item.id}>
-                                    <a href={`/list?id=${item.id}`}>
+                                    <Link href={`/list?id=${item.id}`}>
+                                    <a >
                                         <Icon type={item.icon} />{item.name}
-                                    </a>
+                                    </a></Link>
                                 </Menu.Item>
                             )
                         }):''}

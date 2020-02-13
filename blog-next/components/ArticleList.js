@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-07 19:44:05
- * @LastEditTime : 2020-02-10 00:16:43
+ * @LastEditTime : 2020-02-10 21:59:05
  * @LastEditors  : Xuannan
  */
 
@@ -83,7 +83,7 @@ function ArticleList(props){
             </Skeleton> 
           )}
         /> 
-        <Pagination className='f-right' defaultCurrent={paginate.page?paginate.page:1} total={paginate.total?paginate.total:1} itemRender={itemRender}/>
+        <Pagination className='center' defaultCurrent={paginate.page?paginate.page:1} total={paginate.total?paginate.total:1} itemRender={itemRender}/>
       </div>  
     )
 }

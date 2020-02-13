@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-02-07 20:42:20
+@LastEditTime : 2020-02-11 12:46:13
 @LastEditors  : Xuannan
 '''
 
@@ -187,24 +187,22 @@ class ContentResource(Resource):
             ORDER BY c.sort DESC,c.create_time DESC
             LIMIT {5},{6};
         '''.format(contentTable,contentTagTable,TagTable,categoryTable,query,(page-1)*paginate,paginate)
-        sql_data = Crud.auto_select(sql)
-        # 查询总数
-        count_num = Crud.auto_select("SELECT FOUND_ROWS() as countnum")
-        count = int((count_num.first()).countnum)
-        fetchall_data = sql_data.fetchall()
-        if not fetchall_data:
-            abort(RET.NotFound,msg='暂无数据')
-        data = {
-                    'status':RET.OK,
-                    'paginate':{
-                        'page':page,
-                        'per_page':paginate,
-                        'total':count
-                    },
-                    'data':([mysql_to_json(dict(v))  for v in fetchall_data])
-            }
-        return data 
-
+        sql_data,count = Crud.auto_select(sql,count=True)
+        if  sql_data:
+            fetchall_data = sql_data.fetchall()
+            if not fetchall_data:
+                abort(RET.NotFound,msg='暂无数据')
+            data = {
+                        'status':RET.OK,
+                        'paginate':{
+                            'page':page,
+                            'per_page':paginate,
+                            'total':count
+                        },
+                        'data':([mysql_to_json(dict(v))  for v in fetchall_data])
+                }
+            return data 
+        abort(RET.NotFound,msg='None data')
 
         
     

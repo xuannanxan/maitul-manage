@@ -96,9 +96,7 @@ def searchData(cate_id,tag_id,search,page):
     ORDER BY b.sort DESC
     LIMIT {3},{4};
     '''.format(search,tag_select,cate_select,(page-1)*8,8)
-    sql_data = Crud.auto_select(sql)
-    count_num = Crud.auto_select("SELECT FOUND_ROWS() as countnum")
-    count = int((count_num.first()).countnum)
+    sql_data,count = Crud.auto_select(sql,count=True)
     if sql_data:
         return Pagination(page,8,count,sql_data.fetchall())
     return False
