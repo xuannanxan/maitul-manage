@@ -10,10 +10,9 @@
     <Head></Head>
     <a-layout-content class="content">
       <a-breadcrumb style="margin: 16px 0">
-        <nuxt-link to="/"><a-breadcrumb-item>home</a-breadcrumb-item></nuxt-link>
-        <nuxt-link to="/list"><a-breadcrumb-item>List</a-breadcrumb-item></nuxt-link>
-        
-        <a-breadcrumb-item>App</a-breadcrumb-item>
+        <a-breadcrumb-item><nuxt-link to="/">home</nuxt-link></a-breadcrumb-item>
+        <a-breadcrumb-item><nuxt-link to="/list">List</nuxt-link></a-breadcrumb-item>
+        <a-breadcrumb-item><nuxt-link :to="{path:'/list',params:{newsId:3306}}">NEWS</nuxt-link></a-breadcrumb-item>
       </a-breadcrumb>
       <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">Content</div>
     </a-layout-content>

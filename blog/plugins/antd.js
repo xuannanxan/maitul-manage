@@ -1,12 +1,14 @@
 /*
  * @Description: 
  * @Author: Xuannan
- * @Date: 2020-02-11 18:36:05
- * @LastEditTime : 2020-02-12 00:04:52
+ * @Date: 2020-02-11 23:26:57
+ * @LastEditTime : 2020-02-14 13:10:10
  * @LastEditors  : Xuannan
  */
-import Vue from 'vue'
 
+import Vue from 'vue';
+import '../assets/style.less';
+import 'ant-design-vue/es/button/style';
 
 import {     
     Avatar,
@@ -34,4 +36,7 @@ Vue.use(Input)
 Vue.use(Divider)
 Vue.use(Col)
 Vue.use(Row)
+Vue.use(Layout)
+Vue.use(Breadcrumb)
+Vue.use(Menu)
 Vue.prototype.$message = message;

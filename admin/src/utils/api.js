@@ -6,9 +6,8 @@
  * @LastEditors  : Xuannan
  */
 import {Method} from "./http";
-
-
 const Http = require('./http');
+
 const menuUrl = '/api/admin/menu'
 const ruleUrl = '/api/admin/rule'
 const roleUrl = '/api/admin/role'

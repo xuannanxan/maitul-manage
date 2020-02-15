@@ -3,16 +3,12 @@ name = "pypi"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
 verify_ssl = true
 
-[dev-packages]
-pylint = "*"
-
 [packages]
 flask = "*"
 sqlalchemy = "*"
 flask-wtf = "*"
 flask-login = "*"
 flask-mail = "*"
-flask-cache = "*"
 pymysql = "*"
 pillow = "*"
 lxml = "*"
@@ -27,6 +23,7 @@ redis = "*"
 setuptools = "*"
 flasgger = "*"
 pyjwt = "*"
+flask-caching = "*"
 
 [requires]
 python_version = "3.7"

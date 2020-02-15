@@ -5,7 +5,7 @@
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
 @LastEditTime : 2020-02-11 12:36:30
-@LastEditors  : Xuannan
+@LastEditors: Xuannan
 '''
 import os
 from flask_migrate import Migrate
@@ -13,7 +13,7 @@ from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_cache import Cache
+from flask_caching  import Cache
 from app.apis import api_blueprint
 from flask import current_app
 from contextlib import contextmanager

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime : 2020-02-13 18:44:46
+ * @LastEditTime : 2020-02-14 22:20:36
  * @LastEditors  : Xuannan
  */
 module.exports = {
@@ -28,6 +28,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    transpile: ['ant-design-vue'],
     babel: {
       plugins: [
         [
@@ -89,8 +90,37 @@ module.exports = {
   },
   plugins: [
     {
-      src: '@/plugins/antd',ssr:false
+      src: '@/plugins/antd',ssr:true
     }
-  ]
+  ],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy'  //添加proxy模块
+  ],
+  /*
+  ** Axios module configuration
+  */
+  axios: {
+    proxy: true, // 表示开启代理
+    prefix: '/api', // 表示给请求url加个前缀 /api
+    credentials: true // 表示跨域请求时是否需要使用凭证
+  },
+
+  proxy: [  //proxy配置
+    ['/api', {
+      target:'http://127.0.0.1:5000/api',  //api请求路径
+      pathRewrite: { 
+        '^/api' : '/' ,   // 把 /api 替换成 /
+        changeOrigin: true // 表示是否跨域
+      }  //重定向请求路径，防止路由、api路径的冲突
+         }]
+  ],
+
+  mode: 'universal',
+  env: {
+    BASE_URL: process.env.BASE_URL,
+    NODE_ENV: process.env.NODE_ENV
+  }
+  
 }
 

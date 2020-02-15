@@ -1,21 +1,20 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js
+  D:\Program Files\nodejs\node.exe D:\Program Files\nodejs\yarn\bin\yarn.js add @nuxtjs/axios @nuxtjs/proxy
 
 PATH: 
-  C:\Program Files\python\Scripts\;C:\Program Files\python\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Python36\Scripts\;C:\Program Files\Python36\;C:\Program Files\Broadcom\Broadcom 802.11 Network Adapter;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5 & MySQL Utilities 1.5\;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5 & MySQL Utilities 1.5\Doctrine extensions for PHP\;C:\php;C:\ProgramData\ComposerSetup\bin;C:\Program Files\Lenovo\Bluetooth Software\;C:\Program Files\Lenovo\Bluetooth Software\syswow64;D:\php;C:\Users\xuann\AppData\Roaming\Composer\vendor\bin;C:\Users\xuann\AppData\Local\Microsoft\WindowsApps;C:\Users\xuann\AppD;C:\Program Files\Git\cmd;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Java\jre1.8.0_171\bin;C:\Program Files (x86)\Java\jre1.8.0_171\jre\bin;D:\maven\apache-maven-3.6.0\bin;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\nodejs\;D:\php;C:\Users\xuann\AppData\Roaming\Composer\vendor\bin;C:\Users\xuann\AppData\Local\Microsoft\WindowsApps;d:\Program Files (x86)\Microsoft VS Code\bin;C:\Users\xuann\AppData\Local\GitHubDesktop\bin;C:\Users\xuann\AppData\Local\Microsoft\WindowsApps;C:\Program Files\JetBrains\PyCharm 2019.1.2\bin;;D:\Program Files\Microsoft VS Code\bin;C:\Users\xuann\AppData\Local\Yarn\bin;C:\Users\xuann\AppData\Roaming\npm
+  C:\Program Files\python\Scripts\;C:\Program Files\python\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Python36\Scripts\;C:\Program Files\Python36\;C:\Program Files\Broadcom\Broadcom 802.11 Network Adapter;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5 & MySQL Utilities 1.5\;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5 & MySQL Utilities 1.5\Doctrine extensions for PHP\;C:\php;C:\ProgramData\ComposerSetup\bin;C:\Program Files\Lenovo\Bluetooth Software\;C:\Program Files\Lenovo\Bluetooth Software\syswow64;D:\php;C:\Users\xuann\AppData\Roaming\Composer\vendor\bin;C:\Users\xuann\AppData\Local\Microsoft\WindowsApps;C:\Users\xuann\AppD;C:\Program Files\Git\cmd;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Java\jre1.8.0_171\bin;C:\Program Files (x86)\Java\jre1.8.0_171\jre\bin;D:\maven\apache-maven-3.6.0\bin;D:\Program Files\nodejs\yarn\bin;D:\Program Files\nodejs\;D:\Program Files\nodejs\node_global;D:\Program Files\nodejs\node_global\bin;D:\php;C:\Users\xuann\AppData\Roaming\Composer\vendor\bin;C:\Users\xuann\AppData\Local\Microsoft\WindowsApps;d:\Program Files (x86)\Microsoft VS Code\bin;C:\Users\xuann\AppData\Local\GitHubDesktop\bin;C:\Users\xuann\AppData\Local\Microsoft\WindowsApps;C:\Program Files\JetBrains\PyCharm 2019.1.2\bin;;D:\Program Files\Microsoft VS Code\bin;D:\Program Files\nodejs\yarn\bin;D:\Program Files\nodejs\node_global;C:\Users\xuann\AppData\Roaming\npm
 
 Yarn version: 
   1.19.2
 
 Node version: 
-  12.13.1
+  12.14.1
 
 Platform: 
   win32 x64
 
 Trace: 
-  Error: connect ECONNREFUSED 47.88.227.16:80
-      at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1129:14)
+  Error: ENOENT: no such file or directory, copyfile 'C:\Users\xuann\AppData\Local\Yarn\Cache\v6\npm-ms-2.1.2-d09d1f357b443f493382a8eb3ccd183872ae6009-integrity\node_modules\ms\index.js' -> 'D:\project\maitul-manage\blog\node_modules\@babel\core\node_modules\ms\index.js'
 
 npm manifest: 
   {
@@ -33,6 +32,7 @@ npm manifest:
       "precommit": "npm run lint"
     },
     "dependencies": {
+      "ant-design-vue": "^1.4.10",
       "nuxt": "^2.0.0"
     },
     "devDependencies": {
@@ -40,7 +40,9 @@ npm manifest:
       "eslint": "^4.19.1",
       "eslint-friendly-formatter": "^4.0.1",
       "eslint-loader": "^2.1.1",
-      "eslint-plugin-vue": "^4.0.0"
+      "eslint-plugin-vue": "^4.0.0",
+      "less": "^3.11.1",
+      "less-loader": "^5.0.0"
     }
   }
 
