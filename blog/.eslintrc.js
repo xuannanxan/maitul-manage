@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: Xuannan
+ * @Date: 2020-02-11 23:35:29
+ * @LastEditTime: 2020-02-16 12:48:25
+ * @LastEditors: Xuannan
+ */
 module.exports = {
   root: true,
   env: {
@@ -17,5 +24,7 @@ module.exports = {
     'vue'
   ],
   // add your custom rules here
-  rules: {}
+  rules: {
+    'vue/no-parsing-error': [2, { 'x-invalid-end-tag': false }]
+  }
 }

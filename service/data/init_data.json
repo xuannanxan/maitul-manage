@@ -515,6 +515,21 @@
             "sort": "1"
         },
         {
+            "id": "20200217194306543",
+            "create_time": "2/2/2020 19:43:07",
+            "update_time": "2/2/2020 21:05:46",
+            "last_editor": "xuannan",
+            "is_del": "0",
+            "name": "底部信息",
+            "ename": "siteFoot",
+            "site": "blog",
+            "fieldType": "Input",
+            "placeholder": "请输入底部信息...",
+            "values": "",
+            "value": "Power By Python + React + Vue + Nuxt + Ant Design",
+            "sort": "6"
+        },
+        {
             "id": "20200202194120504",
             "create_time": "2/2/2020 19:41:21",
             "update_time": "2/2/2020 21:05:46",

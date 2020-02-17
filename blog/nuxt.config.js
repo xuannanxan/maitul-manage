@@ -3,18 +3,18 @@
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
  * @LastEditTime : 2020-02-14 22:20:36
- * @LastEditors  : Xuannan
+ * @LastEditors: Xuannan
  */
 module.exports = {
   /*
   ** Headers of the page
   */
   head: {
-    title: 'blog',
+    title: 'My Blog',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Nuxt.js project' }
+      { hid: 'description', name: 'description', content: 'My Blog' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }

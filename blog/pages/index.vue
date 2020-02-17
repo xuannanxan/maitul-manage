@@ -7,42 +7,90 @@
  -->
 <template>
   <a-layout class="layout ">
-    <Head></Head>
+    <Header/>
     <a-layout-content class="content">
-      <a-breadcrumb style="margin: 16px 0">
-        <nuxt-link to="/"><a-breadcrumb-item>home</a-breadcrumb-item></nuxt-link>
-        <nuxt-link to="/list"><a-breadcrumb-item>List</a-breadcrumb-item></nuxt-link>
-        
-        <a-breadcrumb-item>App</a-breadcrumb-item>
-      </a-breadcrumb>
-      <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">Content</div>
+      <a-row>
+        <a-col :xs='24' :sm='24' :md='18' :lg='18' :xl='18'>
+          <div class="main">
+            <Banner/>
+          </div>
+          <div class="main">
+            <ArticleList 
+            :data="data"
+            :paginate="paginate"
+            :tag="tag"
+            :search="search"
+            :category="category"/>
+          </div>
+          <a-layout-footer style="text-align: center">
+            {{webconfig.siteFoot?webconfig.siteFoot:'My blog'}}
+          </a-layout-footer>
+        </a-col>
+        <a-col :xs='0' :sm='0' :md='6' :lg='6' :xl='6'>
+          <div class="main right" v-for="item in rightAd" :key="item.id">
+            <RightAd :ad='item'/>
+          </div>
+          <a-affix :offsetTop="65">
+            <div class="main right">
+              <Author/>
+            </div>
+          </a-affix>
+        </a-col>
+      </a-row>
     </a-layout-content>
-    <a-layout-footer style="text-align: center">
-      Power By Python + React + Vue + Nuxt + Ant Design
-    </a-layout-footer>
   </a-layout>
 </template>
 <script>
+  import Header from '@/components/common/Header';
+  import Banner from '@/components/common/Banner';
+  import Author from '@/components/common/Author';
+  import RightAd from '@/components/common/RightAd';
+  import ArticleList from '@/components/list/ArticleList';
   import {mapState} from 'vuex'
-  import Head from '@/components/common/Head'
+  const pageSize = 10;
+  const contenData =  {
+        data:[],
+        paginate:{},
+        tag:'',
+        search:'',
+        category:{}
+      };
   export default {
     scrollToTop: true,
-    components:{Head},
-    methods: {
-      onSearch(value) {
-        console.log(value);
-      },
+    components:{Header,Banner,Author,RightAd,ArticleList},
+    computed:mapState(["rightAd","webconfig"]),
+    head () {
+      return {
+        title: this.webconfig.siteName,
+        meta: [
+          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords },
+          { hid: 'description', name: 'description', content: this.webconfig.siteDescription }
+        ]
+      }
     },
-    computed:mapState(["webconfig"]),
-    async  asyncData({ store, error }){
+    async asyncData({ store, error }){
       if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-        const  [webconfig,category]  = await Promise.all([
-          store.dispatch('_webconfig'),
-          store.dispatch('_category')
-        ])
+        const  [webconfig]  = await Promise.all([store.dispatch('_webconfig')])
         if(webconfig.status === 200) store.commit('setWebConfig',webconfig.data)
+      }
+      if(store.state.category && store.state.category.length===0){
+        const  [category]  = await Promise.all([store.dispatch('_category')])
         if(category.status === 200) store.commit('setCategory',category.data)
       }
+      if(store.state.banner && store.state.banner.length===0){
+        const  [banner]  = await Promise.all([store.dispatch('_banner')])
+        if(banner.status === 200) store.commit('setBanner',banner.data)
+      }
+      if(store.state.rightAd && store.state.rightAd.length===0){
+        const  [rightAd]  = await Promise.all([store.dispatch('_rightAd')])
+        if(rightAd.status === 200) store.commit('setRightAd',rightAd.data)
+      }
+      const  [content]  = await Promise.all([store.dispatch('_content',{paginate:pageSize})])
+      if(content.status === 200) {
+          contenData.data = content.data
+          contenData.paginate = content.paginate
+        }
+      return contenData
     }
   };
 </script>

@@ -7,7 +7,7 @@
  -->
 <template>
   <a-layout class="layout ">
-    <Head></Head>
+    <Header></Header>
     <a-layout-content class="content">
       <a-breadcrumb style="margin: 16px 0">
         <a-breadcrumb-item><nuxt-link to="/">home</nuxt-link></a-breadcrumb-item>
@@ -23,10 +23,10 @@
 </template>
 <script>
   import {mapState} from 'vuex'
-  import Head from '@/components/common/Head'
+  import Header from '@/components/common/Header'
   export default {
     scrollToTop: true,
-    components:{Head},
+    components:{Header},
     methods: {
       onSearch(value) {
         console.log(value);

@@ -3,7 +3,7 @@
  * @Author: Xuannan
  * @Date: 2019-12-07 16:12:26
  * @LastEditTime : 2020-02-09 22:27:38
- * @LastEditors  : Xuannan
+ * @LastEditors: Xuannan
  */
 import React from 'react';
 import {Carousel,Button} from 'antd'
