@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:26:57
- * @LastEditTime : 2020-02-14 13:10:10
+ * @LastEditTime: 2020-02-18 21:08:05
  * @LastEditors: Xuannan
  */
 
@@ -32,9 +32,11 @@ import {
     Tooltip,
     Popover,
     Divider,
+    Empty,
     message} from 'ant-design-vue';
 Vue.use(Avatar)
 Vue.use(Button)
+Vue.use(Tag)
 Vue.use(Input)
 Vue.use(Divider)
 Vue.use(Col)
@@ -51,4 +53,5 @@ Vue.use(Spin)
 Vue.use(Tooltip)
 Vue.use(Popover)
 Vue.use(Affix)
+Vue.use(Empty)
 Vue.prototype.$message = message;

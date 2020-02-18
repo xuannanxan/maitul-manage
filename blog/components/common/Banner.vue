@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-02-16 10:31:23
+ * @LastEditTime: 2020-02-18 16:33:47
  * @LastEditors: Xuannan
  -->
 <template>
@@ -49,9 +49,9 @@
     .ant-carousel {   
         line-height: 0;
        .custom-slick-arrow {
-            width: 30px;
-            height: 30px;
-            font-size: 30px;
+            width: 2rem;
+            height: 2rem;
+            font-size: 2rem;
             color: #fff;
             background-color: rgba(31, 45, 61, 0.11);
             opacity: 0.3;

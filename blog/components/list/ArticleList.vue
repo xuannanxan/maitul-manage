@@ -2,19 +2,18 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-17 10:23:14
+ * @LastEditTime: 2020-02-18 21:28:01
  * @LastEditors: Xuannan
  -->
 <template>
     <div>
-
         <a-list 
         itemLayout="horizontal" 
         :dataSource="data"
         >
-            <div slot="header" class="list-header">
-                
-                <a-breadcrumb v-if='category.id' >
+            <div slot="header" class="list-header">  
+                <div v-if='tag || search'>{{tag?`【${tag}】相关...`:(search?`【${search}】的搜索结果...`:'最新文章')}}</div>
+                <a-breadcrumb v-else-if='category.id' >
                     <a-breadcrumb-item>
                         <nuxt-link to="/"><a-icon type="home" /><span>首页</span></nuxt-link>
                     </a-breadcrumb-item>
@@ -23,12 +22,10 @@
                             <a-icon :type="category.icon" />
                             <span>{{category.name}}</span>
                         </nuxt-link>
-                        
                     </a-breadcrumb-item>
                 </a-breadcrumb>
-                <div v-else>{{tag?`【${tag}】相关...`:(search?`【${search}】的搜索结果...`:'最新文章')}}</div>
-            </div>
-            
+                <div v-else>最新文章</div>
+            </div>           
             <a-list-item slot="renderItem" slot-scope="item, index">
                 <a-skeleton :loading="skeletonLoading" active avatar>
                 <a-list-item-meta>
@@ -43,6 +40,11 @@
                             </nuxt-link>
                             <span><a-icon type="fire" /> {{item.click}}人</span>
                         </div>
+                        <div class="list-tag" v-if="item.tags_name">
+                            <a-tag v-for="(tag,index) in item.tags_name.split(',')" :key="index+tag" :color="tagColor[Math.floor((Math.random()*tagColor.length))]">
+                                <nuxt-link :to="{path:'/list?tag='+tag}">{{tag}}</nuxt-link>
+                            </a-tag>
+                        </div>
                         <div v-if="item.cover">
                             <nuxt-link :to="{path:'/detail/'+item.id}">
                                 <img :src="item.cover" :alt="item.title" :title="item.title"/>
@@ -53,8 +55,6 @@
                 </a-list-item-meta>
                 </a-skeleton>
             </a-list-item>
-            
-            
         </a-list>
         <a-pagination 
         class="center"
@@ -65,11 +65,11 @@
     </div>
 </template>
 <script>
-
     export default {
         name: 'ArticleList',
         data() {
             return {
+                tagColor:['magenta','red','volcano','orange','gold','lime','green','cyan','blue','geekblue','purple'],
                 skeletonLoading:true,
             }
         },
@@ -106,6 +106,9 @@
         font-size: 1.2rem;
         color: rgba(37, 39, 39, 0.6);
         margin: 0 1rem;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        overflow:hidden;
     }
     .list-context{
         font-size: 1.0rem;
@@ -118,7 +121,7 @@
         }
     }
     .list-icon{
-        padding:.5rem 0;
+        padding-bottom:.2rem;
         color:#AAA;
         font-size: 1rem;
         span{
@@ -130,6 +133,9 @@
             margin: 0 1rem; 
         }
     }
+    .list-tag{
+        padding-bottom: .5rem;
+    }
     .ant-pagination-item a{
         padding: 0.5rem;
         margin: 0;
@@ -139,7 +145,7 @@
         margin-bottom: 1rem;
     }
     .ant-skeleton{
-        margin: 0 1rem;
+        margin: 1rem;
         ul{
             padding: 0
         }

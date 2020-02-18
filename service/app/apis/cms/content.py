@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime : 2020-02-11 12:46:13
-@LastEditors  : Xuannan
+@LastEditTime: 2020-02-18 20:20:43
+@LastEditors: Xuannan
 '''
 
 
@@ -145,12 +145,12 @@ class ContentResource(Resource):
                 WHERE c.id = %s and c.is_del = 0;
                 '''%(contentTable,contentTagTable,TagTable,categoryTable,id)
             sql_data = Crud.auto_select(sql)
+            if not sql_data:
+                abort(RET.NotFound,msg='内容不存在')
             data = sql_data.first()
             _content = getContent(id,contentModel)
             _content.click = _content.click+1
             _content.updata()
-            if not data:
-                abort(RET.NotFound,msg='内容不存在')
             return {
                         'status':RET.OK,
                         'data':mysql_to_json(dict(data))

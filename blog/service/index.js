@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-14 16:02:55
- * @LastEditTime : 2020-02-14 19:56:14
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-02-18 12:30:42
+ * @LastEditors: Xuannan
  */
 import axios from 'axios'
 // import qs from 'qs'
@@ -28,11 +28,20 @@ service.interceptors.request.use(
 // 返回状态判断
 service.interceptors.response.use(
   res => {
-    return Promise.resolve(res.data)
+    if(res.data.status===200){
+      return Promise.resolve(res.data)
+    }else{
+      return Promise.resolve({status:res.data.status})
+    }
+    
   },
   error => {
     //console.dir(error);
-    return Promise.reject(error)
+    if(error.response){
+      return Promise.resolve({status:error.response.status})
+    }else{
+      return Promise.reject({statusCode: 500, message: 'Failed to get data' })
+    }
   }
 )
 

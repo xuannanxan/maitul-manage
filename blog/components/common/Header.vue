@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime : 2020-02-14 23:22:05
+ * @LastEditTime: 2020-02-18 21:45:21
  * @LastEditors: Xuannan
  -->
 <template>
@@ -16,11 +16,12 @@
         <a-col :xs='0' :sm='0' :md='12' :lg='12' :xl='12'>
           <a-menu
             mode="horizontal"
-            :defaultSelectedKeys="['2']"
+            :defaultSelectedKeys="[currentCategory]"
             class="menu "
+            :selectedKeys="[currentCategory]"
           >
-            <a-menu-item>
-              <nuxt-link to="/">首页</nuxt-link>
+            <a-menu-item :key="'home'">
+              <nuxt-link to="/" >首页</nuxt-link>
             </a-menu-item>
             <a-menu-item v-for="item in category" :key="item.id">
               <nuxt-link :to="{path:'/list/'+item.id}">{{item.name}}</nuxt-link>
@@ -46,6 +47,7 @@
       ...mapState(["webconfig"]),
       ...mapState(["category"]),
     },
+    props:['currentCategory']
   };
 </script>
 <style lang="less" scoped>

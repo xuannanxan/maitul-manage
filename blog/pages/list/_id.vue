@@ -2,12 +2,12 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 19:34:49
- * @LastEditTime: 2020-02-17 19:34:50
+ * @LastEditTime: 2020-02-18 21:33:28
  * @LastEditors: Xuannan
  -->
 <template>
     <a-layout class="layout ">
-        <Header/>
+        <Header :currentCategory="category.id"/>
         <a-layout-content class="content">
         <a-row>
             <a-col :xs='24' :sm='24' :md='18' :lg='18' :xl='18'>
@@ -24,15 +24,14 @@
             </a-layout-footer>
             </a-col>
             <a-col :xs='0' :sm='0' :md='6' :lg='6' :xl='6'>
- 
-            <a-affix :offsetTop="65">
-                <div class="main right">
-                <Author/>
-                </div>
-            </a-affix>
-            <div class="main right" v-for="item in rightAd" :key="item.id">
-                <RightAd :ad='item'/>
-            </div>
+                <a-affix :offsetTop="65">
+                    <div class="main right">
+                        <Author/>
+                    </div>
+                    <div class="main right" v-for="item in rightAd" :key="item.id">
+                        <RightAd :ad='item'/>
+                    </div>
+                </a-affix>
             </a-col>
         </a-row>
         </a-layout-content>
@@ -45,7 +44,7 @@
     import ArticleList from '@/components/list/ArticleList';
     import {mapState} from 'vuex'
     const pageSize = 10;
-    const contenData =  {
+    const contenList =  {
         data:[],
         paginate:{},
         tag:'',
@@ -63,10 +62,10 @@
         computed:mapState(["rightAd","webconfig"]),
         head () {
             return {
-                title: this.webconfig.siteName+'|'+contenData.category.name,
+                title: (this.webconfig.siteName?this.webconfig.siteName:'My blog')+(contenList.category.name?'|'+contenList.category.name:''),
                 meta: [
-                { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords+','+contenData.category.keywords },
-                { hid: 'description', name: 'description', content: contenData.category.description?contenData.category.description:this.webconfig.siteDescription }
+                { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'My blog')+(contenList.category.keywords?','+contenList.category.keywords:'') },
+                { hid: 'description', name: 'description', content: contenList.category.description?contenList.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'' }
                 ]
             }
         },
@@ -91,17 +90,18 @@
                 search:query.search,
                 })])
             if(content.status === 200) {
-                contenData.data = content.data
-                contenData.paginate = content.paginate
+                contenList.data = content.data
+                contenList.paginate = content.paginate
+                store.commit('setContentList',content.data)
                 }
             if(params.id){
                 store.state.category.forEach(item => {
-                    if(item.id===params.id)contenData.category = item
+                    if(item.id===params.id)contenList.category = item
                 });
             }
-            contenData.search = query.search?query.search:'';
-            contenData.tag = query.tag?query.tag:''
-            return contenData
+            contenList.search = query.search?query.search:'';
+            contenList.tag = query.tag?query.tag:''
+            return contenList
         }
 
     }

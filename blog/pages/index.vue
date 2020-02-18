@@ -2,12 +2,12 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime : 2020-02-14 22:46:59
+ * @LastEditTime: 2020-02-18 21:41:57
  * @LastEditors: Xuannan
  -->
 <template>
   <a-layout class="layout ">
-    <Header/>
+    <Header :currentCategory="'home'"/>
     <a-layout-content class="content">
       <a-row>
         <a-col :xs='24' :sm='24' :md='18' :lg='18' :xl='18'>
@@ -61,10 +61,10 @@
     computed:mapState(["rightAd","webconfig"]),
     head () {
       return {
-        title: this.webconfig.siteName,
+        title: this.webconfig.siteName?this.webconfig.siteName:'My blog',
         meta: [
-          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords },
-          { hid: 'description', name: 'description', content: this.webconfig.siteDescription }
+          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:'My blog' },
+          { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:'My blog' }
         ]
       }
     },
