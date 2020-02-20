@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime: 2020-02-18 20:20:43
+@LastEditTime: 2020-02-20 19:49:45
 @LastEditors: Xuannan
 '''
 
@@ -168,7 +168,7 @@ class ContentResource(Resource):
         # 开始拼接查询语句
         query = '{0}{1}{2}'.format(
             't.name = "%s" and '%tag if tag else '',
-            'c.category_id = %s and '%category_id if category_id else '',
+            '(a.id = "{0}" OR a.pid = "{0}") and '.format(category_id) if category_id else '',
             '(c.title like "%{0}%" or c.content like "%{0}%") and '.format(search) if search else ''
         )
         sql = '''

@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime : 2020-02-02 22:22:26
-@LastEditors  : Xuannan
+@LastEditTime: 2020-02-20 22:57:15
+@LastEditors: Xuannan
 '''
 
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -221,7 +221,8 @@ class WebConfigResource(Resource):
         data = json.loads(json.dumps(eval(args.get('data'))))
         _list = WebConfig.query.filter_by(is_del = '0').order_by(WebConfig.sort.desc()).all()
         for v in _list:
-            v.value = data.get(v.ename)
+            # 加|区分站点，因为调用名称要多站复用
+            v.value = data.get(v.site+'|'+v.ename)
         result = WebConfig().updata()
         if result:
             data =  {

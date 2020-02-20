@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-17 10:30:37
- * @LastEditTime : 2020-01-20 16:50:39
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-02-20 19:37:08
+ * @LastEditors: Xuannan
  */
 import React, { useImperativeHandle} from 'react';
 import { Input ,Form ,InputNumber,message} from 'antd';
@@ -50,6 +50,7 @@ function SubmitForm(props){
             if(params){
                 form.setFieldsValue({
                     id:params.id,
+                    ename:params.ename,
                     name:params.name,
                     sort:params.sort?params.sort:1,
                 })
@@ -70,6 +71,16 @@ function SubmitForm(props){
                     })(
                         <Input 
                         placeholder="请输入广告位名称..."
+                        size='large'
+                        />,
+                    )}
+                </Form.Item>
+                <Form.Item label='调用名称'>
+                    {getFieldDecorator('ename', {
+                        rules: [{ required: true, message: '请输入调用名称!' }],
+                    })(
+                        <Input 
+                        placeholder="请输入调用名称..."
                         size='large'
                         />,
                     )}

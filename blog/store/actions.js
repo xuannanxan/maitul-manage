@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-13 22:45:12
- * @LastEditTime: 2020-02-18 10:48:26
+ * @LastEditTime: 2020-02-20 20:26:13
  * @LastEditors: Xuannan
  */
 /*
@@ -36,20 +36,25 @@ export const _category = async (store, params={})=>{
 //banner信息
 export const _banner = async (store, params={})=>{
   params['site'] = siteInfo.site
-  params['space_id'] = siteInfo.blogBanner
+  params['ename'] = siteInfo.banner
   return await request.get(api.adUrl, { params: params })
 };
 
 //右侧广告
 export const _rightAd = async (store, params={})=>{
   params['site'] = siteInfo.site
-  params['space_id'] = siteInfo.blogRightAd
+  params['ename'] = siteInfo.rightAd
   return await request.get(api.adUrl, { params: params })
 };
 //内容
 export const _content = async (store, params={})=>{
   params['site'] = siteInfo.site
   return await request.get(api.contentUrl, { params: params })
+};
+//标签
+export const _tags = async (store, params={})=>{
+  params['site'] = siteInfo.site
+  return await request.get(api.tagsUrl, { params: params })
 };
 
 

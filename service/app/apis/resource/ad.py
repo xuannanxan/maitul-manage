@@ -1,8 +1,8 @@
 
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
-from app.models import Ad
-from app.utils import object_to_json
+from app.models import Ad,Crud
+from app.utils import object_to_json,mysql_to_json
 from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.resource import ad_doc as doc
@@ -15,6 +15,7 @@ api = Apidoc('通用-广告管理')
 parse_id = reqparse.RequestParser()
 parse_id.add_argument('id',type=str)
 parse_id.add_argument('space_id',type=str)
+parse_id.add_argument('ename',type=str)
 
 parse_base = parse_id.copy()
 parse_base.add_argument('name',type=str,required=True,help='请输入名称')
@@ -122,6 +123,7 @@ class AdResource(Resource):
         args_id = parse_id.parse_args()
         id = args_id.get('id')
         space_id = args_id.get('space_id')
+        ename = args_id.get('ename')
         if id:
             return {
                         'status':RET.OK,
@@ -135,7 +137,27 @@ class AdResource(Resource):
                     'status':RET.OK,
                     'data':[object_to_json(v) for v in _list]
             }
-            return data     
+            return data 
+        if ename:
+            sql = '''
+                SELECT 
+                a.name,a.info,a.url,a.img
+                FROM ad as a
+                left join ad_space as s on s.id = a.space_id
+                WHERE a.is_del = 0
+                AND s.ename = '%s'
+                ORDER BY a.sort DESC;
+            '''%ename
+            sql_data = Crud.auto_select(sql)
+            if  sql_data:
+                fetchall_data = sql_data.fetchall()
+                if not fetchall_data:
+                    abort(RET.NotFound,msg='暂无数据')
+                data = {
+                            'status':RET.OK,
+                            'data':([mysql_to_json(dict(v))  for v in fetchall_data])
+                    }
+                return data    
         abort(RET.BadRequest,msg='暂无数据')
         
 

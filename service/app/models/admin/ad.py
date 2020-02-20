@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# coding=utf-8
+'''
+@Description: 
+@Author: Xuannan
+@Date: 2019-12-08 10:03:49
+@LastEditTime: 2020-02-20 19:16:36
+@LastEditors: Xuannan
+'''
 # -*- coding: utf-8 -*- 
 # Created by xuannan on 2019-01-26.
 __author__ = 'Allen xu'
@@ -22,6 +31,7 @@ class Ad(BaseModel):
 class AdSpace(BaseModel):
     __tablename__ = "ad_space"
     name = db.Column(db.String(100),nullable=False)
+    ename = db.Column(db.String(100),nullable=False)
     sort = db.Column(db.Integer, default=0)  # 排序
     last_editor =  db.Column(db.String(20))
 

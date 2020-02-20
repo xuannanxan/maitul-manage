@@ -2,12 +2,15 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 19:34:49
- * @LastEditTime: 2020-02-18 21:33:28
+ * @LastEditTime: 2020-02-19 16:48:53
  * @LastEditors: Xuannan
  -->
 <template>
     <a-layout class="layout ">
-        <Header :currentCategory="category.id"/>
+        <a-back-top>
+            <a-button type="primary" shape="circle" icon="to-top" size='large'></a-button>
+        </a-back-top>
+        <Header :currentCategory="[category.id?category.id:'']"/>
         <a-layout-content class="content">
         <a-row>
             <a-col :xs='24' :sm='24' :md='18' :lg='18' :xl='18'>
@@ -24,12 +27,15 @@
             </a-layout-footer>
             </a-col>
             <a-col :xs='0' :sm='0' :md='6' :lg='6' :xl='6'>
+                <div class="main right" v-for="item in rightAd" :key="item.id">
+                    <RightAd :ad='item'/>
+                </div>
                 <a-affix :offsetTop="65">
                     <div class="main right">
                         <Author/>
                     </div>
-                    <div class="main right" v-for="item in rightAd" :key="item.id">
-                        <RightAd :ad='item'/>
+                    <div class="main right">
+                        <Tags/>
                     </div>
                 </a-affix>
             </a-col>
@@ -41,7 +47,9 @@
     import Header from '@/components/common/Header';
     import Author from '@/components/common/Author';
     import RightAd from '@/components/common/RightAd';
+    import Tags from '@/components/common/Tags';
     import ArticleList from '@/components/list/ArticleList';
+    import {findNodes} from '@/utils/treeNodes'
     import {mapState} from 'vuex'
     const pageSize = 10;
     const contenList =  {
@@ -58,7 +66,7 @@
         // },
         watchQuery: ['page','tag','search'],
         scrollToTop: true,
-        components:{Header,Author,RightAd,ArticleList},
+        components:{Header,Author,RightAd,ArticleList,Tags},
         computed:mapState(["rightAd","webconfig"]),
         head () {
             return {
@@ -82,6 +90,10 @@
                 const  [rightAd]  = await Promise.all([store.dispatch('_rightAd')])
                 if(rightAd.status === 200) store.commit('setRightAd',rightAd.data)
             }
+            if(store.state.tags && store.state.tags.length===0){
+                const  [tags]  = await Promise.all([store.dispatch('_tags')])
+                if(tags.status === 200) store.commit('setTags',tags.data)
+            }
             const  [content]  = await Promise.all([store.dispatch('_content',{
                 paginate:pageSize,
                 page:query.page,
@@ -93,11 +105,16 @@
                 contenList.data = content.data
                 contenList.paginate = content.paginate
                 store.commit('setContentList',content.data)
-                }
+            }else{
+                contenList.data = []
+                contenList.paginate = {}
+            }
+
             if(params.id){
-                store.state.category.forEach(item => {
-                    if(item.id===params.id)contenList.category = item
-                });
+                let cateoryData = findNodes(store.state.category,params.id)
+                if(cateoryData.length){
+                    contenList.category = cateoryData[0]
+                }
             }
             contenList.search = query.search?query.search:'';
             contenList.tag = query.tag?query.tag:''

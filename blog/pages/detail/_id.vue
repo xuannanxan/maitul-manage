@@ -2,21 +2,33 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 19:34:49
- * @LastEditTime: 2020-02-18 21:50:37
+ * @LastEditTime: 2020-02-19 16:36:56
  * @LastEditors: Xuannan
  -->
 <template>
     <a-layout class="layout ">
-        <Header :currentCategory="content.category_id"/>
+        <a-back-top>
+            <a-button type="primary" shape="circle" icon="to-top" size='large'></a-button>
+        </a-back-top>
+        <Header :currentCategory="[content.category_id]"/>
         <a-layout-content class="content">
         <a-row>
             <a-col :xs='24' :sm='24' :md='18' :lg='18' :xl='18'>
-            <div class="main">
-                <Content :data="content"/>
-            </div>
-            <a-layout-footer style="text-align: center">
-                {{webconfig.siteFoot?webconfig.siteFoot:'My blog'}}
-            </a-layout-footer>
+                <a-col :span="24">
+                    <div class="main">
+                        <Content :data="content"/>
+                    </div>
+                </a-col>
+                <a-col :span='24'>
+                    <div class="main">
+                        <Recommend/>
+                    </div>
+                </a-col>
+                <a-col :span="24">
+                    <a-layout-footer style="text-align: center">
+                        {{webconfig.siteFoot?webconfig.siteFoot:'My blog'}}
+                    </a-layout-footer>
+                </a-col>
             </a-col>
             <a-col :xs='0' :sm='0' :md='6' :lg='6' :xl='6'>
                 <div class="main right" v-for="item in rightAd" :key="item.id">
@@ -27,10 +39,11 @@
                         <Author/>
                     </div>
                     <div class="main right">
-                        <RightList/>
+                        <Tags/>
                     </div>
                 </a-affix>
             </a-col>
+
         </a-row>
         </a-layout-content>
     </a-layout>
@@ -41,7 +54,8 @@
     import RightAd from '@/components/common/RightAd';
     import ArticleList from '@/components/list/ArticleList';
     import Content from '@/components/detail/Content';
-    import RightList from '@/components/common/RightList';
+    import Tags from '@/components/common/Tags';
+    import Recommend from '@/components/common/Recommend';
     import {mapState} from 'vuex'
     const pageSize = 10;
     const contenData =  {
@@ -49,7 +63,7 @@
         };
     export default {
         scrollToTop: true,
-        components:{Header,Author,RightAd,ArticleList,Content,RightList},
+        components:{Header,Author,RightAd,ArticleList,Content,Recommend,Tags},
         computed:mapState(["rightAd","webconfig"]),
         head () {
             return {
@@ -72,6 +86,10 @@
             if(store.state.rightAd.length===0){
                 const  [rightAd]  = await Promise.all([store.dispatch('_rightAd')])
                 if(rightAd.status === 200) store.commit('setRightAd',rightAd.data)
+            }
+            if(store.state.tags && store.state.tags.length===0){
+                const  [tags]  = await Promise.all([store.dispatch('_tags')])
+                if(tags.status === 200) store.commit('setTags',tags.data)
             }
             //没有内容列表重新从服务器获取
             if(store.state.contentList.length===0){

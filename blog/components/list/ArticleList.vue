@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-18 21:28:01
+ * @LastEditTime: 2020-02-19 18:33:45
  * @LastEditors: Xuannan
  -->
 <template>
@@ -34,7 +34,7 @@
                     </nuxt-link>
                     <div slot="description" class= "list-context">
                         <div class="list-icon">
-                            <span><a-icon type="calendar" /> {{item.create_time}}</span>
+                            <span><a-icon type="calendar" /> {{item.create_time.slice(0,10)}}</span>
                             <nuxt-link :to="{path:'/list/'+item.category_id}" class="list-link">
                                 <a-icon :type="item.category_icon?item.category_icon:'folder'" /> {{item.category_name}}
                             </nuxt-link>

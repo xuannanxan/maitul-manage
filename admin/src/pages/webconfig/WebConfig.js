@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-22 19:25:04
- * @LastEditTime : 2020-02-05 13:56:11
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-02-20 23:15:21
+ * @LastEditors: Xuannan
  */
 
 import React, { useState,useEffect ,useReducer } from 'react';
@@ -49,18 +49,16 @@ const WebConfigForm = (props)=>{
         activeId = webSites[0].site
         setActiveTab(activeId)
         _configList().then(res=>{
-          setConfList(res.data.data)
-          for (var i in res.data.data) {
-                if(res.data.data[i]){
-                    res.data.data[i].forEach(item=>{
-                        if(item.fieldType === 'ImgUpload'){
-                            let obj = {}
-                            obj[item.ename] = item.value
-                            uploadImg(obj)
-                        }
-                    })
-                } 
+            for (var i in res.data.data) {
+                res.data.data[i].forEach(item=>{
+                    if(item.fieldType === 'ImgUpload'){
+                        let obj = {}
+                        obj[item.site+'|'+item.ename] = item.value
+                        uploadImg(obj)
+                    }
+                })
             }
+            setConfList(res.data.data)
         })
         setTimeout(()=>{
             setIsLoading(false)
@@ -116,8 +114,8 @@ const WebConfigForm = (props)=>{
                                 switch (conf.fieldType) {
                                     case 'Input':
                                         return(
-                                            <Form.Item label={conf.name} key={conf.id}>
-                                                {getFieldDecorator(conf.ename, {
+                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
                                                     initialValue:conf.value,
                                                 })(
                                                     <Input
@@ -129,8 +127,8 @@ const WebConfigForm = (props)=>{
                                         );
                                     case 'Number':
                                         return(
-                                            <Form.Item label={conf.name} key={conf.id}>
-                                                {getFieldDecorator(conf.ename, {
+                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
                                                     initialValue:conf.value,
                                                 })(
                                                     <InputNumber 
@@ -142,8 +140,8 @@ const WebConfigForm = (props)=>{
                                         );
                                     case 'Textarea':
                                         return(
-                                            <Form.Item label={conf.name} key={conf.id}>
-                                                {getFieldDecorator(conf.ename, {
+                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
                                                     initialValue:conf.value,
                                                 })(
                                                     <TextArea 
@@ -155,8 +153,8 @@ const WebConfigForm = (props)=>{
                                         );
                                     case 'Select':
                                         return(
-                                            <Form.Item label={conf.name} key={conf.id}>
-                                                {getFieldDecorator(conf.ename, {
+                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
                                                     initialValue:conf.value,
                                                 })(
                                                     <Select size='large' placeholder={conf.placeholder?conf.placeholder:'请输入...'}>
@@ -171,8 +169,8 @@ const WebConfigForm = (props)=>{
                                         );
                                     case 'Checkbox':
                                         return(
-                                            <Form.Item label={conf.name} key={conf.id}>
-                                                {getFieldDecorator(conf.ename, {
+                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
                                                     initialValue:conf.value.split(','),
                                                 })(
                                                     <Checkbox.Group style={{ width: '100%' }}>
@@ -186,7 +184,6 @@ const WebConfigForm = (props)=>{
                                                                 )
                                                             })
                                                         }
-                                                        
                                                     </Row>
                                                     </Checkbox.Group>,
                                                 )}
@@ -194,8 +191,8 @@ const WebConfigForm = (props)=>{
                                         );
                                     case 'Editor':
                                         return(
-                                            <Form.Item label={conf.name} key={conf.id}>
-                                                {getFieldDecorator(conf.ename, {
+                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
                                                     initialValue:conf.value,
                                                 })(
                                                     <Editor/>,
@@ -204,28 +201,28 @@ const WebConfigForm = (props)=>{
                                         );
                                     case 'ImgUpload':
                                         return(
-                                            <Form.Item label={conf.name} key={conf.id}>
-                                                {getFieldDecorator(conf.ename, {
+                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
                                                     initialValue:conf.value,
                                                     valuePropName:'file',
                                                 })(
                                                     <Upload
-                                                        name={conf.ename}
+                                                        name={conf.site+'|'+conf.ename}
                                                         listType="picture-card"
                                                         className="avatar-uploader"
                                                         showUploadList={false}
                                                         customRequest={uploadImg}
                                                         beforeUpload={beforeUpload} 
                                                     >
-                                                        { imgObj[conf.ename] ? <img src={imgObj[conf.ename]} alt={conf.name} style={{ width: '100%' }} /> : uploadButton}
+                                                        { imgObj[conf.site+'|'+conf.ename] ? <img src={imgObj[conf.site+'|'+conf.ename]} alt={conf.name} style={{ width: '100%' }} /> : uploadButton}
                                                     </Upload>,
                                                 )}
                                             </Form.Item>    
                                         );
                                     default:
                                         return(
-                                            <Form.Item label={conf.name} key={conf.id}>
-                                                {getFieldDecorator(conf.ename, {
+                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
                                                     initialValue:conf.value,
                                                 })(
                                                     <Input

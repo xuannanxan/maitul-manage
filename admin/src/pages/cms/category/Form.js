@@ -88,21 +88,21 @@ function SubmitForm(props){
                         />,
                     )}
                 </Form.Item>
-                <Form.Item label='图 标'>
-                    {getFieldDecorator('icon', {
-                    })(
-                        <Input 
-                        placeholder="请输入图标..."
-                        size='large'
-                        />,
-                    )}
-                </Form.Item>
                 <Form.Item label='分类名称'>
                     {getFieldDecorator('name', {
                         rules: [{ required: true, message: '请输入分类名称!' }],
                     })(
                         <Input 
                         placeholder="请输入分类名称..."
+                        size='large'
+                        />,
+                    )}
+                </Form.Item>
+                <Form.Item label='图 标'>
+                    {getFieldDecorator('icon', {
+                    })(
+                        <Input 
+                        placeholder="请输入图标..."
                         size='large'
                         />,
                     )}
@@ -120,7 +120,7 @@ function SubmitForm(props){
                     )}
                 </Form.Item>
                 <Form.Item label='描  述'>
-                {getFieldDecorator('info', {
+                {getFieldDecorator('description', {
                 })(
                     <TextArea 
                     rows={3}

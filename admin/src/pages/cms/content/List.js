@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-02-07 13:22:30
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-02-20 10:56:26
+ * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef , useReducer} from 'react';
 import {_cmsTagList , _cmsCategoryList,_cmsContentList,_cmsContentDelete} from '../../../utils/api'
@@ -60,12 +60,12 @@ const ContentList = (props)=>{
         return data.map(item => {
             if (item.children && item.children.length) {
               return (
-                <TreeNode key={item.id} title={item.name} icon={<Icon type={item.icon} />}> 
+                <TreeNode className='tree-node' key={item.id} title={item.name} icon={<Icon type={item.icon} />}> 
                   {loop(item.children)}
                 </TreeNode>
               );
             }
-            return <TreeNode key={item.id} title={item.name} icon={<Icon type={item.icon} />}/>;
+            return <TreeNode class='tree-node' key={item.id} title={item.name} icon={<Icon type={item.icon} />}/>;
           });  
     }
     //点击树设置category_id展示对应菜单的内容

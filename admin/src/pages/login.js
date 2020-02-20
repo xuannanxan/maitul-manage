@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-13 17:25:03
- * @LastEditTime : 2020-02-02 21:28:55
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-02-20 09:25:23
+ * @LastEditors: Xuannan
  */
 import React , {useState,useEffect} from 'react';
 import 'antd/dist/antd.css';
@@ -33,7 +33,7 @@ function LoginForm(props){
         if (!err) {
             _login(values.username,values.password,values.captcha,imageCode).then(res=>{
                 localStorage.setItem('jwToken',res.data.token)
-                props.history.push('/home') 
+                props.history.push('/message/maitul') 
             })
             .catch(error=>{
                 //登录失败重新获取验证码

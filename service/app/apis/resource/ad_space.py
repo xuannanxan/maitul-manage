@@ -18,10 +18,12 @@ parse_id.add_argument('id',type=str)
 
 parse_base = parse_id.copy()
 parse_base.add_argument('name',type=str,required=True,help='请输入名称')
+parse_base.add_argument('ename',type=str,required=True,help='请输入调用名称')
 parse_base.add_argument('sort',type=int,help='排序号只能是数字')
 
 _fields = {
     'name':fields.String,
+    'ename':fields.String,
     'sort':fields.Integer,
     'id':fields.String
 }
@@ -47,12 +49,14 @@ class AdSpaceResource(Resource):
         '''
         args = parse_base.parse_args()
         name = args.get('name')
+        ename = args.get('ename')
         sort = args.get('sort')
-        _data = AdSpace.query.filter_by(name = name,is_del = '0').first()
+        _data = AdSpace.query.filter_by(ename = ename,is_del = '0').first()
         if _data:
             abort(RET.Forbidden,msg='广告位已存在')
         model_data = AdSpace()
         model_data.name = name
+        model_data.ename = ename
         model_data.sort = sort
         model_data.last_editor = g.admin.username
         if model_data.add():
@@ -77,12 +81,14 @@ class AdSpaceResource(Resource):
             abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
         name = args.get('name')
+        ename = args.get('ename')
         sort = args.get('sort')
         # 如果名称存在，并且ID不是当前ID
-        _data = AdSpace.query.filter(AdSpace.id != id , AdSpace.is_del == '0',AdSpace.name == name).first()
+        _data = AdSpace.query.filter(AdSpace.id != id , AdSpace.is_del == '0',AdSpace.ename == ename).first()
         if _data:
             abort(RET.Forbidden,msg='广告位已存在')
         sing_data.name = name
+        sing_data.ename = ename
         sing_data.sort = sort if sort else sing_data.sort
         sing_data.last_editor = g.admin.username
         result = sing_data.updata()

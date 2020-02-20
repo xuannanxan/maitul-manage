@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-01-30 20:12:53
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-02-20 19:38:02
+ * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
 import {Table ,Divider ,Icon  ,Button ,Modal,message} from 'antd';
@@ -36,6 +36,11 @@ const AdSpaceList = ()=>{
           title: '名称',
           dataIndex: 'name',
           key: 'name',
+        },
+        {
+          title: '调用名称',
+          dataIndex: 'ename',
+          key: 'ename',
         },
         {
           title: '创建时间',
