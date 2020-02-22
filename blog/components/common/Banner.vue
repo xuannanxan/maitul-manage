@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-02-18 16:33:47
+ * @LastEditTime: 2020-02-21 19:03:26
  * @LastEditors: Xuannan
  -->
 <template>
@@ -74,7 +74,6 @@
         background-repeat: no-repeat;
         background-position: center;
         position: relative;
-        border-radius: .5rem;
         .shade{
             height: 100%;
             background-color: #000000;

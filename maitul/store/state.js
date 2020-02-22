@@ -14,4 +14,6 @@ export default () => ({
     content:{},
     tags:[],
     token: '',
+    productList:[],
+    about:[],
   })

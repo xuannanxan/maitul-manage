@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime : 2020-02-01 13:07:06
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-02-22 19:46:21
+ * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
 import {Table ,Divider ,Icon ,Button ,Modal,message} from 'antd';
@@ -36,6 +36,11 @@ function CategoryList(props){
               <Icon type={record.icon}/>{record.name}
             </span>
           ),
+        },
+        {
+          title: '调用名词',
+          dataIndex: 'ename',
+          key: 'ename',
         },
         {
           title: '最后修改人',

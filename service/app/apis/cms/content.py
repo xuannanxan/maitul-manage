@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime: 2020-02-20 19:49:45
+@LastEditTime: 2020-02-22 21:05:22
 @LastEditors: Xuannan
 '''
 
@@ -41,6 +41,7 @@ parse_page.add_argument('page',type=int,help='页码只能是数字')
 parse_page.add_argument('paginate',type=int,help='每页数量只能是数字')
 parse_page.add_argument('tag')
 parse_page.add_argument('category_id')
+parse_page.add_argument('category')
 parse_page.add_argument('search')
 
 content_fields = {
@@ -164,12 +165,14 @@ class ContentResource(Resource):
             paginate = int(args.get('paginate'))
         tag = args.get('tag')
         category_id = args.get('category_id')
+        category = args.get('category')
         search = args.get('search')
         # 开始拼接查询语句
-        query = '{0}{1}{2}'.format(
-            't.name = "%s" and '%tag if tag else '',
-            '(a.id = "{0}" OR a.pid = "{0}") and '.format(category_id) if category_id else '',
-            '(c.title like "%{0}%" or c.content like "%{0}%") and '.format(search) if search else ''
+        query = '{0}{1}{2}{3}'.format(
+            ('t.name = "%s" and '%tag) if tag else '',
+            ('(a.id = "{0}" OR a.pid = "{0}") and '.format(category_id)) if category_id else '',
+            ('a.ename = "%s" and '%category) if category else '',
+            ('(c.title like "%{0}%" or c.content like "%{0}%") and '.format(search)) if search else ''
         )
         sql = '''
             SELECT 
@@ -225,6 +228,7 @@ class ContentResource(Resource):
         content = args.get('content')
         cover = args.get('cover')
         tags = args.get('tags')
+        sort = args.get('sort')
         category_id = args.get('category_id')
         _content.title = title if title else _content.title
         _content.keywords = keywords if keywords else _content.keywords
@@ -233,6 +237,7 @@ class ContentResource(Resource):
         _content.cover = cover if cover else _content.cover
         _content.category_id = category_id if category_id else _content.category_id
         _content.last_editor = g.admin.username
+        _content.sort = sort
         result = _content.updata()
         if result:
             data =  {

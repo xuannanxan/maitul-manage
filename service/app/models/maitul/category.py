@@ -14,6 +14,7 @@ from  app.models.base import db,BaseModel
 class MaitulCategory(BaseModel):
     __tablename__ = "maitul_category"
     name = db.Column(db.String(200),nullable=False)
+    ename = db.Column(db.String(200),nullable=False)
     keywords = db.Column(db.String(255))
     description = db.Column(db.String(255))
     icon = db.Column(db.String(100))

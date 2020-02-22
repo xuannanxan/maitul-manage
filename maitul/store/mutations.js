@@ -43,6 +43,15 @@ export default {
     },
     setToken(state, token) {
         state.token = token
-     }
-
+     },
+    setProductList(state,data) {
+        if(data && data.length){
+            state.productList = data
+        }
+    },
+    setAbout(state,data) {
+        if(data && data.length){
+            state.about = data
+        }
+    },
   }

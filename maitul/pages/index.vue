@@ -2,21 +2,44 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-19 16:13:15
+ * @LastEditTime: 2020-02-22 20:18:19
  * @LastEditors: Xuannan
  -->
 <template>
   <a-layout class="layout ">
     <a-back-top>
-      <a-button type="primary" shape="circle" icon="to-top" size='large'></a-button>
+      <a-button type="primary" shape="circle" icon="to-top" size='large' ghost></a-button>
     </a-back-top>
     <Header :currentCategory="['home']"/>
+    <Banner/>
     <a-layout-content class="content">
       <a-row>
-        <a-col :xs='24' :sm='24' :md='18' :lg='18' :xl='18'>
+        <a-col :span="24">
           <div class="main">
-            <Banner/>
+            <a-divider>Products</a-divider>
+            <ProductList
+            :data="data"
+            :paginate="paginate"
+            :tag="tag"
+            :search="search"
+            :category="category"
+            />
           </div>
+        </a-col>
+        <a-col :span="24">
+          <div class="main dark">
+            <About
+            :data="data"
+            />
+          </div>
+        </a-col>
+      </a-row>
+      
+    </a-layout-content>
+    
+    <a-layout-content class="content">
+      <a-row>
+        <a-col :span="24">
           <div class="main">
             <ArticleList 
             :data="data"
@@ -53,8 +76,11 @@
   import RightAd from '@/components/common/RightAd';
   import Tags from '@/components/common/Tags';
   import ArticleList from '@/components/list/ArticleList';
-  import {mapState} from 'vuex'
-  const pageSize = 10;
+  import ProductList from '@/components/list/ProductList';
+  import About from '@/components/list/About';
+  import {mapState} from 'vuex';
+  import {siteInfo}  from "@/service/config";
+  const pageSize = 12;
   const contenData =  {
         data:[],
         paginate:{},
@@ -64,7 +90,7 @@
       };
   export default {
     scrollToTop: true,
-    components:{Header,Banner,Author,RightAd,ArticleList,Tags},
+    components:{Header,Banner,Author,RightAd,ArticleList,Tags,ProductList,About},
     computed:mapState(["rightAd","webconfig"]),
     head () {
       return {
@@ -96,6 +122,13 @@
         const  [tags]  = await Promise.all([store.dispatch('_tags')])
         if(tags.status === 200) store.commit('setTags',tags.data)
       }
+      if(store.state.about && store.state.about.length===0){
+        const  [aboutData]  = await Promise.all([store.dispatch('_content',{
+          paginate:pageSize,
+          category:siteInfo.about,
+          })])
+        if(aboutData.status === 200) store.commit('setAbout',aboutData.data)
+      }
       const  [content]  = await Promise.all([store.dispatch('_content',{paginate:pageSize})])
       if(content.status === 200) {
           contenData.data = content.data
@@ -105,6 +138,7 @@
     }
   };
 </script>
-<style>
+<style lang="less" scoped>
+
 
 </style>

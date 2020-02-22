@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:26:57
- * @LastEditTime: 2020-02-19 11:23:43
+ * @LastEditTime: 2020-02-22 16:37:48
  * @LastEditors: Xuannan
  */
 
@@ -35,6 +35,8 @@ import {
     Empty,
     Drawer,
     BackTop,
+    Card,
+    Tabs,
     message} from 'ant-design-vue';
     
 Vue.use(Avatar)
@@ -45,6 +47,8 @@ Vue.use(Divider)
 Vue.use(Col)
 Vue.use(Row)
 Vue.use(List)
+Vue.use(Card)
+Vue.use(Tabs)
 Vue.use(Pagination)
 Vue.use(Carousel)
 Vue.use(Layout)

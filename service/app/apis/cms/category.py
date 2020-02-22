@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime : 2020-02-05 13:34:28
-@LastEditors  : Xuannan
+@LastEditTime: 2020-02-22 19:38:34
+@LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
@@ -28,6 +28,7 @@ parse_id.add_argument('id')
 parse_base = parse_id.copy()
 parse_base.add_argument('pid',type=str,required=True,help='请选择上级分类')
 parse_base.add_argument('name',type=str,required=True,help='请输入分类名称')
+parse_base.add_argument('ename',type=str,required=True,help='请输入调用名称')
 parse_base.add_argument('keywords')
 parse_base.add_argument('description')
 parse_base.add_argument('icon')
@@ -37,6 +38,7 @@ parse_base.add_argument('sort',type=int,help='排序号只能是数字')
 cate_fields = {
     'pid':fields.String,
     'name':fields.String,
+    'ename':fields.String,
     'keywords':fields.String,
     'description':fields.String,
     'icon':fields.String,
@@ -83,28 +85,30 @@ class CategoryResource(Resource):
         args = parse_base.parse_args()
         pid = args.get('pid')
         name = args.get('name')
+        ename = args.get('ename')
         keywords = args.get('keywords')
         description = args.get('description')
         icon = args.get('icon')
         cover = args.get('cover')
         sort = args.get('sort')
-        cate = categoryModel.query.filter_by(name = name,is_del = '0').first()
+        cate = categoryModel.query.filter_by(ename = ename,is_del = '0').first()
         if cate:
             abort(RET.Forbidden,msg='分类已存在')
-        blog_cate = categoryModel()
-        blog_cate.pid = pid
-        blog_cate.name = name
-        blog_cate.keywords = keywords
-        blog_cate.description = description
-        blog_cate.icon = icon
-        blog_cate.cover = cover
-        blog_cate.sort = sort
-        blog_cate.last_editor = g.admin.username
-        if blog_cate.add():
+        cateData = categoryModel()
+        cateData.pid = pid
+        cateData.name = name
+        cateData.ename = ename
+        cateData.keywords = keywords
+        cateData.description = description
+        cateData.icon = icon
+        cateData.cover = cover
+        cateData.sort = sort
+        cateData.last_editor = g.admin.username
+        if cateData.add():
             data = {
                     'status':RET.Created,
                     'msg':'添加成功',
-                    'data':blog_cate
+                    'data':cateData
             }
             return marshal(data,sing_cate_fields)
         abort(RET.BadRequest,msg='添加失败，请重试')
@@ -147,32 +151,34 @@ class CategoryResource(Resource):
         id = args.get('id')
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作！！！')
-        blog_cate = getCategory(id,categoryModel)
+        cateData = getCategory(id,categoryModel)
         pid = args.get('pid')
         name = args.get('name')
+        ename = args.get('ename')
         keywords = args.get('keywords')
         description = args.get('description')
         icon = args.get('icon')
         cover = args.get('cover')
         sort = args.get('sort')
         # 如果名称存在，并且ID不是当前ID
-        cate = categoryModel.query.filter(categoryModel.id != id , categoryModel.is_del == '0',categoryModel.name == name).first()
+        cate = categoryModel.query.filter(categoryModel.id != id , categoryModel.is_del == '0',categoryModel.ename == ename).first()
         if cate:
             abort(RET.Forbidden,msg='标签已存在')
-        blog_cate.name = name
-        blog_cate.pid = pid if pid else blog_cate.pid
-        blog_cate.keywords = keywords if keywords else blog_cate.keywords
-        blog_cate.description = description if description else blog_cate.description
-        blog_cate.icon = icon if icon else blog_cate.icon
-        blog_cate.cover = cover if cover else blog_cate.cover
-        blog_cate.sort = sort if sort else blog_cate.sort
-        blog_cate.last_editor = g.admin.username
-        result = blog_cate.updata()
+        cateData.name = name
+        cateData.ename = ename
+        cateData.pid = pid if pid else cateData.pid
+        cateData.keywords = keywords if keywords else cateData.keywords
+        cateData.description = description if description else cateData.description
+        cateData.icon = icon if icon else cateData.icon
+        cateData.cover = cover if cover else cateData.cover
+        cateData.sort = sort if sort else cateData.sort
+        cateData.last_editor = g.admin.username
+        result = cateData.updata()
         if result:
             data =  {
                 'status':RET.OK,
                 'msg':'修改成功',
-                'data':blog_cate
+                'data':cateData
             }
             return marshal(data,sing_cate_fields)
         abort(RET.BadRequest,msg='修改失败，请重试')

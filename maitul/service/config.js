@@ -2,12 +2,15 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-14 16:01:34
- * @LastEditTime: 2020-02-20 20:25:01
+ * @LastEditTime: 2020-02-22 19:32:02
  * @LastEditors: Xuannan
  */
 export const siteInfo = {
         banner:'maitulBanner',
         blogRightAd:'20200117223636718',
+        about:'about',
+        products:'product',
+        news:'news',
         site:'maitul',
     }
   

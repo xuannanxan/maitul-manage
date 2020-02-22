@@ -66,9 +66,6 @@
     }
     .detail{
         padding: 1rem;
-        .center{
-            text-align: center;
-        }
         .detail-icon{
             padding-bottom:.2rem;
             color:#AAA;

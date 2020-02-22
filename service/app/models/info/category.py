@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-13 17:29:28
-@LastEditTime : 2020-01-31 13:19:33
-@LastEditors  : Xuannan
+@LastEditTime: 2020-02-22 19:33:51
+@LastEditors: Xuannan
 '''
 
 
@@ -14,6 +14,7 @@ from  app.models.base import db,BaseModel
 class InfoCategory(BaseModel):
     __tablename__ = "info_category"
     name = db.Column(db.String(200),nullable=False)
+    ename = db.Column(db.String(200),nullable=False)
     keywords = db.Column(db.String(255))
     description = db.Column(db.String(255))
     icon = db.Column(db.String(100))

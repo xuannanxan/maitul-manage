@@ -49,6 +49,7 @@ function SubmitForm(props){
                     id:params.id,
                     pid:params.pid,
                     name:params.name,
+                    ename:params.ename,
                     icon:params.icon,
                     description:params.description,
                     keywords:params.keywords?params.keywords.split(','):[],
@@ -94,6 +95,16 @@ function SubmitForm(props){
                     })(
                         <Input 
                         placeholder="请输入分类名称..."
+                        size='large'
+                        />,
+                    )}
+                </Form.Item>
+                <Form.Item label='调用名称'>
+                    {getFieldDecorator('ename', {
+                        rules: [{ required: true, message: '请输入调用名称!' }],
+                    })(
+                        <Input 
+                        placeholder="请输入调用名称..."
                         size='large'
                         />,
                     )}
