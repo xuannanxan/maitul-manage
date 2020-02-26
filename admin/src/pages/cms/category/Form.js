@@ -50,6 +50,7 @@ function SubmitForm(props){
                     pid:params.pid,
                     name:params.name,
                     ename:params.ename,
+                    url:params.url,
                     icon:params.icon,
                     description:params.description,
                     keywords:params.keywords?params.keywords.split(','):[],
@@ -105,6 +106,15 @@ function SubmitForm(props){
                     })(
                         <Input 
                         placeholder="请输入调用名称..."
+                        size='large'
+                        />,
+                    )}
+                </Form.Item>
+                <Form.Item label='Url'>
+                    {getFieldDecorator('url', {
+                    })(
+                        <Input 
+                        placeholder="请输入URL地址..."
                         size='large'
                         />,
                     )}

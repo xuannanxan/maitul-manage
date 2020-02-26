@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-22 12:33:35
+ * @LastEditTime: 2020-02-26 23:58:27
  * @LastEditors: Xuannan
  -->
 <template>
@@ -15,7 +15,7 @@
                <nuxt-link to="/"><span>{{webconfig.siteName?webconfig.siteSlogan:'Maitul.com'}}</span></nuxt-link>
             </a-col>
             <a-col :span="12">
-              <Contact :head="true"/>
+              <Contact :shownumber="true"/>
             </a-col>
           </div>
         </a-col>
@@ -29,6 +29,11 @@
                 <img 
                 v-if="webconfig.siteLogo" 
                 :src="webconfig.siteLogo" 
+                :alt="webconfig.siteName?webconfig.siteName:'MT'"
+                :title="webconfig.siteName?webconfig.siteName:'MT'">
+                <img 
+                v-else
+                src="~assets/images/logo.png" 
                 :alt="webconfig.siteName?webconfig.siteName:'MT'"
                 :title="webconfig.siteName?webconfig.siteName:'MT'">
               </nuxt-link> 
@@ -85,7 +90,7 @@
               :selectedKeys="currentCategory"
               >
               <a-menu-item :key="'home'">
-                <nuxt-link to="/" ><a-icon type="home" />首页</nuxt-link>
+                <nuxt-link to="/" ><a-icon type="home" />Home</nuxt-link>
               </a-menu-item>
               <template v-for="item in category">
                 <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
@@ -96,7 +101,6 @@
               </a-menu>
               <a-divider/>
               <div style="text-align:center"><Contact/></div>
-              
             </a-drawer>
           </a-col>
         </a-layout-header>
@@ -154,12 +158,15 @@
     .logo{
       float: left;
       img{
-        width: 40px;
+        width: 2.5rem;
       }
       .title {
         color: #00cccc;
         font-size: 1.8rem;
-        float:right;
+        position: relative;
+        top: -0.06em;
+        display: inline-block;
+        vertical-align: middle;
       }
     }
     .menu{

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-13 17:29:28
-@LastEditTime: 2020-02-22 19:33:41
+@LastEditTime: 2020-02-26 22:17:51
 @LastEditors: Xuannan
 '''
 
@@ -21,6 +21,7 @@ class BlogCategory(BaseModel):
     cover = db.Column(db.String(255))
     pid = db.Column(db.String(32), default=0)  # 上级分类,0为最上级
     sort = db.Column(db.Integer, default=0)  # 排序
+    url = db.Column(db.String(255))
    
 
     def __repr__(self):

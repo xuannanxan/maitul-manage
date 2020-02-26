@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-20 09:12:01
+ * @LastEditTime: 2020-02-25 19:25:28
  * @LastEditors: Xuannan
  -->
 <template>
@@ -10,47 +10,28 @@
         <a-list 
         itemLayout="horizontal" 
         :dataSource="data"
-        >
-            <div slot="header" class="list-header">  
-                <div v-if='tag || search'>{{tag?`【${tag}】相关...`:(search?`【${search}】的搜索结果...`:'最新文章')}}</div>
-                <a-breadcrumb v-else-if='category.id' >
-                    <a-breadcrumb-item>
-                        <nuxt-link to="/"><a-icon type="home" /><span>首页</span></nuxt-link>
-                    </a-breadcrumb-item>
-                    <a-breadcrumb-item>
-                        <nuxt-link :to="{path:'/list/'+category.id}">
-                            <a-icon :type="category.icon" />
-                            <span>{{category.name}}</span>
-                        </nuxt-link>
-                    </a-breadcrumb-item>
-                </a-breadcrumb>
-                <div v-else>最新文章</div>
-            </div>           
+        >         
             <a-list-item slot="renderItem" slot-scope="item, index">
                 <a-skeleton :loading="skeletonLoading" active avatar>
                 <a-list-item-meta>
                     <nuxt-link :to="{path:'/detail/'+item.id}" slot="title" class= "list-title">
                     {{item.title}}
                     </nuxt-link>
+                    <div v-if="item.cover" slot="avatar">
+                        <nuxt-link :to="{path:'/detail/'+item.id}">
+                            <img :src="item.cover" :alt="item.title" :title="item.title"/>
+                        </nuxt-link>    
+                    </div>
+                    <!-- <a-avatar v-if="item.cover"
+                     slot="avatar"
+                    :src="item.cover"
+                    /> -->
                     <div slot="description" class= "list-context">
                         <div class="list-icon">
                             <span><a-icon type="calendar" /> {{item.create_time.slice(0,10)}}</span>
-                            <nuxt-link :to="{path:'/list/'+item.category_id}" class="list-link">
-                                <a-icon :type="item.category_icon?item.category_icon:'folder'" /> {{item.category_name}}
-                            </nuxt-link>
                             <span><a-icon type="fire" /> {{item.click}}人</span>
                         </div>
-                        <div class="list-tag" v-if="item.tags_name">
-                            <a-tag v-for="(tag,index) in item.tags_name.split(',')" :key="index+tag" :color="tagColor[Math.floor((Math.random()*tagColor.length))]">
-                                <nuxt-link :to="{path:'/list?tag='+tag}">{{tag}}</nuxt-link>
-                            </a-tag>
-                        </div>
-                        <div v-if="item.cover">
-                            <nuxt-link :to="{path:'/detail/'+item.id}">
-                                <img :src="item.cover" :alt="item.title" :title="item.title"/>
-                            </nuxt-link>    
-                        </div>
-                        <div>{{item.description}}</div>
+                        <div class="description">{{item.description}}</div>
                     </div>
                 </a-list-item-meta>
                 </a-skeleton>
@@ -69,7 +50,6 @@
         name: 'ArticleList',
         data() {
             return {
-                tagColor:['magenta','red','volcano','orange','gold','lime','green','cyan','blue','geekblue','purple'],
                 skeletonLoading:true,
             }
         },
@@ -106,20 +86,41 @@
         font-size: 1.2rem;
         color: rgba(37, 39, 39, 0.6);
         margin: 0 1rem;
-        white-space:nowrap;
-        text-overflow:ellipsis;
-        overflow:hidden;
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+        -webkit-box-orient: vertical;
     }
     .list-context{
         font-size: 1.0rem;
         line-height: 1.6rem;
         color:#777;
         padding: 0.1rem 1rem;
-        img{
-            width:100%;
-            border-radius: .3rem;
+        .description{
+            text-overflow: -o-ellipsis-lastline;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            color: rgba(0, 0, 0, 0.55);
+            line-height: 1.5rem;
         }
     }
+    .ant-list-item-meta-avatar{
+        img{
+            width: 10.8rem;
+            height: 8.1rem;
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-radius: .3rem;
+        }
+    } 
     .list-icon{
         padding-bottom:.2rem;
         color:#AAA;
@@ -133,9 +134,7 @@
             margin: 0 1rem; 
         }
     }
-    .list-tag{
-        padding-bottom: .5rem;
-    }
+
     .ant-pagination-item a{
         padding: 0.5rem;
         margin: 0;
@@ -148,6 +147,30 @@
         margin: 1rem;
         ul{
             padding: 0
+        }
+    }
+    @media only screen and (max-width:750px),
+    only screen and (max-device-width:750px) {
+        .ant-list-item-meta-avatar{
+        img{
+            width: 4rem;
+            height: 3rem;
+            }
+        }
+        .list-context{
+            margin: 0 .3rem;
+            padding: 0.1rem .3rem;
+            font-size: 0.8rem;
+            .description{
+                line-height: 1rem;
+            }
+        }
+        .list-title{
+            margin: 0 .3rem;
+            font-size: 1rem;
+        }
+        .list-icon{
+            font-size: 0.8rem;
         }
     }
 </style>

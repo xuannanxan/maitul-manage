@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime: 2020-02-22 19:38:34
+@LastEditTime: 2020-02-26 22:21:26
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -33,6 +33,7 @@ parse_base.add_argument('keywords')
 parse_base.add_argument('description')
 parse_base.add_argument('icon')
 parse_base.add_argument('cover')
+parse_base.add_argument('url')
 parse_base.add_argument('sort',type=int,help='排序号只能是数字')
 
 cate_fields = {
@@ -43,6 +44,7 @@ cate_fields = {
     'description':fields.String,
     'icon':fields.String,
     'cover':fields.String,
+    'url':fields.String,
     'sort':fields.Integer,
     'id':fields.String
 }
@@ -91,6 +93,7 @@ class CategoryResource(Resource):
         icon = args.get('icon')
         cover = args.get('cover')
         sort = args.get('sort')
+        url = args.get('url')
         cate = categoryModel.query.filter_by(ename = ename,is_del = '0').first()
         if cate:
             abort(RET.Forbidden,msg='分类已存在')
@@ -103,6 +106,7 @@ class CategoryResource(Resource):
         cateData.icon = icon
         cateData.cover = cover
         cateData.sort = sort
+        cateData.url = url
         cateData.last_editor = g.admin.username
         if cateData.add():
             data = {
@@ -160,6 +164,7 @@ class CategoryResource(Resource):
         icon = args.get('icon')
         cover = args.get('cover')
         sort = args.get('sort')
+        url = args.get('url')
         # 如果名称存在，并且ID不是当前ID
         cate = categoryModel.query.filter(categoryModel.id != id , categoryModel.is_del == '0',categoryModel.ename == ename).first()
         if cate:
@@ -172,6 +177,7 @@ class CategoryResource(Resource):
         cateData.icon = icon if icon else cateData.icon
         cateData.cover = cover if cover else cateData.cover
         cateData.sort = sort if sort else cateData.sort
+        cateData.url = url if url else cateData.url
         cateData.last_editor = g.admin.username
         result = cateData.updata()
         if result:

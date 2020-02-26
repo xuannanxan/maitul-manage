@@ -2,17 +2,17 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-21 17:12:17
+ * @LastEditTime: 2020-02-25 21:47:30
  * @LastEditors: Xuannan
  -->
 <template>
     <div class="contact">
         <a v-if="webconfig.contact" :href="'tel:'+webconfig.contact"><a-icon type="mobile" /> 
-            <span v-if="head"> {{webconfig.contact}}</span> 
+            <span v-if="shownumber"> {{webconfig.contact}}</span> 
         </a>
         <a-divider type="vertical" v-if="webconfig.email && webconfig.contact"/>
         <a v-if="webconfig.email" :href="'mailto:'+webconfig.email"><a-icon type="mail" />
-            <span v-if="head"> {{webconfig.email}}</span> 
+            <span v-if="shownumber"> {{webconfig.email}}</span> 
         </a>
         <a-divider type="vertical" v-if="webconfig.email && webconfig.weixin"/>
         <a-popover placement="bottomRight" trigger="click" v-if="webconfig.weixin">
@@ -37,7 +37,7 @@
       ...mapState(["webconfig"]),
     },
     props:{
-        head: {
+        shownumber: {
             type: Boolean,
             default: false
         },

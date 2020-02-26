@@ -2,25 +2,39 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-22 20:56:32
+ * @LastEditTime: 2020-02-24 22:04:26
  * @LastEditors: Xuannan
  -->
 <template>
-    <a-tabs :defaultActiveKey='about[0].id' size="large">
-        <a-tab-pane v-for="item in about" :tab="item.title" :key="item.id">
-            <a-row>
-                <a-col v-if="item.cover" :xs='24' :sm='24' :md='12' :lg='12' :xl='12'>
-                    <img class="tab-cover" :src="item.cover" :alt="item.title">
-                </a-col>
-                <a-col v-if="item.cover" :xs='24' :sm='24' :md='12' :lg='12' :xl='12'>
-                    <div class="tab-content" v-html="item.content"></div>
-                </a-col>
-                <a-col v-else :span='24'>
-                    <div v-html="item.content"></div>
-                </a-col>
-            </a-row>
-        </a-tab-pane>
-    </a-tabs>
+    <div>
+        <div v-if="about.length">
+            <a-tabs :defaultActiveKey='about[0].id' size="large">
+                <a-tab-pane v-for="item in about" :tab="item.title" :key="item.id">
+                    <a-row>
+                        <a-col v-if="item.cover" :xs='24' :sm='24' :md='10' :lg='10' :xl='10'>
+                            <div class="tab-cover" >
+                                <div :style="{ backgroundImage: 'url('+item.cover+')'}" :title="item.title"></div>        
+                            </div>
+                        </a-col>
+                        <a-col v-if="item.cover" :xs='24' :sm='24' :md='14' :lg='14' :xl='14'>
+                            <div class="tab-content">
+                                <div  v-html="item.content"></div>
+                            </div>
+                        </a-col>
+                        <a-col v-else :span='24'>
+                            <div class="tab-content">
+                                <div  v-html="item.content"></div>
+                            </div>
+                        </a-col>
+                    </a-row>
+                </a-tab-pane>
+            </a-tabs> 
+        </div>
+        <div v-else>
+            <a-empty/>
+        </div>
+    </div>
+
 </template>
 <script>
     import {mapState} from 'vuex'
@@ -41,8 +55,31 @@
 </script>
 <style lang='less' scoped>
     .tab-cover{
-        width: 100%;
-        padding-right: 1.5em;
+        padding-right: 1.2rem;
+        div{
+            width: 100%;
+            height: 14.5rem;
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+            transition: all 2s;
+        }
+
+    }
+    .tab-content{
+
+        div{
+            height: 14.5rem;
+            text-overflow: -o-ellipsis-lastline;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 11;
+            line-clamp: 11;
+            -webkit-box-orient: vertical;
+        }
+            
     }
     @media only screen and (max-width:750px),
     only screen and (max-device-width:750px) {
@@ -50,7 +87,7 @@
             padding:0 .8em;
         }
         .tab-content{
-            padding:.5rem .8em 0 .8em;
+            padding:.5rem .8em 1rem .8em;
         }
     }
 

@@ -2,13 +2,14 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-22 20:18:19
+ * @LastEditTime: 2020-02-25 23:17:04
  * @LastEditors: Xuannan
  -->
 <template>
   <a-layout class="layout ">
+    <ContactRight/>
     <a-back-top>
-      <a-button type="primary" shape="circle" icon="to-top" size='large' ghost></a-button>
+      <div class="right-btn"><a-icon type="to-top"/></div>
     </a-back-top>
     <Header :currentCategory="['home']"/>
     <Banner/>
@@ -33,44 +34,28 @@
             />
           </div>
         </a-col>
-      </a-row>
-      
-    </a-layout-content>
-    
-    <a-layout-content class="content">
-      <a-row>
         <a-col :span="24">
           <div class="main">
-            <ArticleList 
+            <a-divider>News</a-divider>
+            <ArticleList
             :data="data"
             :paginate="paginate"
             :tag="tag"
             :search="search"
-            :category="category"/>
+            :category="category"
+            />
           </div>
-          <a-layout-footer style="text-align: center">
-            {{webconfig.siteFoot?webconfig.siteFoot:'My blog'}}
-          </a-layout-footer>
         </a-col>
-        <a-col :xs='0' :sm='0' :md='6' :lg='6' :xl='6'>
-          <div class="main right" v-for="item in rightAd" :key="item.id">
-            <RightAd :ad='item'/>
-          </div>
-          <a-affix :offsetTop="65">
-            <div class="main right">
-              <Author/>
-            </div>
-            <div class="main right">
-              <Tags/>
-            </div>
-          </a-affix>
-        </a-col>
+      </a-row>
+      <a-row>
+        <Footer/>
       </a-row>
     </a-layout-content>
   </a-layout>
 </template>
 <script>
   import Header from '@/components/common/Header';
+  import Footer from '@/components/common/Footer';
   import Banner from '@/components/common/Banner';
   import Author from '@/components/common/Author';
   import RightAd from '@/components/common/RightAd';
@@ -78,6 +63,8 @@
   import ArticleList from '@/components/list/ArticleList';
   import ProductList from '@/components/list/ProductList';
   import About from '@/components/list/About';
+  import Contact from '@/components/common/Contact';
+  import ContactRight from '@/components/common/ContactRight';
   import {mapState} from 'vuex';
   import {siteInfo}  from "@/service/config";
   const pageSize = 12;
@@ -90,14 +77,14 @@
       };
   export default {
     scrollToTop: true,
-    components:{Header,Banner,Author,RightAd,ArticleList,Tags,ProductList,About},
+    components:{Header,Footer,Banner,Author,RightAd,ArticleList,Tags,ProductList,About,Contact,ContactRight},
     computed:mapState(["rightAd","webconfig"]),
     head () {
       return {
-        title: this.webconfig.siteName?this.webconfig.siteName:'My blog',
+        title: this.webconfig.siteName?this.webconfig.siteName:'Maitul Metalparts',
         meta: [
-          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:'My blog' },
-          { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:'My blog' }
+          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul,Metalparts' },
+          { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul Metalparts ' }
         ]
       }
     },

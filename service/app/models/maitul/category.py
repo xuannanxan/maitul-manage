@@ -21,6 +21,7 @@ class MaitulCategory(BaseModel):
     cover = db.Column(db.String(255))
     pid = db.Column(db.String(32), default=0)  # 上级分类,0为最上级
     sort = db.Column(db.Integer, default=0)  # 排序
+    url = db.Column(db.String(255))
    
 
     def __repr__(self):

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-22 16:23:38
+ * @LastEditTime: 2020-02-24 22:19:45
  * @LastEditors: Xuannan
  -->
 <template>
@@ -10,7 +10,7 @@
         <a-row>
             <Tags/>
         </a-row>
-        <a-row>
+        <a-row  v-if="data.length">
             <a-col 
             :xs='24' :sm='24' :md='12' :lg='8' :xl='6'
             v-for="item in data" 
@@ -46,13 +46,16 @@
                 </a-skeleton>
             </a-col>
         </a-row>
+        <div v-else :span="24">
+            <a-empty/>
+        </div>
         <a-row>
-        <a-pagination 
-        class="center"
-        :current="paginate.page?paginate.page:1" 
-        :total="paginate.total?paginate.total:1" 
-        :itemRender="paginateRender"
-        />
+            <a-pagination v-if="Object.keys(paginate).length>0"
+            class="center"
+            :current="paginate.page?paginate.page:1" 
+            :total="paginate.total?paginate.total:1" 
+            :itemRender="paginateRender"
+            />
         </a-row>
     </div>
 </template>
@@ -96,6 +99,7 @@
             line-clamp: 2;
             -webkit-box-orient: vertical;
             color: rgba(0, 0, 0, 0.55);
+            min-height: 2.6rem;
         }
         span{
             color: rgba(0, 0, 0, 0.65);

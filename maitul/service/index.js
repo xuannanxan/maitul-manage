@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-14 16:02:55
- * @LastEditTime: 2020-02-18 12:30:42
+ * @LastEditTime: 2020-02-24 21:38:41
  * @LastEditors: Xuannan
  */
 import axios from 'axios'
@@ -40,7 +40,7 @@ service.interceptors.response.use(
     if(error.response){
       return Promise.resolve({status:error.response.status})
     }else{
-      return Promise.reject({statusCode: 500, message: 'Failed to get data' })
+      return Promise.resolve({status: 500, message: 'Failed to get data' })
     }
   }
 )
