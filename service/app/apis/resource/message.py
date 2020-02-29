@@ -73,7 +73,7 @@ class MessageResource(Resource):
         model_data.site = site
         if model_data.add():
             data = {
-                    'status':RET.Created,
+                    'status':RET.OK,
                     'msg':'Success',
                     'data':model_data
             }

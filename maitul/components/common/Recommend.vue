@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-19 18:33:29
+ * @LastEditTime: 2020-02-29 01:40:37
  * @LastEditors: Xuannan
  -->
 <template>
@@ -77,7 +77,7 @@
         updated() {
             this.skeletonLoading=false;
         },
-        computed:mapState(["contentList"])
+        computed:mapState(["productList"])
     }
 </script>
 <style lang='less' scoped>

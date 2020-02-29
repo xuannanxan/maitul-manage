@@ -74,7 +74,28 @@
         updated() {
             this.skeletonLoading=false;
         },
-        props:["data","paginate","tag","search","category"]
+        props:{
+            data: {
+                type: Array,
+                default: ()=>[]
+            },
+            paginate: {
+                type: Object,
+                default:()=> {}
+            },
+            tag: {
+                type: String,
+                default: ''
+            },
+            search: {
+                type: String,
+                default: ''
+            },
+            category: {
+                type: String,
+                default: ''
+            },
+        }
     }
 </script>
 <style lang='less' scoped>

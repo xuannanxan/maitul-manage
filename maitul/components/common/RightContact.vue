@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-26 22:56:02
+ * @LastEditTime: 2020-02-28 21:14:19
  * @LastEditors: Xuannan
  -->
 <template>
@@ -36,7 +36,7 @@
 <script>
   import {mapState} from 'vuex'
   export default {
-    name: 'ContactRight',
+    name: 'RightContact',
     computed:{
       ...mapState(["webconfig"]),
     },

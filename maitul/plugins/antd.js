@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:26:57
- * @LastEditTime: 2020-02-22 16:37:48
+ * @LastEditTime: 2020-02-27 09:18:07
  * @LastEditors: Xuannan
  */
 
@@ -63,4 +63,5 @@ Vue.use(Affix)
 Vue.use(Empty)
 Vue.use(Drawer)
 Vue.use(BackTop)
+Vue.use(Form)
 Vue.prototype.$message = message;

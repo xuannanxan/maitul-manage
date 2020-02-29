@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-13 22:14:21
- * @LastEditTime: 2020-02-19 16:47:45
+ * @LastEditTime: 2020-02-28 09:32:56
  * @LastEditors: Xuannan
  */
 export default {
@@ -21,9 +21,9 @@ export default {
             state.banner = data
         }
     },
-    setRightAd(state,data){
+    setArticleList(state,data){
         if(data && data.length){
-            state.rightAd = data
+            state.articleList = data
         }
     },
     setContent(state,data) {

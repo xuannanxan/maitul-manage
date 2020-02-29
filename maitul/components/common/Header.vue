@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-26 23:58:27
+ * @LastEditTime: 2020-02-28 13:45:36
  * @LastEditors: Xuannan
  -->
 <template>
@@ -57,7 +57,7 @@
             </a-menu-item>
             <template v-for="item in category">
               <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                <nuxt-link :to="{path:'/product/list/'+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
+                <nuxt-link :to="{path:item.url+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
               </a-menu-item>
               <sub-menu v-else :menu-info="item" :key="item.id" />
             </template>
@@ -94,7 +94,7 @@
               </a-menu-item>
               <template v-for="item in category">
                 <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                  <nuxt-link :to="{path:'/list/'+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
+                  <nuxt-link :to="{path:item.url+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
                 </a-menu-item>
                 <sub-menu v-else :menu-info="item" :key="item.id" />
               </template>

@@ -2,12 +2,12 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-25 23:17:04
+ * @LastEditTime: 2020-02-28 21:13:55
  * @LastEditors: Xuannan
  -->
 <template>
   <a-layout class="layout ">
-    <ContactRight/>
+    <RightContact/>
     <a-back-top>
       <div class="right-btn"><a-icon type="to-top"/></div>
     </a-back-top>
@@ -19,18 +19,15 @@
           <div class="main">
             <a-divider>Products</a-divider>
             <ProductList
-            :data="data"
-            :paginate="paginate"
-            :tag="tag"
-            :search="search"
-            :category="category"
+            :data="productData.data"
+            :paginate="productData.paginate"
             />
           </div>
         </a-col>
         <a-col :span="24">
           <div class="main dark">
-            <About
-            :data="data"
+            <Info
+            :data="about"
             />
           </div>
         </a-col>
@@ -38,11 +35,8 @@
           <div class="main">
             <a-divider>News</a-divider>
             <ArticleList
-            :data="data"
-            :paginate="paginate"
-            :tag="tag"
-            :search="search"
-            :category="category"
+            :data="newsData.data"
+            :paginate="newsData.paginate"
             />
           </div>
         </a-col>
@@ -57,28 +51,27 @@
   import Header from '@/components/common/Header';
   import Footer from '@/components/common/Footer';
   import Banner from '@/components/common/Banner';
-  import Author from '@/components/common/Author';
-  import RightAd from '@/components/common/RightAd';
   import Tags from '@/components/common/Tags';
   import ArticleList from '@/components/list/ArticleList';
   import ProductList from '@/components/list/ProductList';
-  import About from '@/components/list/About';
+  import Info from '@/components/list/Info';
   import Contact from '@/components/common/Contact';
-  import ContactRight from '@/components/common/ContactRight';
+  import RightContact from '@/components/common/RightContact';
   import {mapState} from 'vuex';
   import {siteInfo}  from "@/service/config";
-  const pageSize = 12;
+ 
+  const listData =  {
+      data:[],
+      paginate:{},
+    };
   const contenData =  {
-        data:[],
-        paginate:{},
-        tag:'',
-        search:'',
-        category:{}
+        newsData:{ ...listData },
+        productData:{ ...listData },
       };
   export default {
     scrollToTop: true,
-    components:{Header,Footer,Banner,Author,RightAd,ArticleList,Tags,ProductList,About,Contact,ContactRight},
-    computed:mapState(["rightAd","webconfig"]),
+    components:{Header,Footer,Banner,ArticleList,Tags,ProductList,Info,Contact,RightContact},
+    computed:mapState(["webconfig",'about']),
     head () {
       return {
         title: this.webconfig.siteName?this.webconfig.siteName:'Maitul Metalparts',
@@ -101,27 +94,35 @@
         const  [banner]  = await Promise.all([store.dispatch('_banner')])
         if(banner.status === 200) store.commit('setBanner',banner.data)
       }
-      if(store.state.rightAd && store.state.rightAd.length===0){
-        const  [rightAd]  = await Promise.all([store.dispatch('_rightAd')])
-        if(rightAd.status === 200) store.commit('setRightAd',rightAd.data)
-      }
       if(store.state.tags && store.state.tags.length===0){
         const  [tags]  = await Promise.all([store.dispatch('_tags')])
         if(tags.status === 200) store.commit('setTags',tags.data)
       }
       if(store.state.about && store.state.about.length===0){
         const  [aboutData]  = await Promise.all([store.dispatch('_content',{
-          paginate:pageSize,
+          paginate:siteInfo.articlePageSize,
           category:siteInfo.about,
           })])
         if(aboutData.status === 200) store.commit('setAbout',aboutData.data)
       }
-      const  [content]  = await Promise.all([store.dispatch('_content',{paginate:pageSize})])
-      if(content.status === 200) {
-          contenData.data = content.data
-          contenData.paginate = content.paginate
+      const  [news]  = await Promise.all([store.dispatch('_content',{
+        paginate:siteInfo.articlePageSize,
+        category:siteInfo.news,
+        })])
+      if(news.status === 200) {
+          contenData.newsData.data = news.data
+          contenData.newsData.paginate = news.paginate
         }
-      return contenData
+      const  [product]  = await Promise.all([store.dispatch('_content',{
+        paginate:siteInfo.productPageSize,
+        category:siteInfo.products,
+        })])
+      if(product.status === 200) {
+          contenData.productData.data = product.data
+          contenData.productData.paginate = product.paginate
+          store.commit('setProductList',product.data)
+        }
+      return contenData;
     }
   };
 </script>

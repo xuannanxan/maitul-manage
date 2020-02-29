@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime: 2020-02-20 10:56:26
+ * @LastEditTime: 2020-02-28 10:02:05
  * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef , useReducer} from 'react';
@@ -150,6 +150,11 @@ const ContentList = (props)=>{
           title: '作者',
           dataIndex: 'author',
           key: 'author',
+        },
+        {
+          title: '所属分类',
+          dataIndex: 'category_name',
+          key: 'category_name',
         },
         {
             title: '操作',

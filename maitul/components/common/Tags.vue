@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-02-21 22:30:09
+ * @LastEditTime: 2020-02-28 14:00:47
  * @LastEditors: Xuannan
  -->
 <template>
@@ -14,7 +14,7 @@
             :key="tag.id" 
             :color="tagColor[Math.floor((Math.random()*tagColor.length))]"
             >
-                <nuxt-link :to="{path:'/products?tag='+tag.name}">{{tag.name}}</nuxt-link>
+                <nuxt-link :to="{path:'/product?tag='+tag.name}">{{tag.name}}</nuxt-link>
             </a-tag>
         </div>
         

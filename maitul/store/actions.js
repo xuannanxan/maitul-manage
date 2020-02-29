@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-13 22:45:12
- * @LastEditTime: 2020-02-20 20:25:13
+ * @LastEditTime: 2020-02-27 13:14:09
  * @LastEditors: Xuannan
  */
 /*
@@ -56,6 +56,14 @@ export const _tags = async (store, params={})=>{
   params['site'] = siteInfo.site
   return await request.get(api.tagsUrl, { params: params })
 };
+
+//留言
+export const _message = async (store, params={})=>{
+  
+  params['site'] = siteInfo.site
+  return await request.post(api.messageUrl, params)
+};
+
 
 
   

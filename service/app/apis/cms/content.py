@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime: 2020-02-22 21:05:22
+@LastEditTime: 2020-02-29 15:31:46
 @LastEditors: Xuannan
 '''
 
@@ -17,10 +17,10 @@ from app.config import PAGINATE_NUM
 from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.cms import content_doc
-from flask import g
+from flask import g,current_app,request
 
 from app.models import BlogContent,BlogContentTag, MaitulContent,MaitulContentTag,InfoContent,InfoContentTag,MetalpartsContent,MetalpartsContentTag
-
+from app.models import BlogCategory,MaitulCategory,MetalpartsCategory,InfoCategory
 api = Apidoc('内容管理-内容')
 
 parse_id = reqparse.RequestParser()
@@ -70,13 +70,13 @@ def getContent(id,contentModel):
 def setModel(site):
     # 动态设置表名和模型
     if site == 'blog':
-        return BlogContent, BlogContentTag,'blog_content','blog_content_tag','blog_tag','blog_category'
+        return BlogContent, BlogContentTag,BlogCategory,'blog_content','blog_content_tag','blog_tag','blog_category'
     elif site == 'maitul':
-        return MaitulContent,MaitulContentTag,'maitul_content', 'maitul_content_tag','maitul_tag','maitul_category'
+        return MaitulContent,MaitulContentTag,MaitulCategory,'maitul_content', 'maitul_content_tag','maitul_tag','maitul_category'
     elif site == 'info':
-        return InfoContent,InfoContentTag,'info_content','info_content_tag','info_tag','info_category'
+        return InfoContent,InfoContentTag,InfoCategory,'info_content','info_content_tag','info_tag','info_category'
     elif site == 'metalparts':
-        return MetalpartsContent,MetalpartsContentTag, 'metalparts_content','metalparts_content_tag','metalparts_tag','metalparts_category'
+        return MetalpartsContent,MetalpartsContentTag,MetalpartsCategory, 'metalparts_content','metalparts_content_tag','metalparts_tag','metalparts_category'
     else:
         abort(RET.NotFound,msg='请勿非法操作...')
 
@@ -88,7 +88,7 @@ class ContentResource(Resource):
         """
         添加内容
         """
-        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable,categoryTable= setModel(site)
+        contentModel,contentTagModel,categoryModel,contentTable ,contentTagTable,TagTable,categoryTable= setModel(site)
         args = parse_base.parse_args()
         title = args.get('title')
         keywords = args.get('keywords')
@@ -129,7 +129,7 @@ class ContentResource(Resource):
         '''
         内容列表1
         '''
-        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable,categoryTable = setModel(site)
+        contentModel,contentTagModel,categoryModel,contentTable ,contentTagTable,TagTable,categoryTable = setModel(site)
         argsById = parse_id.parse_args()
         id = argsById.get('id')
         # 如果有id,就返回单个内容
@@ -143,7 +143,7 @@ class ContentResource(Resource):
                     left join %s as r on c.id = r.content_id
                     left join %s as t on t.id = r.tag_id
                     left join %s as a on a.id = c.category_id
-                WHERE c.id = %s and c.is_del = 0;
+                WHERE c.id = '%s' and c.is_del = 0;
                 '''%(contentTable,contentTagTable,TagTable,categoryTable,id)
             sql_data = Crud.auto_select(sql)
             if not sql_data:
@@ -166,12 +166,16 @@ class ContentResource(Resource):
         tag = args.get('tag')
         category_id = args.get('category_id')
         category = args.get('category')
+        if category:
+            cateData = categoryModel.query.filter_by(ename = category , is_del = '0').first()
+            category_id = cateData.id if cateData else ''
         search = args.get('search')
+        if search:
+            current_app.logger.info(request.remote_addr+':'+search)
         # 开始拼接查询语句
-        query = '{0}{1}{2}{3}'.format(
+        query = '{0}{1}{2}'.format(
             ('t.name = "%s" and '%tag) if tag else '',
             ('(a.id = "{0}" OR a.pid = "{0}") and '.format(category_id)) if category_id else '',
-            ('a.ename = "%s" and '%category) if category else '',
             ('(c.title like "%{0}%" or c.content like "%{0}%") and '.format(search)) if search else ''
         )
         sql = '''
@@ -216,7 +220,7 @@ class ContentResource(Resource):
         '''
         修改内容
         '''
-        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable,categoryTable = setModel(site)
+        contentModel,contentTagModel,categoryModel,contentTable ,contentTagTable,TagTable,categoryTable = setModel(site)
         args = parse_base.parse_args()
         id = args.get('id')
         if not id:
@@ -266,7 +270,7 @@ class ContentResource(Resource):
         '''
         删除内容
         '''
-        contentModel,contentTagModel,contentTable ,contentTagTable,TagTable,categoryTable = setModel(site)
+        contentModel,contentTagModel,categoryModel,contentTable ,contentTagTable,TagTable,categoryTable = setModel(site)
         args = parse_id.parse_args()
         id = args.get('id')
         if not id:

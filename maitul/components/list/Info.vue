@@ -2,14 +2,15 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-24 22:04:26
+ * @LastEditTime: 2020-02-28 20:58:45
  * @LastEditors: Xuannan
  -->
 <template>
     <div>
-        <div v-if="about.length">
-            <a-tabs :defaultActiveKey='about[0].id' size="large">
-                <a-tab-pane v-for="item in about" :tab="item.title" :key="item.id">
+        <a-skeleton :loading="skeletonLoading" :title="false" active avatar>
+        <div v-if="data.length">
+            <a-tabs :defaultActiveKey='data[0].id' size="large">
+                <a-tab-pane v-for="item in data" :tab="item.title" :key="item.id">
                     <a-row>
                         <a-col v-if="item.cover" :xs='24' :sm='24' :md='10' :lg='10' :xl='10'>
                             <div class="tab-cover" >
@@ -33,24 +34,21 @@
         <div v-else>
             <a-empty/>
         </div>
+        </a-skeleton>
     </div>
-
 </template>
 <script>
-    import {mapState} from 'vuex'
     export default {
-        name: 'About',
-        computed:{
-            ...mapState(["about"]),
-        },
+        name: 'Info',
         data() {
             return {
                 skeletonLoading:true,
             }
         },
-        mounted(){
+        created(){
            this.skeletonLoading=false;
         },
+        props:["data"]
     }
 </script>
 <style lang='less' scoped>
@@ -58,7 +56,7 @@
         padding-right: 1.2rem;
         div{
             width: 100%;
-            height: 14.5rem;
+            height: 16.5rem;
             background-size: 100%;
             background-repeat: no-repeat;
             background-position: center;

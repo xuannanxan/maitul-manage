@@ -2,11 +2,40 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-24 22:19:45
+ * @LastEditTime: 2020-02-28 21:51:05
  * @LastEditors: Xuannan
  -->
 <template>
     <div>
+        <a-row class="crumb" v-if="Object.keys(category).length>0 || tag || search">
+            <a-col :xs='24' :sm='24' :md='14' :lg='16' :xl='18'>
+                <div v-if='tag || search'>{{tag?`Tag:${tag}...`:(search?`Search:${search}...`:'Newest...')}}</div>
+                    <a-breadcrumb v-else-if='category.id' >
+                        <a-breadcrumb-item>
+                            <nuxt-link to="/"><a-icon type="home" /><span> Home</span></nuxt-link>
+                        </a-breadcrumb-item>
+                        <a-breadcrumb-item v-if="Object.keys(topCategory).length>0">
+                            <nuxt-link :to="{path:'/product/'+topCategory.id}">
+                                <a-icon :type="topCategory.icon" />
+                                <span> {{topCategory.name}}</span>
+                            </nuxt-link>
+                        </a-breadcrumb-item>
+                    </a-breadcrumb>
+                <div v-else>Newest...</div>
+            </a-col>
+            <a-col :xs='24' :sm='24' :md='10' :lg='8' :xl='6'>
+                <a-input-search size="large" placeholder="Search..." @search="onSearch" />
+            </a-col>
+            <a-col :span='24'><a-divider/></a-col>
+            
+        </a-row>
+        <a-row v-if="Object.keys(topCategory).length>0 &&  !tag && !search">
+            <div v-if="topCategory.children.length>0" v-for="item in topCategory.children" :key="item.id" class="sub-category">
+                <nuxt-link :to="{path:'/product/'+item.id}">
+                    <a-icon :type="item.icon" /> {{item.name}}
+                </nuxt-link>
+            </div>
+        </a-row>
         <a-row>
             <Tags/>
         </a-row>
@@ -70,13 +99,16 @@
         },
         components:{Tags},
         methods: {
+            onSearch(value) {
+                this.$router.push(this.$route.path+'?search='+value)    
+            },
             paginateRender(page, type, originalElement){
                 if (type === "page") {
-                    return <nuxt-link to={'/product/list/'+(this.category.id?this.category.id:'')+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
+                    return <nuxt-link to={'/product/'+(this.category.id?this.category.id:'')+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
                 } else if (type === "prev") {
-                    return <nuxt-link to={'/product/list/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="left" /></nuxt-link>;
+                    return <nuxt-link to={'/product/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="left" /></nuxt-link>;
                 } else if (type === "next") {
-                    return <nuxt-link to={'/product/list/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page+1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="right" /></nuxt-link>;
+                    return <nuxt-link to={'/product/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page+1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="right" /></nuxt-link>;
                 }
                 return originalElement;
             },
@@ -84,10 +116,64 @@
         created(){
            this.skeletonLoading=false;
         },
-        props:["data","paginate","tag","search","category"]
+        props:{
+            data: {
+                type: Array,
+                default: ()=>[]
+            },
+            paginate: {
+                type: Object,
+                default: ()=>{return {}}
+            },
+            tag: {
+                type: String,
+                default: ''
+            },
+            search: {
+                type: String,
+                default: ''
+            },
+            category: {
+                type: Object,
+                default: ()=>{return {}}
+            },
+            topCategory: {
+                type: Object,
+                default: ()=>{return {}}
+            },
+        }
     }
 </script>
 <style lang='less' scoped>
+    .crumb{
+        font-size: 1rem;
+        padding: 0 .8rem;
+        line-height: 3rem;
+        a{
+            font-size: 1rem;
+        }
+        .ant-breadcrumb{
+            line-height: 3rem;
+        } 
+    }
+    .sub-category{
+        float:left;
+        padding:.5rem .8rem;
+        font-size: 1rem;
+        font-weight: 500;
+        a{
+            padding: .3rem 0;
+            color: rgba(0, 0, 0, 0.65);
+        }
+        a:hover{
+            color: #00cccc;
+            border-bottom: 2px solid #00cccc;
+        }
+        .nuxt-link-active{
+            color: #00cccc;
+            border-bottom: 2px solid #00cccc;
+        }
+    }
     .product{
         padding: .8rem;
         .description{
@@ -131,7 +217,6 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             margin-right: .3rem;
-            line-height: 50%;
         }
     }
     .list-tag{
@@ -150,5 +235,8 @@
         ul{
             padding: 0
         }
+    }
+    .ant-divider{
+        margin: .5rem 0;
     }
 </style>
