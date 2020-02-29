@@ -2,19 +2,19 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-02-28 14:00:47
+ * @LastEditTime: 2020-02-29 23:34:01
  * @LastEditors: Xuannan
  -->
 <template>
     <a-spin  :spinning="spinning" size="large" tip="Loading...">
-        <div style="margin:0.8rem">
+        <div>
             <a-tag 
             style="margin: 0 0.5rem 0.5rem 0"
             v-for="tag in tags" 
             :key="tag.id" 
             :color="tagColor[Math.floor((Math.random()*tagColor.length))]"
             >
-                <nuxt-link :to="{path:'/product?tag='+tag.name}">{{tag.name}}</nuxt-link>
+                <nuxt-link :to="{path:url+'?tag='+tag.name}">{{tag.name}}</nuxt-link>
             </a-tag>
         </div>
         
@@ -34,6 +34,12 @@
         },
         name: 'Tags',
         computed:mapState(["tags"]),
+        props:{
+            url: {
+                type: String,
+                default: '/product'
+            },
+        }
     };
 </script>
 <style  lang="less" scoped>

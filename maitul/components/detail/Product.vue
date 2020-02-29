@@ -2,19 +2,29 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-29 15:06:35
+ * @LastEditTime: 2020-02-29 22:13:57
  * @LastEditors: Xuannan
  -->
 <template>
     <a-skeleton :loading="skeletonLoading" :title="false" active avatar>
-        <a-row>
+        <a-empty class="no-content" v-if="Object.keys(data).length===0">
+            <span slot="description">
+                <div>
+                    <h3>Sorry!</h3>
+                    <h1>No Data...</h1>
+                    <p>Please contact us at <a href="mailto:admin@maitul.com">admin@maitul.com</a></p>
+                    <nuxt-link to="/"> Home</nuxt-link>
+                </div>
+            </span>
+        </a-empty>
+        <a-row v-else>
             <a-col :span='24' style="padding:.3rem 0">
                 <a-breadcrumb>
                     <a-breadcrumb-item>
                         <nuxt-link to="/"><a-icon type="home" /><span> Home</span></nuxt-link>
                     </a-breadcrumb-item>
                     <a-breadcrumb-item>
-                        <nuxt-link :to="{path:'/product/'+data.category_id}">
+                        <nuxt-link :to="{path:data.category_url+data.category_id}">
                             <a-icon :type="data.category_icon" />
                             <span> {{data.category_name}}</span>
                         </nuxt-link>
@@ -38,7 +48,7 @@
                 <a-divider/>
                 <div class="detail-tag" v-if="data.tags_name">
                     <a-tag v-for="(item,index) in data.tags_name.split(',')" :key="index+item" :color="tagColor[Math.floor((Math.random()*tagColor.length))]">
-                        <nuxt-link :to="{path:'/product?tag='+item}">{{item}}</nuxt-link>
+                        <nuxt-link :to="{path:data.category_url+'?tag='+item}">{{item}}</nuxt-link>
                     </a-tag>
                 </div>
                 <p>{{data.description}}</p>
@@ -53,7 +63,6 @@
                 <RelatedProduct/>
             </a-col>
         </a-row>
-
     </a-skeleton>
 </template>
 <script>

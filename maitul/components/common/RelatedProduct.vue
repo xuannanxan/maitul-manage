@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-29 15:07:26
+ * @LastEditTime: 2020-02-29 22:22:09
  * @LastEditors: Xuannan
  -->
 <template>
@@ -19,7 +19,7 @@
             :title="item.title"
             >
             <a-skeleton :loading="skeletonLoading" active avatar>
-            <nuxt-link :to="{path:'/product/detail/'+item.id}">
+            <nuxt-link :to="{path:item.category_url+'detail/'+item.id}">
                 <a-card  hoverable >
                     <div v-if="item.cover" slot="cover" class="cover" :style="{ backgroundImage: 'url('+item.cover+')'}"></div>
                     <img

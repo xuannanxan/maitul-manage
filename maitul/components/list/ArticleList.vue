@@ -2,11 +2,49 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-25 19:25:28
+ * @LastEditTime: 2020-02-29 23:32:05
  * @LastEditors: Xuannan
  -->
 <template>
     <div>
+        <a-row class="crumb" v-if="Object.keys(category).length>0 || tag || search">
+            <div v-if='category.id'>
+                <a-col :xs='24' :sm='24' :md='14' :lg='16' :xl='18'>
+                    <div v-if='tag || search'>{{tag?`Tag:${tag}...`:(search?`Search:${search}...`:'Newest...')}}</div>
+                    <a-breadcrumb  v-else>
+                        <a-breadcrumb-item>
+                            <nuxt-link to="/"><a-icon type="home" /><span> Home</span></nuxt-link>
+                        </a-breadcrumb-item>
+                        <a-breadcrumb-item v-if="Object.keys(topCategory).length>0">
+                            <nuxt-link :to="{path:topCategory.url+topCategory.id}">
+                                <a-icon :type="topCategory.icon" />
+                                <span> {{topCategory.name}}</span>
+                            </nuxt-link>
+                        </a-breadcrumb-item>
+                    </a-breadcrumb>
+                </a-col>
+                <a-col :xs='24' :sm='24' :md='10' :lg='8' :xl='6'>
+                    <a-input-search size="large" placeholder="Search..." @search="onSearch" />
+                </a-col>
+            </div>
+            <div v-else-if='tag || search'>
+                <div>
+                    <a-col :xs='24' :sm='24' :md='12' :lg='10' :xl='8'>
+                        <a-input-search 
+                        size="large" 
+                        placeholder="Search..."  
+                        @search="onSearch" 
+                        enterButton="Search"
+                        />
+                    </a-col>
+                    <a-col :span='24'>
+                        <Tags :url="'/search/'"/>
+                    </a-col>
+                </div>
+            </div>
+            <div v-else>Newest...</div>
+            <a-col :span='24'><a-divider/></a-col>
+        </a-row>
         <a-list 
         itemLayout="horizontal" 
         :dataSource="data"
@@ -14,22 +52,21 @@
             <a-list-item slot="renderItem" slot-scope="item, index">
                 <a-skeleton :loading="skeletonLoading" active avatar>
                 <a-list-item-meta>
-                    <nuxt-link :to="{path:'/detail/'+item.id}" slot="title" class= "list-title">
+                    <nuxt-link :to="{path:item.category_url+'detail/'+item.id}" slot="title" class= "list-title">
                     {{item.title}}
                     </nuxt-link>
                     <div v-if="item.cover" slot="avatar">
-                        <nuxt-link :to="{path:'/detail/'+item.id}">
+                        <nuxt-link :to="{path:item.category_url+'detail/'+item.id}">
                             <img :src="item.cover" :alt="item.title" :title="item.title"/>
                         </nuxt-link>    
                     </div>
-                    <!-- <a-avatar v-if="item.cover"
-                     slot="avatar"
-                    :src="item.cover"
-                    /> -->
                     <div slot="description" class= "list-context">
                         <div class="list-icon">
                             <span><a-icon type="calendar" /> {{item.create_time.slice(0,10)}}</span>
-                            <span><a-icon type="fire" /> {{item.click}}人</span>
+                            <nuxt-link :to="{path:item.category_url+item.category_id}" class="list-link">
+                                <a-icon :type="item.category_icon?item.category_icon:'folder'" /> {{item.category_name}}
+                            </nuxt-link>
+                            <span><a-icon type="fire" /> {{item.click}}</span>
                         </div>
                         <div class="description">{{item.description}}</div>
                     </div>
@@ -46,33 +83,32 @@
     </div>
 </template>
 <script>
+    import Tags from '@/components/common/Tags';
     export default {
         name: 'ArticleList',
+        components:{Tags},
         data() {
             return {
                 skeletonLoading:true,
             }
         },
         methods: {
+            onSearch(value) {
+                this.$router.push(this.$route.path+'?search='+value)    
+            },
             paginateRender(page, type, originalElement){
                 if (type === "page") {
-                    return <nuxt-link to={'/list/'+(this.category.id?this.category.id:'')+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
+                    return <nuxt-link to={this.category.url?this.category.url:(this.search?'/search/':'article')+(this.category.id?this.category.id:'')+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
                 } else if (type === "prev") {
-                    return <nuxt-link to={'/list/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>上一页</nuxt-link>;
+                    return <nuxt-link to={this.category.url?this.category.url:(this.search?'/search/':'article')+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>上一页</nuxt-link>;
                 } else if (type === "next") {
-                    return <nuxt-link to={'/list/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page+1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>下一页</nuxt-link>;
+                    return <nuxt-link to={this.category.url?this.category.url:(this.search?'/search/':'article')+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page+1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>下一页</nuxt-link>;
                 }
                 return originalElement;
             },
         },  
         mounted(){
            this.skeletonLoading=false;
-        },
-        beforeUpdate() {
-            this.skeletonLoading=true;
-        },
-        updated() {
-            this.skeletonLoading=false;
         },
         props:{
             data: {
@@ -81,7 +117,7 @@
             },
             paginate: {
                 type: Object,
-                default:()=> {}
+                default:()=> {return {}}
             },
             tag: {
                 type: String,
@@ -92,13 +128,28 @@
                 default: ''
             },
             category: {
-                type: String,
-                default: ''
+                type: Object,
+                default:()=> {return {}}
+            },
+            topCategory: {
+                type: Object,
+                default: ()=>{return {}}
             },
         }
     }
 </script>
 <style lang='less' scoped>
+    .crumb{
+            font-size: 1rem;
+            padding: 0 .8rem;
+            line-height: 3rem;
+            a{
+                font-size: 1rem;
+            }
+            .ant-breadcrumb{
+                line-height: 3rem;
+            } 
+        }
     .list-header{
         font-size:1rem;
         margin: 0 1rem;
@@ -193,5 +244,8 @@
         .list-icon{
             font-size: 0.8rem;
         }
+    }
+    .ant-divider{
+        margin: .5rem 0;
     }
 </style>

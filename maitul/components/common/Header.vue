@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-28 13:45:36
+ * @LastEditTime: 2020-02-29 22:38:42
  * @LastEditors: Xuannan
  -->
 <template>
@@ -123,7 +123,7 @@
     },
     methods: {
         onSearch(value) {
-            this.$router.push('/list?search='+value)    
+            this.$router.push('/search?search='+value)    
         },
         showDrawer() {
           this.visible = true;

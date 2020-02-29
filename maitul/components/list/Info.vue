@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-28 20:58:45
+ * @LastEditTime: 2020-02-29 23:40:17
  * @LastEditors: Xuannan
  -->
 <template>
@@ -18,12 +18,12 @@
                             </div>
                         </a-col>
                         <a-col v-if="item.cover" :xs='24' :sm='24' :md='14' :lg='14' :xl='14'>
-                            <div class="tab-content">
+                            <div :class="maxHeight?'tab-content':''">
                                 <div  v-html="item.content"></div>
                             </div>
                         </a-col>
                         <a-col v-else :span='24'>
-                            <div class="tab-content">
+                            <div :class="maxHeight?'tab-content':''">
                                 <div  v-html="item.content"></div>
                             </div>
                         </a-col>
@@ -32,7 +32,7 @@
             </a-tabs> 
         </div>
         <div v-else>
-            <a-empty/>
+            <div></div>
         </div>
         </a-skeleton>
     </div>
@@ -48,7 +48,16 @@
         created(){
            this.skeletonLoading=false;
         },
-        props:["data"]
+        props:{
+                data: {
+                    type: Array,
+                    default: ()=>[]
+                },
+                maxHeight: {
+                    type: Boolean,
+                    default:true,
+                },
+            }
     }
 </script>
 <style lang='less' scoped>
@@ -63,12 +72,10 @@
             position: relative;
             transition: all 2s;
         }
-
     }
     .tab-content{
-
         div{
-            height: 14.5rem;
+            height: 16.5rem;
             text-overflow: -o-ellipsis-lastline;
             overflow: hidden;
             text-overflow: ellipsis;

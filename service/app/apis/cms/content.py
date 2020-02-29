@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime: 2020-02-29 15:31:46
+@LastEditTime: 2020-02-29 22:10:02
 @LastEditors: Xuannan
 '''
 
@@ -138,6 +138,7 @@ class ContentResource(Resource):
                 SELECT c.*,GROUP_CONCAT(t.id SEPARATOR ',') as tags,
                 GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
                 a.name as category_name,
+                a.url as category_url,
                 a.icon as category_icon
                 FROM %s as c
                     left join %s as r on c.id = r.content_id
@@ -184,6 +185,7 @@ class ContentResource(Resource):
             GROUP_CONCAT(t.id SEPARATOR ',') as tags,
             GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
             a.name as category_name,
+            a.url as category_url,
             a.icon as category_icon
             FROM {0} as c
             left join {1} as r on c.id = r.content_id

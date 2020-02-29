@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-28 21:51:05
+ * @LastEditTime: 2020-02-29 23:35:33
  * @LastEditors: Xuannan
  -->
 <template>
@@ -15,7 +15,7 @@
                             <nuxt-link to="/"><a-icon type="home" /><span> Home</span></nuxt-link>
                         </a-breadcrumb-item>
                         <a-breadcrumb-item v-if="Object.keys(topCategory).length>0">
-                            <nuxt-link :to="{path:'/product/'+topCategory.id}">
+                            <nuxt-link :to="{path:topCategory.url+topCategory.id}">
                                 <a-icon :type="topCategory.icon" />
                                 <span> {{topCategory.name}}</span>
                             </nuxt-link>
@@ -27,17 +27,18 @@
                 <a-input-search size="large" placeholder="Search..." @search="onSearch" />
             </a-col>
             <a-col :span='24'><a-divider/></a-col>
-            
         </a-row>
         <a-row v-if="Object.keys(topCategory).length>0 &&  !tag && !search">
             <div v-if="topCategory.children.length>0" v-for="item in topCategory.children" :key="item.id" class="sub-category">
-                <nuxt-link :to="{path:'/product/'+item.id}">
+                <nuxt-link :to="{path:item.url+item.id}">
                     <a-icon :type="item.icon" /> {{item.name}}
                 </nuxt-link>
             </div>
         </a-row>
         <a-row>
-            <Tags/>
+            <div style="margin:.5rem .8rem">
+                <Tags/>
+            </div>
         </a-row>
         <a-row  v-if="data.length">
             <a-col 
@@ -48,7 +49,7 @@
             :title="item.title"
             >
             <a-skeleton :loading="skeletonLoading" active avatar>
-            <nuxt-link :to="{path:'/product/detail/'+item.id}">
+            <nuxt-link :to="{path:item.category_url+'detail/'+item.id}">
                 <a-card  hoverable >
                     <div v-if="item.cover" slot="cover" class="cover" :style="{ backgroundImage: 'url('+item.cover+')'}"></div>
                     <img
@@ -104,11 +105,11 @@
             },
             paginateRender(page, type, originalElement){
                 if (type === "page") {
-                    return <nuxt-link to={'/product/'+(this.category.id?this.category.id:'')+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
+                    return <nuxt-link to={this.category.url?this.category.url:'/product/'+(this.category.id?this.category.id:'')+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
                 } else if (type === "prev") {
-                    return <nuxt-link to={'/product/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="left" /></nuxt-link>;
+                    return <nuxt-link to={this.category.url?this.category.url:'/product/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="left" /></nuxt-link>;
                 } else if (type === "next") {
-                    return <nuxt-link to={'/product/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page+1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="right" /></nuxt-link>;
+                    return <nuxt-link to={this.category.url?this.category.url:'/product/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page+1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="right" /></nuxt-link>;
                 }
                 return originalElement;
             },

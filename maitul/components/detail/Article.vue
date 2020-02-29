@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-19 18:32:43
+ * @LastEditTime: 2020-02-29 22:57:38
  * @LastEditors: Xuannan
  -->
 <template>
@@ -11,9 +11,9 @@
             <a-empty class="no-content" v-if="Object.keys(data).length===0">
                 <span slot="description">
                 <h3>Sorry!</h3>
-                <h1>内容不存在...</h1>
+                <h1>No Data...</h1>
                 <p>Please contact us at <a href="mailto:admin@maitul.com">admin@maitul.com</a></p>
-                <p><nuxt-link to="/"> 返回首页</nuxt-link></p>
+                <p><nuxt-link to="/"> Home</nuxt-link></p>
                 </span>
             </a-empty>
             <div class="detail" v-else>
@@ -23,30 +23,30 @@
                 <a-divider>  
                     <div class="detail-icon">
                         <span><a-icon type="calendar" /> {{data.create_time.slice(0,10)}}</span>
-                        <nuxt-link :to="{path:'/list/'+data.category_id}" class="list-link">
+                        <nuxt-link :to="{path:data.category_url+data.category_id}" class="list-link">
                             <a-icon :type="data.category_icon?data.category_icon:'folder'" /> {{data.category_name}}
                         </nuxt-link>
-                        <span><a-icon type="fire" /> {{data.click}}人</span>
+                        <span><a-icon type="fire" /> {{data.click}}</span>
                     </div>
                 </a-divider>
-                
                 <div class="detail-tag" v-if="data.tags_name">
                     <a-tag v-for="(item,index) in data.tags_name.split(',')" :key="index+item" :color="tagColor[Math.floor((Math.random()*tagColor.length))]">
-                        <nuxt-link :to="{path:'/list?tag='+item}">{{item}}</nuxt-link>
+                        <nuxt-link :to="{path:data.category_url+'?tag='+item}">{{item}}</nuxt-link>
                     </a-tag>
                 </div>
                 <div class="detail-content" v-html="data.content">{{data.content}}</div>
-            </div>
-                
-                
+                <div>
+                    <RelatedProduct/>
+                </div>
+            </div> 
         </div>
-        
     </a-skeleton>
-
 </template>
 <script>
+    import RelatedProduct from '../common/RelatedProduct.vue'
     export default {
-        name: 'Content',
+        name: 'Article',
+        components:{RelatedProduct},
         data() {
             return {
                 tagColor:['magenta','red','volcano','orange','gold','lime','green','cyan','blue','geekblue','purple'],
@@ -54,7 +54,7 @@
             }
         },
 
-        mounted(){
+        created(){
            this.skeletonLoading=false;
         },
         props:["data"]
