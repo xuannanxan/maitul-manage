@@ -15,6 +15,10 @@ PAGINATE_NUM = 10
 ACCESS_ORIGIN = '*'
 # 允许跨域请求的方法
 ACCESS_METHODS = 'GET,POST'
+# 设置redis的ip,port,有效时间
+REDIS_HOST = "127.0.0.1"
+REDIS_PORT = "6379"
+REDIS_DB= 0
 # 通用配置
 class config:
     DEBUG = False
@@ -25,13 +29,6 @@ class config:
     #图片大小
     MAX_CONTENT_LENGTH = 8 * 1024 * 1024
 
-    # 设置redis的ip,port,有效时间
-    REDIS_HOST = "127.0.0.1"
-    REDIS_PORT = "6379"
-    REDIS_DB= 0
-    
-
-
     #设置CACHE
     CACHE_TYPE = 'redis'
     CACHE_REDIS_HOST = REDIS_HOST
@@ -40,7 +37,6 @@ class config:
 
     # 设置session
     SESSION_TYPE = 'redis'
-    
     SESSION_PERMANENT = True  # 如果设置为True，则关闭浏览器session就失效
     SESSION_USE_SIGNER = True # 是否对发送到浏览器上 session:cookie值进行加密
     # 数据库配置
