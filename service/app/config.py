@@ -36,12 +36,11 @@ class config:
     CACHE_TYPE = 'redis'
     CACHE_REDIS_HOST = REDIS_HOST
     CACHE_REDIS_PORT = REDIS_PORT
-    CACHE_REDIS_PASSWORD = REDIS_PASSWORD
     CACHE_DEFAULT_TIMEOUT = 300
 
     # 设置session
     SESSION_TYPE = 'redis'
-    SESSION_REDIS=  Redis(host=REDIS_HOST, port=REDIS_PORT, password= REDIS_PASSWORD,db = REDIS_DB)
+    
     SESSION_PERMANENT = True  # 如果设置为True，则关闭浏览器session就失效
     SESSION_USE_SIGNER = True # 是否对发送到浏览器上 session:cookie值进行加密
     # 数据库配置
@@ -82,6 +81,8 @@ class Dev(config):
     MAIL_PASSWORD = secret.get('MAIL_PASSWORD') 
     SECRET_KEY=secret.get('SECRET_KEY') 
     REDIS_PASSWORD = secret.get('REDIS_PASSWORD') 
+    CACHE_REDIS_PASSWORD = REDIS_PASSWORD
+    SESSION_REDIS=  Redis(host=REDIS_HOST, port=REDIS_PORT, password= REDIS_PASSWORD,db = REDIS_DB)
 
 class Produce(config):
     # 密码信息
@@ -101,6 +102,8 @@ class Produce(config):
     MAIL_PASSWORD = secret.get('MAIL_PASSWORD') 
     SECRET_KEY=secret.get('SECRET_KEY') 
     REDIS_PASSWORD = secret.get('REDIS_PASSWORD') 
+    CACHE_REDIS_PASSWORD = REDIS_PASSWORD
+    SESSION_REDIS=  Redis(host=REDIS_HOST, port=REDIS_PORT, password= REDIS_PASSWORD,db = REDIS_DB)
 
 envs = {
     'dev' :Dev,
