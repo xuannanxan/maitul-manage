@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime : 2020-02-14 22:06:05
-@LastEditors  : Xuannan
+@LastEditTime: 2020-03-01 19:52:19
+@LastEditors: Xuannan
 '''
 
 
@@ -15,6 +15,7 @@ from app.config import envs,ACCESS_METHODS,ACCESS_ORIGIN
 import logging,os,time
 from logging.handlers import RotatingFileHandler
 from app.apis import api_blueprint
+from app.home import home_blueprint
 from app.utils.file import make_dir
 from app.apis.client import client_api
 from app.apis.admin import admin_api
@@ -23,6 +24,7 @@ from app.apis.cms import cms_api
 
 DEFAULT_BLUEPRINT = (
     (api_blueprint,'/api'),
+    (home_blueprint,'/'),
 )
 
 

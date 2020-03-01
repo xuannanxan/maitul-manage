@@ -4,16 +4,16 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime: 2019-11-28 12:35:12
+@LastEditTime: 2020-03-01 19:59:38
 @LastEditors: Xuannan
 '''
 
 from app.models.base import BaseModel,db
 from app.models.model_constant import *
 from werkzeug.security import check_password_hash,generate_password_hash
-from flask_login import UserMixin
+
 # 会员的数据模型
-class User(UserMixin,BaseModel):
+class User(BaseModel):
     __tablename__ = "user"  
     username = db.Column(db.String(100), unique=True)
     email = db.Column(db.String(100), unique=True)

@@ -8,18 +8,8 @@
 @LastEditors  : Xuannan
 '''
 
-#!/usr/bin/env python
-# coding=utf-8
-'''
-@Description: 
-@Author: Xuannan
-@Date: 2019-12-08 10:03:49
-@LastEditTime : 2020-01-31 11:17:06
-@LastEditors  : Xuannan
-'''
 # 对外暴露
 from .base import Crud
-
 from .user import User
 from .city import City
 from .message import Message
