@@ -29,7 +29,7 @@ class config:
     REDIS_HOST = "127.0.0.1"
     REDIS_PORT = "6379"
     REDIS_DB= 0
-    REDIS_PASSWORD = ''
+    
 
 
     #设置CACHE
@@ -81,7 +81,7 @@ class Dev(config):
     MAIL_ASYNC_RECIPIENTS = secret.get('MAIL_ASYNCNAME') 
     MAIL_PASSWORD = secret.get('MAIL_PASSWORD') 
     SECRET_KEY=secret.get('SECRET_KEY') 
-    
+    REDIS_PASSWORD = secret.get('REDIS_PASSWORD') 
 
 class Produce(config):
     # 密码信息
@@ -100,6 +100,7 @@ class Produce(config):
     MAIL_ASYNC_RECIPIENTS = secret.get('MAIL_ASYNCNAME') 
     MAIL_PASSWORD = secret.get('MAIL_PASSWORD') 
     SECRET_KEY=secret.get('SECRET_KEY') 
+    REDIS_PASSWORD = secret.get('REDIS_PASSWORD') 
 
 envs = {
     'dev' :Dev,
