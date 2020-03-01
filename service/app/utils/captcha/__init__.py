@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 21:48:37
-@LastEditTime: 2020-03-02 00:35:54
+@LastEditTime: 2020-03-02 00:48:04
 @LastEditors: Xuannan
 '''
 import random
@@ -64,7 +64,7 @@ class Captcha(object):
             'verdana.ttf',
         ]
         font = random.choice(fonts)
-        return '/app/utils/captcha/' + font
+        return './app/utils/captcha/' + font
 
     # 用来随机生成一个字符串
     @classmethod
