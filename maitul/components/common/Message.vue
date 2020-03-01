@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-27 09:09:07
- * @LastEditTime: 2020-02-29 11:03:44
+ * @LastEditTime: 2020-03-01 10:26:12
  * @LastEditors: Xuannan
  -->
 <template>
@@ -53,22 +53,21 @@
         />
     </a-form-item>
     <a-form-item>
-    
+
       <a-button type="primary" size="large" html-type="submit" class="floatLeft">
         Inquiry Now
       </a-button>
       <div class="floatRight">
         <div class="email ">
-            E-mail:
+
             <a v-if="webconfig.email" :href="'mailto:'+webconfig.email">
-                <span>{{webconfig.email}}</span> 
+                <span>Email:{{webconfig.email}}</span> 
             </a>
         </div>
-                <div style="font-size:1.4rem;" class="floatRight">
-                    <Contact/>
-                </div>
+        <div style="font-size:1.2rem;">
+            <Contact/>
+        </div>
       </div>
-    
     </a-form-item>
   </a-form>
 </template>

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-29 22:57:38
+ * @LastEditTime: 2020-03-01 10:27:36
  * @LastEditors: Xuannan
  -->
 <template>
@@ -80,7 +80,7 @@
             }
         }
         .detail-tag{
-            padding: .2rem 0;
+            padding: .2rem;
         }
         .detail-context{
             font-size: 1.0rem;

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-29 22:13:57
+ * @LastEditTime: 2020-03-01 10:29:05
  * @LastEditors: Xuannan
  -->
 <template>
@@ -117,8 +117,8 @@
         }
     .detail-info{
         padding:0 1rem;
-        .tag{
-        padding-bottom: .5rem;
+        .detail-tag{
+            padding-bottom: .5rem;
             .ant-tag {
                 margin: 0px 0.5rem 0.5rem 0px;
             }
