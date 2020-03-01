@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 21:48:37
-@LastEditTime : 2019-12-21 19:28:26
-@LastEditors  : Xuannan
+@LastEditTime: 2020-03-02 00:23:15
+@LastEditors: Xuannan
 '''
 import random
 import string
@@ -60,8 +60,8 @@ class Captcha(object):
     @classmethod
     def __gene_random_font(cls):
         fonts = [ 
-            'times.ttf',
-            'verdana.ttf',
+            './times.ttf',
+            './verdana.ttf',
         ]
         font = random.choice(fonts)
         return 'utils/captcha/' + font
