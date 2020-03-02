@@ -6,8 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "cross-env BASE_URL=http://127.0.0.1:5000/ NODE_ENV=development nuxt",
-    "build": "cross-env BASE_URL=http://127.0.0.1:5000/ NODE_ENV=produce  nuxt build",
-    "start": "cross-env BASE_URL=http://127.0.0.1:5000/ NODE_ENV=produce  nuxt start",
+    "build": "cross-env BASE_URL=http://api.maitul.com/ NODE_ENV=produce  nuxt build",
+    "start": "cross-env BASE_URL=http://api.maitul.com/ NODE_ENV=produce  nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint"
