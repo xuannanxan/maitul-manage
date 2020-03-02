@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-01 10:31:03
+ * @LastEditTime: 2020-03-02 13:30:00
  * @LastEditors: Xuannan
  -->
 <template>
@@ -47,10 +47,10 @@
     computed:mapState(["webconfig"]),
     head () {
         return {
-            title: (this.webconfig.siteName?this.webconfig.siteName:'Maitul Metalparts')+(articleData.data.title?'|'+articleData.data.title:''),
+            title: (this.webconfig.siteName?this.webconfig.siteName:'Maitul.com')+(articleData.data.title?'|'+articleData.data.title:''),
             meta: [
-            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul,Metalparts')+(articleData.data.keywords?','+articleData.data.keywords:'') },
-            { hid: 'description', name: 'description', content: articleData.data.description?articleData.data.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul Metalparts '  }
+            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul')+(articleData.data.keywords?','+articleData.data.keywords:'') },
+            { hid: 'description', name: 'description', content: articleData.data.description?articleData.data.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul'  }
             ]
         }
     },

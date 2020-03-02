@@ -62,10 +62,10 @@
     computed:mapState(["webconfig"]),
     head () {
         return {
-            title: (this.webconfig.siteName?this.webconfig.siteName:'Maitul Metalparts')+(articleData.category.name?'|'+articleData.category.name:''),
+            title: (this.webconfig.siteName?this.webconfig.siteName:'Maitul.com')+(articleData.category.name?'|'+articleData.category.name:''),
             meta: [
-            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul,Metalparts')+(articleData.category.keywords?','+articleData.category.keywords:'') },
-            { hid: 'description', name: 'description', content: articleData.category.description?articleData.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul Metalparts '  }
+            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul')+(articleData.category.keywords?','+articleData.category.keywords:'') },
+            { hid: 'description', name: 'description', content: articleData.category.description?articleData.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul'  }
             ]
         }
     },

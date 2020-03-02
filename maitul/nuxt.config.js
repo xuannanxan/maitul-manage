@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-19 21:31:11
+ * @LastEditTime: 2020-03-02 13:26:57
  * @LastEditors: Xuannan
  */
 module.exports = {
@@ -10,11 +10,11 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'My Blog',
+    title: 'Maitul.com',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'My Blog' }
+      { hid: 'description', name: 'description', content: 'Maitul.com' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }

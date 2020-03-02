@@ -74,10 +74,10 @@
     computed:mapState(["webconfig",'about']),
     head () {
       return {
-        title: this.webconfig.siteName?this.webconfig.siteName:'Maitul Metalparts',
+        title: this.webconfig.siteName?this.webconfig.siteName:'Maitul.com',
         meta: [
-          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul,Metalparts' },
-          { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul Metalparts ' }
+          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul' },
+          { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul' }
         ]
       }
     },
