@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-02 13:26:57
+ * @LastEditTime: 2020-03-02 19:15:46
  * @LastEditors: Xuannan
  */
 module.exports = {
@@ -108,7 +108,7 @@ module.exports = {
 
   proxy: [  //proxy配置
     ['/api', {
-      target:'http://127.0.0.1:5000/api',  //api请求路径
+      target:process.env.NODE_ENV==='produce'?'http://api.maitul.com/api':'http://127.0.0.1:5000/api',  //api请求路径
       pathRewrite: { 
         '^/api' : '/' ,   // 把 /api 替换成 /
         changeOrigin: true // 表示是否跨域
