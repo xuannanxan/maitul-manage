@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-29 23:32:05
+ * @LastEditTime: 2020-03-02 20:50:29
  * @LastEditors: Xuannan
  -->
 <template>
@@ -107,7 +107,7 @@
                 return originalElement;
             },
         },  
-        mounted(){
+        created(){
            this.skeletonLoading=false;
         },
         props:{

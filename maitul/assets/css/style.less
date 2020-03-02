@@ -70,12 +70,25 @@ only screen and (max-device-width:750px) {
         padding: 0 0.5rem;
     }
 }
-.page-enter-active, .page-leave-active {
-    transition: opacity .5s;
+.page-enter {
+    transform: translateX(100%);
   }
-.page-enter, .page-leave-active {
-    opacity: 0.3;
+  .page-leave,
+  .page-enter-to {
+    transform: translateX(0px);
   }
+  .page-leave-to {
+    transform: translateX(-100%);
+  }
+  .page-enter-active,
+  .page-leave-active {
+    transition: opacity .1s, transform .5s;
+  }
+  .page-enter,
+  .page-leave-active {
+    opacity: 0.5;
+  }
+
 .ant-back-top{
     right: 2rem;
   }

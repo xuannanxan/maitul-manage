@@ -2,11 +2,11 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-02-22 16:06:48
+ * @LastEditTime: 2020-03-02 20:47:18
  * @LastEditors: Xuannan
  -->
 <template>
-    <a-spin  :spinning="spinning" size="large" tip="Loading...">
+    <a-spin v-if="banner.length" :spinning="spinning" size="large" tip="Loading...">
         <a-carousel arrows>
             <div
             slot="prevArrow"
@@ -53,7 +53,7 @@
             height: 2rem;
             font-size: 2rem;
             color: #fff;
-            background-color: rgba(31, 45, 61, 0.11);
+            background-color: transparent;
             opacity: 0.3;
         }
         .custom-slick-arrow:before {

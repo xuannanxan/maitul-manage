@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-29 10:39:50
+ * @LastEditTime: 2020-03-02 20:18:36
  * @LastEditors: Xuannan
  -->
 <template>
@@ -75,11 +75,6 @@
   export default {
     components:{SubMenu,Contact,Message},
     name: 'Footer',
-    data() {
-      return {
-        visible: false,
-      }
-    },
     computed:{
       ...mapState(["webconfig"]),
       ...mapState(["category"]),

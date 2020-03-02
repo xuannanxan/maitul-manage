@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-27 09:09:07
- * @LastEditTime: 2020-03-01 10:26:12
+ * @LastEditTime: 2020-03-02 21:48:32
  * @LastEditors: Xuannan
  -->
 <template>
@@ -54,12 +54,11 @@
     </a-form-item>
     <a-form-item>
 
-      <a-button type="primary" size="large" html-type="submit" class="floatLeft">
+      <a-button type="primary" size="large" html-type="submit" class="floatLeft" :loading="loading">
         Inquiry Now
       </a-button>
       <div class="floatRight">
         <div class="email ">
-
             <a v-if="webconfig.email" :href="'mailto:'+webconfig.email">
                 <span>Email:{{webconfig.email}}</span> 
             </a>
@@ -80,7 +79,8 @@ export default {
     components:{Contact},
     data() {
         return {
-        form: this.$form.createForm(this, { name: Math.random().toString(36).substr(2) }),
+            form: this.$form.createForm(this, { name: Math.random().toString(36).substr(2) }),
+            loading: false,
         };
     },
     methods: {
@@ -88,17 +88,21 @@ export default {
         e.preventDefault();
         this.form.validateFields((err, values) => {
             if (!err) {
+                this.loading=true;
                 this.$store.dispatch('_message', values)
                 .then(res=>{
                     if(res.status===200){
                         this.$message.success('Thank you for your message.');
+                        this.loading=false;
                     }
                     else{
                         this.$message.error('Failed, please try again.');
+                        this.loading=false;
                     }
                 })
                 .catch(err=>{
                     this.$message.error('Failed, please try again.');
+                    this.loading=false;
                 })
                 this.form.resetFields(); 
             }
