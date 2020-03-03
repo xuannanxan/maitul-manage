@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-15 22:25:14
-@LastEditTime : 2020-02-11 13:12:59
-@LastEditors  : Xuannan
+@LastEditTime: 2020-03-03 16:16:55
+@LastEditors: Xuannan
 '''
 
 
@@ -200,9 +200,9 @@ class AdminResource(Resource):
         LIMIT {0},{1};
         '''.format((page-1)*paginate,paginate)
         sql_data,count = Crud.auto_select(sql,count=True)
-        fetchall_data = sql_data.fetchall()
-        if not fetchall_data:
+        if not sql_data:
             abort(RET.NotFound,msg='暂无数据')
+        fetchall_data = sql_data.fetchall()
         data = {
                     'status':RET.OK,
                     'paginate':{

@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:28
- * @LastEditTime : 2020-02-03 22:51:49
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-03-03 14:26:44
+ * @LastEditors: Xuannan
  */
 
 import axios from 'axios';
@@ -63,7 +63,7 @@ export const request = (api, method = Method.GET, params = {}, config = {}) => {
           }else{
               if(error.response.data.status === 1403){
                 localStorage.removeItem('jwToken') 
-                window.location = '/login';
+                window.location = '#/login';
               }else{
                 message.error(error.response.data.msg ? error.response.data.msg : JSON.stringify(error.response.data));
               }
