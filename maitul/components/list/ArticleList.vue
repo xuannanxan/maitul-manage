@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-02 20:50:29
+ * @LastEditTime: 2020-03-03 21:54:23
  * @LastEditors: Xuannan
  -->
 <template>
@@ -98,11 +98,11 @@
             },
             paginateRender(page, type, originalElement){
                 if (type === "page") {
-                    return <nuxt-link to={this.category.url?this.category.url:(this.search?'/search/':'article')+(this.category.id?this.category.id:'')+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
+                    return <nuxt-link to={(this.category.url?this.category.url:(this.search?'/search/':'article'))+(this.category.id?this.category.id:'')+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
                 } else if (type === "prev") {
-                    return <nuxt-link to={this.category.url?this.category.url:(this.search?'/search/':'article')+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>上一页</nuxt-link>;
+                    return <nuxt-link to={(this.category.url?this.category.url:(this.search?'/search/':'article'))+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page===1?1:this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="left"/></nuxt-link>;
                 } else if (type === "next") {
-                    return <nuxt-link to={this.category.url?this.category.url:(this.search?'/search/':'article')+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page+1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>下一页</nuxt-link>;
+                    return <nuxt-link to={(this.category.url?this.category.url:(this.search?'/search/':'article'))+(this.category.id?this.category.id:'')+'?page='+(page<(this.paginate.total/this.paginate.per_page)?this.paginate.page+1:page)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="right"/></nuxt-link>;
                 }
                 return originalElement;
             },
