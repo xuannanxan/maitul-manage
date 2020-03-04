@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-29 22:22:09
+ * @LastEditTime: 2020-03-04 01:19:40
  * @LastEditors: Xuannan
  -->
 <template>
@@ -18,7 +18,6 @@
             class="product"
             :title="item.title"
             >
-            <a-skeleton :loading="skeletonLoading" active avatar>
             <nuxt-link :to="{path:item.category_url+'detail/'+item.id}">
                 <a-card  hoverable >
                     <div v-if="item.cover" slot="cover" class="cover" :style="{ backgroundImage: 'url('+item.cover+')'}"></div>
@@ -33,10 +32,8 @@
                         <template slot="title"><span>{{item.title}}</span></template>
                     </a-card-meta>
                 </a-card>
-                </nuxt-link>
-                </a-skeleton>
+            </nuxt-link>
             </a-col>
-       
         </a-row>
              <div v-else :span="24">
             <a-empty/>
@@ -47,15 +44,6 @@
     import {mapState} from 'vuex'
     export default {
         name: 'RelatedProduct',
-        data() {
-            return {
-                skeletonLoading:true,
-            }
-        },
-         
-        mounted(){
-           this.skeletonLoading=false;
-        },
         computed:mapState(["productList"])
     }
 </script>

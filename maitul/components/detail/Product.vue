@@ -2,11 +2,11 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-01 10:29:05
+ * @LastEditTime: 2020-03-04 01:17:21
  * @LastEditors: Xuannan
  -->
 <template>
-    <a-skeleton :loading="skeletonLoading" :title="false" active avatar>
+    <div>
         <a-empty class="no-content" v-if="Object.keys(data).length===0">
             <span slot="description">
                 <div>
@@ -63,7 +63,7 @@
                 <RelatedProduct/>
             </a-col>
         </a-row>
-    </a-skeleton>
+    </div>
 </template>
 <script>
     import Contact from '../common/Contact.vue'
@@ -76,11 +76,7 @@
         data() {
             return {
                 tagColor:['magenta','red','volcano','orange','gold','lime','green','cyan','blue','geekblue','purple'],
-                skeletonLoading:true,
             }
-        },
-        created(){
-           this.skeletonLoading=false;
         },
         props:["data"],
         computed:{

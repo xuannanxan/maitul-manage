@@ -2,52 +2,40 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-29 23:40:17
+ * @LastEditTime: 2020-03-04 01:09:56
  * @LastEditors: Xuannan
  -->
 <template>
-    <div>
-        <a-skeleton :loading="skeletonLoading" :title="false" active avatar>
-        <div v-if="data.length">
-            <a-tabs :defaultActiveKey='data[0].id' size="large">
-                <a-tab-pane v-for="item in data" :tab="item.title" :key="item.id">
-                    <a-row>
-                        <a-col v-if="item.cover" :xs='24' :sm='24' :md='10' :lg='10' :xl='10'>
-                            <div class="tab-cover" >
-                                <div :style="{ backgroundImage: 'url('+item.cover+')'}" :title="item.title"></div>        
-                            </div>
-                        </a-col>
-                        <a-col v-if="item.cover" :xs='24' :sm='24' :md='14' :lg='14' :xl='14'>
-                            <div :class="maxHeight?'tab-content':''">
-                                <div  v-html="item.content"></div>
-                            </div>
-                        </a-col>
-                        <a-col v-else :span='24'>
-                            <div :class="maxHeight?'tab-content':''">
-                                <div  v-html="item.content"></div>
-                            </div>
-                        </a-col>
-                    </a-row>
-                </a-tab-pane>
-            </a-tabs> 
-        </div>
-        <div v-else>
-            <div></div>
-        </div>
-        </a-skeleton>
+    <div v-if="data.length">
+        <a-tabs :defaultActiveKey='data[0].id' size="large">
+            <a-tab-pane v-for="item in data" :tab="item.title" :key="item.id">
+                <a-row>
+                    <a-col v-if="item.cover" :xs='24' :sm='24' :md='10' :lg='10' :xl='10'>
+                        <div class="tab-cover" >
+                            <div :style="{ backgroundImage: 'url('+item.cover+')'}" :title="item.title"></div>        
+                        </div>
+                    </a-col>
+                    <a-col v-if="item.cover" :xs='24' :sm='24' :md='14' :lg='14' :xl='14'>
+                        <div :class="maxHeight?'tab-content':''">
+                            <div  v-html="item.content"></div>
+                        </div>
+                    </a-col>
+                    <a-col v-else :span='24'>
+                        <div :class="maxHeight?'tab-content':''">
+                            <div  v-html="item.content"></div>
+                        </div>
+                    </a-col>
+                </a-row>
+            </a-tab-pane>
+        </a-tabs> 
+    </div>
+    <div v-else>
+        <div></div>
     </div>
 </template>
 <script>
     export default {
         name: 'Info',
-        data() {
-            return {
-                skeletonLoading:true,
-            }
-        },
-        created(){
-           this.skeletonLoading=false;
-        },
         props:{
                 data: {
                     type: Array,

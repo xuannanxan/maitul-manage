@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-03 21:54:23
+ * @LastEditTime: 2020-03-04 01:12:13
  * @LastEditors: Xuannan
  -->
 <template>
@@ -50,7 +50,6 @@
         :dataSource="data"
         >         
             <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-skeleton :loading="skeletonLoading" active avatar>
                 <a-list-item-meta>
                     <nuxt-link :to="{path:item.category_url+'detail/'+item.id}" slot="title" class= "list-title">
                     {{item.title}}
@@ -87,11 +86,6 @@
     export default {
         name: 'ArticleList',
         components:{Tags},
-        data() {
-            return {
-                skeletonLoading:true,
-            }
-        },
         methods: {
             onSearch(value) {
                 this.$router.push(this.$route.path+'?search='+value)    
@@ -107,9 +101,6 @@
                 return originalElement;
             },
         },  
-        created(){
-           this.skeletonLoading=false;
-        },
         props:{
             data: {
                 type: Array,

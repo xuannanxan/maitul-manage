@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-25 21:47:30
+ * @LastEditTime: 2020-03-03 23:33:48
  * @LastEditors: Xuannan
  -->
 <template>
@@ -17,7 +17,7 @@
         <a-divider type="vertical" v-if="webconfig.email && webconfig.weixin"/>
         <a-popover placement="bottomRight" trigger="click" v-if="webconfig.weixin">
             <template slot="content">
-            <img :src="webconfig.weixin" alt="wechat" title="wechat" style="width:60px">
+            <img :src="webconfig.weixin" alt="wechat" title="wechat" style="width:150px">
             </template>
             <a-icon type="wechat" />
         </a-popover>

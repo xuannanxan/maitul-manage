@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-28 21:14:19
+ * @LastEditTime: 2020-03-03 23:34:47
  * @LastEditors: Xuannan
  -->
 <template>
@@ -27,7 +27,7 @@
         </a-tooltip>
         <a-popover placement="left" trigger="click" v-if="webconfig.weixin">
             <template slot="content">
-            <img :src="webconfig.weixin" alt="wechat" title="wechat" style="width:60px">
+            <img :src="webconfig.weixin" alt="wechat" title="wechat" style="width:150px">
             </template>
             <div class="right-btn"><a-icon type="wechat" /></div>
         </a-popover>

@@ -2,45 +2,35 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-03-02 20:47:18
+ * @LastEditTime: 2020-03-04 21:06:09
  * @LastEditors: Xuannan
  -->
 <template>
-    <a-spin v-if="banner.length" :spinning="spinning" size="large" tip="Loading...">
-        <a-carousel arrows>
-            <div
-            slot="prevArrow"
-            slot-scope="props"
-            class="custom-slick-arrow"
-            style="left: 1.5rem;zIndex: 1"
-            >
-            <a-icon type="left" />
+    <a-carousel arrows :style="{ backgroundImage: 'url('+(banner.length?banner[0].img:'')+')'}">
+        <div
+        slot="prevArrow"
+        slot-scope="props"
+        class="custom-slick-arrow"
+        style="left: 1.5rem;zIndex: 1"
+        >
+        <a-icon type="left" />
+        </div>
+        <div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 1.5rem">
+        <a-icon type="right" />
+        </div>
+            <div v-for="item in banner" :key="item.id" class='banner' :style="{ backgroundImage: 'url('+item.img+')'}">
+                <div class='shade'> </div>
+                <div class='info'>
+                    <h1>{{item.name}}</h1>
+                    <p>{{item.info}}</p>
+                    <a-button  target="_blank" :href="item.url" type="primary">Learn More</a-button>
+                </div>        
             </div>
-            <div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 1.5rem">
-            <a-icon type="right" />
-            </div>
-                <div v-for="item in banner" :key="item.id" class='banner' :style="{ backgroundImage: 'url('+item.img+')'}">
-                    <div class='shade'> </div>
-                    <div class='info'>
-                        <h1>{{item.name}}</h1>
-                        <p>{{item.info}}</p>
-                        <a-button  target="_blank" :href="item.url" type="primary" size='large'>Learn More</a-button>
-                    </div>
-                </div>
-        </a-carousel>
-    </a-spin>
+    </a-carousel>
 </template>
 <script>
     import {mapState} from 'vuex'
     export default {
-        data() {
-            return {
-                spinning: true,
-            }
-        },
-        mounted(){
-            this.spinning=false;
-        },
         name: 'Banner',
         computed:mapState(["banner"]),
     };
@@ -48,6 +38,12 @@
 <style  lang="less" scoped>
     .ant-carousel {   
         line-height: 0;
+        overflow: hidden;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        position: relative;
+        background-color: rgba(0, 0, 0, 0.35);
        .custom-slick-arrow {
             width: 2rem;
             height: 2rem;
@@ -103,11 +99,9 @@
     @media only screen and (max-width:750px),
     only screen and (max-device-width:750px) {
         .banner{
-            height: 10rem;
-            line-height: 10rem;
+            height: 8rem;
             .info{
-                margin-top:.2rem;
-                padding-left: 4rem;
+                display: none;
             }
         }
         
