@@ -1,6 +1,13 @@
 <!--
  * @Description: 
  * @Author: Xuannan
+ * @Date: 2020-02-18 19:31:34
+ * @LastEditTime: 2020-03-04 21:15:50
+ * @LastEditors: Xuannan
+ -->
+<!--
+ * @Description: 
+ * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
  * @LastEditTime: 2020-02-19 16:23:12
  * @LastEditors: Xuannan
@@ -16,13 +23,11 @@
                 <div>相关推荐...</div>
             </div>           
             <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-skeleton :loading="skeletonLoading" :title="false" active>
                 <a-list-item-meta>
                     <nuxt-link :to="{path:'/detail/'+item.id}" slot="description" class= "list-title">
                     {{item.title}}
                     </nuxt-link>
                 </a-list-item-meta>
-                </a-skeleton>
             </a-list-item>
         </a-list>
     </div>
@@ -31,20 +36,6 @@
     import {mapState} from 'vuex'
     export default {
         name: 'RightList',
-        data() {
-            return {
-                skeletonLoading:true,
-            }
-        }, 
-        mounted(){
-           this.skeletonLoading=false;
-        },
-        beforeUpdate() {
-            this.skeletonLoading=true;
-        },
-        updated() {
-            this.skeletonLoading=false;
-        },
         computed:mapState(["contentList"])
     }
 </script>

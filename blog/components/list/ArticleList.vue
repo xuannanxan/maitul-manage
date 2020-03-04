@@ -27,7 +27,6 @@
                 <div v-else>最新文章</div>
             </div>           
             <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-skeleton :loading="skeletonLoading" active avatar>
                 <a-list-item-meta>
                     <nuxt-link :to="{path:'/detail/'+item.id}" slot="title" class= "list-title">
                     {{item.title}}
@@ -53,7 +52,6 @@
                         <div>{{item.description}}</div>
                     </div>
                 </a-list-item-meta>
-                </a-skeleton>
             </a-list-item>
         </a-list>
         <a-pagination 
@@ -70,7 +68,6 @@
         data() {
             return {
                 tagColor:['magenta','red','volcano','orange','gold','lime','green','cyan','blue','geekblue','purple'],
-                skeletonLoading:true,
             }
         },
         methods: {
@@ -85,15 +82,6 @@
                 return originalElement;
             },
         },  
-        mounted(){
-           this.skeletonLoading=false;
-        },
-        beforeUpdate() {
-            this.skeletonLoading=true;
-        },
-        updated() {
-            this.skeletonLoading=false;
-        },
         props:["data","paginate","tag","search","category"]
     }
 </script>

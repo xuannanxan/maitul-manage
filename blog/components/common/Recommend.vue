@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-19 18:33:29
+ * @LastEditTime: 2020-03-04 21:14:47
  * @LastEditors: Xuannan
  -->
 <template>
@@ -15,7 +15,6 @@
                 <div>相关推荐...</div>
             </div>           
             <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-skeleton :loading="skeletonLoading" active avatar>
                 <a-list-item-meta>
                     <nuxt-link :to="{path:'/detail/'+item.id}" slot="title" class= "list-title">
                     {{item.title}}
@@ -41,7 +40,6 @@
                         <div>{{item.description}}</div>
                     </div>
                 </a-list-item-meta>
-                </a-skeleton>
             </a-list-item>
         </a-list>
     </div>
@@ -53,7 +51,6 @@
         data() {
             return {
                 tagColor:['magenta','red','volcano','orange','gold','lime','green','cyan','blue','geekblue','purple'],
-                skeletonLoading:true,
             }
         },
         methods: {
@@ -68,15 +65,6 @@
                 return originalElement;
             },
         },  
-        mounted(){
-           this.skeletonLoading=false;
-        },
-        beforeUpdate() {
-            this.skeletonLoading=true;
-        },
-        updated() {
-            this.skeletonLoading=false;
-        },
         computed:mapState(["contentList"])
     }
 </script>

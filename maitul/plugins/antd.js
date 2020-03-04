@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:26:57
- * @LastEditTime: 2020-02-27 09:18:07
+ * @LastEditTime: 2020-03-04 21:36:00
  * @LastEditors: Xuannan
  */
 
@@ -11,11 +11,9 @@ import '../assets/css/style.less';
 
 
 import { 
-    Affix,
-    Skeleton,    
+    Affix, 
     Avatar,
     Layout,
-    LocaleProvider,
     Menu,
     Icon,
     Button,
@@ -26,7 +24,6 @@ import {
     Row,
     Col,
     Carousel ,
-    Spin ,
     Tag ,
     Pagination,
     Tooltip,
@@ -55,8 +52,6 @@ Vue.use(Layout)
 Vue.use(Breadcrumb)
 Vue.use(Menu)
 Vue.use(Icon)
-Vue.use(Skeleton)
-Vue.use(Spin)
 Vue.use(Tooltip)
 Vue.use(Popover)
 Vue.use(Affix)

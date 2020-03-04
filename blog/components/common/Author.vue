@@ -2,11 +2,10 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 14:26:44
- * @LastEditTime: 2020-02-16 14:26:45
+ * @LastEditTime: 2020-03-04 21:15:13
  * @LastEditors: Xuannan
  -->
 <template>
-    <a-spin  :spinning="spinning" size="large" tip="Loading...">
         <div class='user-div'>
             <div> 
                 <a-avatar :size="100" v-if="webconfig.blogAvatar" :src="webconfig.blogAvatar"/>
@@ -33,17 +32,11 @@
                 </a-popover>
             </div>
         </div> 
-    </a-spin>
 </template>
 <script>
     import {mapState} from 'vuex'
     export default {
         name: 'Author',
-        data() {
-            return {
-                spinning: true,
-            }
-        },
         created() {
             if(this.webconfig && Object.keys(this.webconfig).length > 0){
                 this.spinning=false;

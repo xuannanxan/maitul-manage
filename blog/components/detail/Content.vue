@@ -2,11 +2,10 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-02-19 18:32:43
+ * @LastEditTime: 2020-03-04 21:16:52
  * @LastEditors: Xuannan
  -->
 <template>
-    <a-skeleton :loading="skeletonLoading" :title="false" active>
         <div>
             <a-empty class="no-content" v-if="Object.keys(data).length===0">
                 <span slot="description">
@@ -40,9 +39,6 @@
                 
                 
         </div>
-        
-    </a-skeleton>
-
 </template>
 <script>
     export default {
@@ -50,12 +46,7 @@
         data() {
             return {
                 tagColor:['magenta','red','volcano','orange','gold','lime','green','cyan','blue','geekblue','purple'],
-                skeletonLoading:true,
             }
-        },
-
-        mounted(){
-           this.skeletonLoading=false;
         },
         props:["data"]
     }

@@ -1,21 +1,11 @@
 <template>
-    <a-spin class="right-ad" :spinning="spinning" size="large" tip="Loading...">
-        <div :style="{ backgroundImage:'url('+ad.img+')'}" >
+        <div class="right-ad" :style="{ backgroundImage:'url('+ad.img+')'}" >
             <a-button type="link" :href="ad.url" target="_blank">{{ad.name}}</a-button>
         </div>
-    </a-spin>
 </template>
 <script>
     export default {
         name: 'Author',
-        data() {
-            return {
-                spinning: true,
-            }
-        },
-        created() {
-            this.spinning=false;
-        },
         props:["ad"]
     };
 </script>
