@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:14:35
-@LastEditTime: 2020-03-03 20:04:44
+@LastEditTime: 2020-03-05 14:46:23
 @LastEditors: Xuannan
 '''
 
@@ -34,7 +34,7 @@ def init_api(app):
 
 def app_log(app):
     log_dir_name = "logs"
-    log_file_name = 'logger-' + time.strftime('%Y-%m-%d', time.localtime(time.time())) + '.log'
+    log_file_name = 'logger-' + time.strftime('%Y-%m', time.localtime(time.time())) + '.log'
     log_file_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)) + os.sep + log_dir_name
     make_dir(log_file_folder)
     log_file_str = log_file_folder + os.sep + log_file_name

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-27 09:09:07
- * @LastEditTime: 2020-03-02 21:48:32
+ * @LastEditTime: 2020-03-05 22:29:24
  * @LastEditors: Xuannan
  -->
 <template>
@@ -47,13 +47,13 @@
     </a-form-item>
     <a-form-item>
         <a-textarea
+        style="font-size:16px"
         placeholder="Please input your message"
-        v-decorator="['info']"
+        v-decorator="['info', { initialValue: '' }]"
         :autosize="{ minRows: 2, maxRows: 2 }"
         />
     </a-form-item>
     <a-form-item>
-
       <a-button type="primary" size="large" html-type="submit" class="floatLeft" :loading="loading">
         Inquiry Now
       </a-button>
