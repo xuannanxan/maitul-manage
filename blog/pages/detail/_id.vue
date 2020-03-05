@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 19:34:49
- * @LastEditTime: 2020-02-19 16:36:56
+ * @LastEditTime: 2020-03-05 22:51:27
  * @LastEditors: Xuannan
  -->
 <template>
@@ -24,11 +24,6 @@
                         <Recommend/>
                     </div>
                 </a-col>
-                <a-col :span="24">
-                    <a-layout-footer style="text-align: center">
-                        {{webconfig.siteFoot?webconfig.siteFoot:'My blog'}}
-                    </a-layout-footer>
-                </a-col>
             </a-col>
             <a-col :xs='0' :sm='0' :md='6' :lg='6' :xl='6'>
                 <div class="main right" v-for="item in rightAd" :key="item.id">
@@ -43,9 +38,11 @@
                     </div>
                 </a-affix>
             </a-col>
-
         </a-row>
         </a-layout-content>
+        <a-layout-footer style="text-align: center">
+            {{webconfig.siteFoot?webconfig.siteFoot:'My blog'}}
+        </a-layout-footer>
     </a-layout>
 </template>
 <script>

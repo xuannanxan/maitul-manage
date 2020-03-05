@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 19:34:49
- * @LastEditTime: 2020-02-28 14:18:14
+ * @LastEditTime: 2020-03-05 22:50:47
  * @LastEditors: Xuannan
  -->
 <template>
@@ -22,9 +22,6 @@
                 :search="search"
                 :category="category"/>
             </div>
-            <a-layout-footer style="text-align: center">
-                {{webconfig.siteFoot?webconfig.siteFoot:'My blog'}}
-            </a-layout-footer>
             </a-col>
             <a-col :xs='0' :sm='0' :md='6' :lg='6' :xl='6'>
                 <div class="main right" v-for="item in rightAd" :key="item.id">
@@ -41,6 +38,9 @@
             </a-col>
         </a-row>
         </a-layout-content>
+        <a-layout-footer style="text-align: center">
+            {{webconfig.siteFoot?webconfig.siteFoot:'My blog'}}
+        </a-layout-footer>
     </a-layout>
 </template>
 <script>
