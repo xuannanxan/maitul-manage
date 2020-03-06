@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 10:03:49
-@LastEditTime: 2020-03-06 21:49:57
+@LastEditTime: 2020-03-07 01:53:28
 @LastEditors: Xuannan
 '''
 # -*- coding: utf-8 -*- 
@@ -78,6 +78,6 @@ class Config(object):
 
 config  = {
     'dev' :Config('dev'),
-    'produce':Config,
+    'produce':Config(),
     'default':Config('dev'),
 }
