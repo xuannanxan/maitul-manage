@@ -4,26 +4,26 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-21 10:12:25
-@LastEditTime : 2020-02-02 18:34:07
-@LastEditors  : Xuannan
+@LastEditTime: 2020-03-07 00:31:28
+@LastEditors: Xuannan
 '''
 
 
 from flask_mail import Message
 from app.ext import mail
-from app.config import envs
+from app.config import config
 from threading import Thread
 from concurrent.futures import ThreadPoolExecutor
 import os
 
 executor = ThreadPoolExecutor(2)
 
-env = os.environ.get('FLASK_ENV','dev')
-config = envs.get(env)
+config_name = os.environ.get('FLASK_ENV','dev')
+mailConfig = config.get(config_name)
 class SendMail():
-    def __init__(self,subject='',text_body='',html_body='',recipients = [config.MAIL_ASYNC_RECIPIENTS]):
+    def __init__(self,subject='',text_body='',html_body='',recipients = [mailConfig.MAIL_ASYNC_RECIPIENTS]):
         self.subject = subject
-        self.sender = config.MAIL_DEFAULT_SENDER
+        self.sender = mailConfig.MAIL_DEFAULT_SENDER
         self.recipients = recipients
         self.text_body = text_body
         self.html_body = html_body

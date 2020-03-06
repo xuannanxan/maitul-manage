@@ -6,8 +6,7 @@
  * @LastEditors: Xuannan
  -->
 <template>
-    <div>
-          
+    <div> 
       <a-row>
         <a-col :xs='0' :sm='0' :md='24' :lg='24' :xl='24'>
           <div class="topbar">

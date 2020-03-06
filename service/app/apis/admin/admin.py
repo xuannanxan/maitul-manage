@@ -323,7 +323,7 @@ class AdminLogin(Resource):
         if not admin.check_pwd(password):
             abort(RET.Unauthorized,msg='用户名或密码错误')
         token = Auth.encode_auth_token(admin.id)
-        cache.set(admin.id,token,timeout=60*60*7)
+        cache.set(admin.id,token,timeout=60*60*8)
         # 记录登陆日志
         admin_log = AdminLog()
         admin_log.username = admin.username

@@ -2,18 +2,35 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-02-20 23:36:20
+ * @LastEditTime: 2020-03-06 19:09:47
  * @LastEditors: Xuannan
  -->
 <template>
     <a-layout-header class="header">
       <a-row>
         <a-col :xs='21' :sm='21' :md='6' :lg='6' :xl='6'>
-          <nuxt-link to="/" class="logo">
-            <div >{{webconfig.siteName?webconfig.siteName:'My Blog'}}
-              <p> {{webconfig.siteSlogan?webconfig.siteSlogan:'This is my blog'}}</p>
+<div class="logo">
+              <nuxt-link to="/">
+                <img 
+                v-if="webconfig.siteLogo" 
+                :src="webconfig.siteLogo" 
+                :alt="webconfig.siteName?webconfig.siteName:'Qz-n'"
+                :title="webconfig.siteName?webconfig.siteName:'Qz-n'">
+                <img 
+                v-else
+                src="~assets/images/logo.png" 
+                :alt="webconfig.siteName?webconfig.siteName:'Qz-n'"
+                :title="webconfig.siteName?webconfig.siteName:'Qz-n'">
+              </nuxt-link> 
+              <a-divider type="vertical" />
+              <nuxt-link to="/">
+                <div class="title">
+                  <div>{{webconfig.siteName?webconfig.siteName:'Qz-n blog'}}</div>
+                  <span> {{webconfig.siteSlogan?webconfig.siteSlogan:'This is Qz-n blog'}}</span>
+                </div>
+                
+              </nuxt-link> 
             </div>
-          </nuxt-link>
           
         </a-col>     
         <a-col :xs='0' :sm='0' :md='12' :lg='12' :xl='12'>
@@ -99,15 +116,23 @@
     position:fixed;
     z-index:99;
     width: 100%;
-    .logo {
-      color: #00c58e;
+    .logo{
       float: left;
-      font-size: 1.5rem;
-      line-height: 42px;
-      p{
-        color: #ccc;
-        font-size: .8rem;
-        line-height: 100%;
+      img{
+        width: 2.5rem;
+      }
+      .title {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 180%;
+        div{
+          font-size: 1.6rem;
+        }
+        span{
+          color: rgba(0, 0, 0, 0.45);
+          font-size: .8rem;
+        }
       }
     }
     .menu{

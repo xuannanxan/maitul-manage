@@ -1,8 +1,18 @@
+#!/usr/bin/env python
+# coding=utf-8
+'''
+@Description: 
+@Author: Xuannan
+@Date: 2019-12-08 10:03:49
+@LastEditTime: 2020-03-06 21:49:57
+@LastEditors: Xuannan
+'''
 # -*- coding: utf-8 -*- 
 # Created by xuannan on 2019-01-02.
 import os
 from redis import Redis
-from app.secret import secret
+from app.secret import secret as sec
+import logging
 # 自定义变量
 # 文件上传的位置
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -11,98 +21,63 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static/uploads')
 WATER_MARK = os.path.join(BASE_DIR, 'static/watermark.png')
 # 每页的数量
 PAGINATE_NUM = 10
-# 允许跨域地址
-ACCESS_ORIGIN = '*'
-# 允许跨域请求的方法
-ACCESS_METHODS = 'GET,POST'
-# 设置redis的ip,port,有效时间
-REDIS_HOST = "127.0.0.1"
-REDIS_PORT = "6379"
-REDIS_DB= 0
+
+
 # 通用配置
-class config:
+class Config(object):
     DEBUG = False
     TESTING = False
+    LOG_LEVEL = logging.INFO
     #允许的文件格式
     FILE_EXTENSIONS = set(['txt', 'pdf','rar', 'zip','doc', 'docx','xls', 'xlsx', 'ppt', 'pptx','db','png', 'jpg', 'jpeg', 'gif'])
     IMAGE_EXTENSIONS = set([ 'png', 'jpg', 'jpeg', 'gif'])
     #图片大小
     MAX_CONTENT_LENGTH = 8 * 1024 * 1024
-
-    #设置CACHE
-    CACHE_TYPE = 'redis'
-    CACHE_REDIS_HOST = REDIS_HOST
-    CACHE_REDIS_PORT = REDIS_PORT
-    CACHE_DEFAULT_TIMEOUT = 300
-
-    # 设置session
-    SESSION_TYPE = 'redis'
-    SESSION_PERMANENT = True  # 如果设置为True，则关闭浏览器session就失效
-    SESSION_USE_SIGNER = True # 是否对发送到浏览器上 session:cookie值进行加密
     # 数据库配置
-    # 数据库公用配置
     # 无警告
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # 自动提交
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True    
-
     # 发邮件 配置
-    MAIL_USE_SSL = True
     MAIL_SUPPRESS_SEND = False
     MAIL_PORT = 465
     MAIL_USE_TLS = False   
-    MAIL_PROT = 465,
-    MAIL_USE_TLS = False
     MAIL_USE_SSL = True
     MAIL_DEBUG = False
-    
+    def __init__(self,config_name='produce'):
+        if config_name=='dev':
+            self.MAIL_DEBUG = True
+            self.DEBUG = True
+            self.LOG_LEVEL = logging.DEBUG
+        secret = sec(config_name)
+        self.SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format(
+            'mysql', 
+            'pymysql',
+            secret.get('DB_USERNAME'),
+            secret.get('DB_PASSWORD'),
+            secret.get('DB_HOST'), 
+            secret.get('DB_PORT'),
+            secret.get('DB_DATABASE'))
+        self. MAIL_SERVER = secret.get('MAIL_SERVER') 
+        self.MAIL_USERNAME = secret.get('MAIL_USERNAME')
+        self.MAIL_DEFAULT_SENDER =secret.get('MAIL_USERNAME')
+        self.MAIL_ASYNC_RECIPIENTS = secret.get('MAIL_ASYNCNAME') 
+        self.MAIL_PASSWORD = secret.get('MAIL_PASSWORD') 
+        self.SECRET_KEY=secret.get('SECRET_KEY') 
+        #设置CACHE
+        self.CACHE_TYPE = 'redis'
+        self.CACHE_REDIS_HOST = secret.get('REDIS_HOST')
+        self.CACHE_REDIS_PORT = secret.get('REDIS_PORT')
+        self.CACHE_REDIS_PASSWORD = secret.get('REDIS_PASSWORD') 
+        self.CACHE_DEFAULT_TIMEOUT = 300
+        # 设置session
+        self.SESSION_TYPE = 'redis'
+        self.SESSION_PERMANENT = True  # 如果设置为True，则关闭浏览器session就失效
+        self.SESSION_USE_SIGNER = True # 是否对发送到浏览器上 session:cookie值进行加密
+        self.SESSION_REDIS=  Redis(host=secret.get('REDIS_HOST'), port=secret.get('REDIS_PORT'), password= secret.get('REDIS_PASSWORD') ,db=secret.get('REDIS_DB'))
 
-class Dev(config):
-    DEBUG = True
-    MAIL_DEBUG = True
-    # 密码信息
-    secret = secret('dev')
-    ENGINE = 'mysql'  # 要用的什么数据库
-    DRIVER = 'pymysql'  # 连接数据库驱动
-    USERNAME = secret.get('DB_USERNAME')  # 用户名
-    PASSWORD = secret.get('DB_PASSWORD')   # 密码
-    HOST = secret.get('DB_HOST')   # 服务器
-    PORT = secret.get('DB_PORT')  # 端口
-    DATABASE = secret.get('DB_DATABASE')  # 数据库名
-    SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format(ENGINE, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
-    MAIL_SERVER = secret.get('MAIL_SERVER') 
-    MAIL_USERNAME = secret.get('MAIL_USERNAME')
-    MAIL_DEFAULT_SENDER =secret.get('MAIL_USERNAME')
-    MAIL_ASYNC_RECIPIENTS = secret.get('MAIL_ASYNCNAME') 
-    MAIL_PASSWORD = secret.get('MAIL_PASSWORD') 
-    SECRET_KEY=secret.get('SECRET_KEY') 
-    REDIS_PASSWORD = secret.get('REDIS_PASSWORD') 
-    CACHE_REDIS_PASSWORD = REDIS_PASSWORD
-    SESSION_REDIS=  Redis(host=REDIS_HOST, port=REDIS_PORT, password= REDIS_PASSWORD,db = REDIS_DB)
-
-class Produce(config):
-    # 密码信息
-    secret = secret('produce')
-    ENGINE = 'mysql'  # 要用的什么数据库
-    DRIVER = 'pymysql'  # 连接数据库驱动
-    USERNAME = secret.get('DB_USERNAME')  # 用户名
-    PASSWORD = secret.get('DB_PASSWORD')   # 密码
-    HOST = secret.get('DB_HOST')   # 服务器
-    PORT = secret.get('DB_PORT')  # 端口
-    DATABASE = secret.get('DB_DATABASE')  # 数据库名
-    SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8".format(ENGINE, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
-    MAIL_SERVER = secret.get('MAIL_SERVER') 
-    MAIL_USERNAME = secret.get('MAIL_USERNAME')
-    MAIL_DEFAULT_SENDER =secret.get('MAIL_USERNAME')
-    MAIL_ASYNC_RECIPIENTS = secret.get('MAIL_ASYNCNAME') 
-    MAIL_PASSWORD = secret.get('MAIL_PASSWORD') 
-    SECRET_KEY=secret.get('SECRET_KEY') 
-    REDIS_PASSWORD = secret.get('REDIS_PASSWORD') 
-    CACHE_REDIS_PASSWORD = REDIS_PASSWORD
-    SESSION_REDIS=  Redis(host=REDIS_HOST, port=REDIS_PORT, password= REDIS_PASSWORD,db = REDIS_DB)
-
-envs = {
-    'dev' :Dev,
-    'produce':Produce,
-    'default':Dev
+config  = {
+    'dev' :Config('dev'),
+    'produce':Config,
+    'default':Config('dev'),
 }

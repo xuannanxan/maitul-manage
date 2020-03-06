@@ -2,11 +2,11 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-22 19:25:04
- * @LastEditTime: 2020-02-20 23:15:21
+ * @LastEditTime: 2020-03-07 01:34:26
  * @LastEditors: Xuannan
  */
 
-import React, { useState,useEffect ,useReducer } from 'react';
+import React, { useState,useEffect  } from 'react';
 import {_configList,_fileUpload,_webconfigEdit} from '../../utils/api'
 import Editor from '../components/Editor'
 import {webSites} from '../config'
@@ -21,43 +21,41 @@ const WebConfigForm = (props)=>{
     const [loading,setLoading] = useState(false)
     const [confList,setConfList] = useState([])
     const [activeTab,setActiveTab] = useState('')
-    const [imgObj, uploadImg] = useReducer((state, e) => {
-        setLoading(true)
-        let formData=new FormData();
+    const [imgObj,setImgObj] = useState({})
+    const uploadImg = (e)=>{
         if(e.file){
+            setLoading(true)
+            let formData=new FormData();
             formData.append('file',e.file)
             _fileUpload(formData).then(res=>{
                 if (res.data.status===200){
-                    const obj = {}
-                    state[e.filename] = res.data.path
+                    const obj = {...imgObj}
                     obj[e.filename] = res.data.path
+                    setImgObj(obj)
                     form.setFieldsValue(obj)
                 }
             })
+            setLoading(false)
         }else{
-            for (var i in e) {
-                state[i] = e[i]
-            }
+            message.error('请上传文件!');
         }
-        setLoading(false)
-        return state;
-      }, {});
-
+    } 
     const initData = ()=>{
         setIsLoading(true)
         let activeId = ''
         activeId = webSites[0].site
         setActiveTab(activeId)
         _configList().then(res=>{
+            const obj = {}
             for (var i in res.data.data) {
                 res.data.data[i].forEach(item=>{
                     if(item.fieldType === 'ImgUpload'){
-                        let obj = {}
                         obj[item.site+'|'+item.ename] = item.value
-                        uploadImg(obj)
                     }
                 })
             }
+            console.log(obj)
+            setImgObj(obj)
             setConfList(res.data.data)
         })
         setTimeout(()=>{
@@ -91,11 +89,11 @@ const WebConfigForm = (props)=>{
         if (!isJpgOrPng) {
           message.error('只能上传JPG/PNG文件!');
         }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isLt2M) {
-          message.error('图片不能超过2MB!');
+        const isLt1M = file.size / 1024 / 1024 < 1;
+        if (!isLt1M) {
+          message.error('图片不能超过1MB!');
         }
-        return isJpgOrPng && isLt2M;
+        return isJpgOrPng && isLt1M;
       }  
     useEffect(()=>{
     initData()

@@ -51,10 +51,10 @@ def _verify():
     g.admin = admin
     # g.auth = token
     # 超过30分钟就要重新获取token
-    if (datetime.datetime.strptime(token_time, "%Y-%m-%d %H:%M:%S")+datetime.timedelta(minutes=30))<now_time:
+    if (datetime.datetime.strptime(token_time, "%Y-%m-%d %H:%M:%S")+datetime.timedelta(minutes=60*8))<now_time:
         cache.delete(token) 
         new_token = Auth.encode_auth_token(admin.id)
-        cache.set(admin.id,new_token,timeout=60*60*7)
+        cache.set(admin.id,new_token,timeout=60*60*8)
         data = {
             'status':RET.RESETOKEN,
             'token':new_token
