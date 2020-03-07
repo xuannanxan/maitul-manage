@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-04 21:35:50
+ * @LastEditTime: 2020-03-07 10:13:35
  * @LastEditors: Xuannan
  -->
 <template>
@@ -74,7 +74,7 @@
     computed:mapState(["webconfig",'about']),
     head () {
       return {
-        title: this.webconfig.siteName?this.webconfig.siteName:'Maitul.com',
+        title: this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com'),
         meta: [
           { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul' },
           { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul' }

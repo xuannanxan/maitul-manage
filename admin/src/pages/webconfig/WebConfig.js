@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-22 19:25:04
- * @LastEditTime: 2020-03-07 01:34:26
+ * @LastEditTime: 2020-03-07 11:09:15
  * @LastEditors: Xuannan
  */
 
@@ -54,7 +54,6 @@ const WebConfigForm = (props)=>{
                     }
                 })
             }
-            console.log(obj)
             setImgObj(obj)
             setConfList(res.data.data)
         })

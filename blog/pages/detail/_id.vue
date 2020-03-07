@@ -63,8 +63,10 @@
         components:{Header,Author,RightAd,ArticleList,Content,Recommend,Tags},
         computed:mapState(["rightAd","webconfig"]),
         head () {
+            const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'My blog')
+            const pageTitle = contenData.content.title?'|'+contenData.content.title:''
             return {
-                title: (this.webconfig.siteName?this.webconfig.siteName:'My blog')+(contenData.content.title?'|'+contenData.content.title:''),
+                title: siteTitle+pageTitle,
                 meta: [
                 { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'My blog')+(contenData.content.keywords?','+contenData.content.keywords:'') },
                 { hid: 'description', name: 'description', content: contenData.content.description?contenData.content.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'' }

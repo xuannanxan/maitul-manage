@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 19:34:49
- * @LastEditTime: 2020-03-05 22:50:47
+ * @LastEditTime: 2020-03-07 11:05:39
  * @LastEditors: Xuannan
  -->
 <template>
@@ -69,8 +69,12 @@
         components:{Header,Author,RightAd,ArticleList,Tags},
         computed:mapState(["rightAd","webconfig"]),
         head () {
+            const search = this.$route.query.search?'|'+this.$route.query.search:'';
+            const tag = this.$route.query.tag?'|'+this.$route.query.tag:'';
+            const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'My blog')
+            const pageTitle = contenList.category.name?'|'+contenList.category.name:''
             return {
-                title: (this.webconfig.siteName?this.webconfig.siteName:'My blog')+(contenList.category.name?'|'+contenList.category.name:''),
+                title: siteTitle+pageTitle+search+tag,
                 meta: [
                 { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'My blog')+(contenList.category.keywords?','+contenList.category.keywords:'') },
                 { hid: 'description', name: 'description', content: contenList.category.description?contenList.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'' }

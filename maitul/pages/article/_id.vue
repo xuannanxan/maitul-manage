@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-02 13:29:36
+ * @LastEditTime: 2020-03-07 10:46:44
  * @LastEditors: Xuannan
  -->
 <template>
@@ -58,8 +58,12 @@
     components:{Header,Footer,ArticleList,Contact,RightContact},
     computed:mapState(["webconfig"]),
     head () {
+        const search = this.$route.query.search?'|'+this.$route.query.search:'';
+        const tag = this.$route.query.tag?'|'+this.$route.query.tag:'';
+        const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com')
+        const pageTitle = articleData.category.name?'|'+articleData.category.name:''
         return {
-            title: (this.webconfig.siteName?this.webconfig.siteName:'Maitul.com')+(articleData.category.name?'|'+articleData.category.name:''),
+            title: siteTitle+pageTitle+search+tag,
             meta: [
             { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul')+(articleData.category.keywords?','+articleData.category.keywords:'') },
             { hid: 'description', name: 'description', content: articleData.category.description?articleData.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul'  }

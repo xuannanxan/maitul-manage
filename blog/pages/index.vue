@@ -68,7 +68,7 @@
     computed:mapState(["rightAd","webconfig"]),
     head () {
       return {
-        title: this.webconfig.siteName?this.webconfig.siteName:'My blog',
+        title: this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'My blog'),
         meta: [
           { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:'My blog' },
           { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:'My blog' }
