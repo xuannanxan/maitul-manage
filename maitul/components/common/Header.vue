@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-03 22:55:15
+ * @LastEditTime: 2020-03-07 18:59:06
  * @LastEditors: Xuannan
  -->
 <template>
@@ -22,7 +22,7 @@
       <a-row>
         <a-affix :offsetTop="0">
         <a-layout-header class="header">
-          <a-col :xs='21' :sm='21' :md='6' :lg='4' :xl='4'>
+          <a-col :xs='21' :sm='21' :md='8' :lg='6' :xl='4'>
             <div class="logo">
               <nuxt-link to="/">
                 <img 
@@ -44,7 +44,7 @@
               </nuxt-link> 
             </div>
           </a-col>     
-          <a-col :xs='0' :sm='0' :md='14' :lg='16' :xl='14' style="text-align:right">
+          <a-col :xs='0' :sm='0' :md='12' :lg='14' :xl='14' style="text-align:right">
             <a-menu
               mode="horizontal"
               :defaultSelectedKeys="currentCategory"
@@ -52,11 +52,11 @@
               :selectedKeys="currentCategory"
             >
             <a-menu-item :key="'home'">
-              <nuxt-link to="/" ><a-icon type="home" />Home</nuxt-link>
+              <nuxt-link to="/" ><a-icon type="home" :style="{ fontSize: '16px'}"/>Home</nuxt-link>
             </a-menu-item>
             <template v-for="item in category">
               <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                <nuxt-link :to="{path:item.url+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
+                <nuxt-link :to="{path:item.url+item.id}"><a-icon :type="item.icon" :style="{ fontSize: '16px'}"/>{{item.name}}</nuxt-link>
               </a-menu-item>
               <sub-menu v-else :menu-info="item" :key="item.id" />
             </template>
