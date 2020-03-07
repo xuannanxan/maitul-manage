@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-04 21:16:52
+ * @LastEditTime: 2020-03-07 18:06:45
  * @LastEditors: Xuannan
  -->
 <template>
@@ -34,7 +34,7 @@
                         <nuxt-link :to="{path:'/list?tag='+item}">{{item}}</nuxt-link>
                     </a-tag>
                 </div>
-                <div class="detail-content" v-html="data.content">{{data.content}}</div>
+                <div class="detail-content" v-html="data.content"></div>
             </div>
                 
                 

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 14:26:44
- * @LastEditTime: 2020-03-04 21:15:13
+ * @LastEditTime: 2020-03-07 18:07:48
  * @LastEditors: Xuannan
  -->
 <template>
@@ -12,7 +12,7 @@
                 <img class="weixin" v-else src="~/assets/images/user.png"/>
             </div>
             <div class="user-introduction">
-                {{webconfig.blogAuthor}}
+                <div  v-html="webconfig.blogAuthor"></div>
                 <a-divider>社交账号</a-divider>
                 <a-tooltip placement="topLeft" trigger="hover">
                     <template slot="title">
