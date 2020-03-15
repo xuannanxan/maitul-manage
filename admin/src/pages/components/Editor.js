@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-21 19:54:46
- * @LastEditTime : 2020-01-29 23:04:41
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-03-07 20:50:20
+ * @LastEditors: Xuannan
  */
 import React, { useRef,useEffect } from 'react';
 import E from 'wangeditor'
@@ -71,7 +71,7 @@ const  Editor = React.forwardRef((props,ref)=>{
       if(value){
         editor.txt.html(value)
       }
-    },[onChange, value])
+    },[])
 
     
     return (

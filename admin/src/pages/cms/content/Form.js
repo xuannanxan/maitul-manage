@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-14 17:40:02
- * @LastEditTime: 2020-03-07 01:10:04
+ * @LastEditTime: 2020-03-07 22:32:58
  * @LastEditors: Xuannan
  */
 
@@ -167,7 +167,8 @@ function SubmitForm(props){
                             <Row>
                                 <Form.Item hasFeedback  wrapperCol={{ span:24 }}>
                                 {getFieldDecorator('content', {
-                                     rules: [{ required: true, message: '请输入内容!' }],
+                                    initialValue:params.content,
+                                    rules: [{ required: true, message: '请输入内容!' }],
                                 })(
                                     <Editor/>,
                                 )}
