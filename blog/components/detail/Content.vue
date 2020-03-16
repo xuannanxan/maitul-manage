@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-16 17:48:08
+ * @LastEditTime: 2020-03-16 21:35:15
  * @LastEditors: Xuannan
  -->
 <template>
@@ -27,7 +27,7 @@
                         </nuxt-link>
                         <span><a-icon type="fire" /> {{data.click}}人</span>
                         <nuxt-link :to="{path:data.source_url}" class="list-link" v-if="data.source">
-                            <a-icon type="global" /> {{data.source}}
+                            <a-icon type="import" /> {{data.source}}
                         </nuxt-link>
                     </div>
                 </a-divider>
