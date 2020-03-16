@@ -34,7 +34,11 @@ parse_base.add_argument('description')
 parse_base.add_argument('content')
 parse_base.add_argument('cover')
 parse_base.add_argument('tags')
-parse_base.add_argument('category_id',type=str,required=True,help='请选择所属分类')   
+parse_base.add_argument('category_id',type=str,required=True,help='请选择所属分类')  
+parse_base.add_argument('author') 
+parse_base.add_argument('source')
+parse_base.add_argument('source_url')
+
 
 parse_page = reqparse.RequestParser()
 parse_page.add_argument('page',type=int,help='页码只能是数字')
@@ -52,6 +56,9 @@ content_fields = {
     'content':fields.String,
     'cover':fields.String,
     'sort':fields.Integer,
+    'author':fields.String,
+    'source':fields.String,
+    'source_url':fields.String,
 }
 sing_content_fields = {
     'status':fields.Integer,
@@ -98,6 +105,9 @@ class ContentResource(Resource):
         tags = args.get('tags')
         sort = args.get('sort')
         category_id = args.get('category_id')
+        source = args.get('source')
+        source_url = args.get('source_url')
+        author = args.get('author')
         _content = contentModel()
         _content.title = title
         _content.keywords = keywords
@@ -106,7 +116,9 @@ class ContentResource(Resource):
         _content.cover = cover
         _content.category_id = category_id
         _content.sort = sort
-        _content.author = g.admin.username
+        _content.source = source
+        _content.source_url = source_url
+        _content.author = author if author else g.admin.username
         _content.last_editor = g.admin.username
         if _content.add():
             data = {
@@ -235,6 +247,9 @@ class ContentResource(Resource):
         cover = args.get('cover')
         tags = args.get('tags')
         sort = args.get('sort')
+        author = args.get('author')
+        source = args.get('source')
+        source_url = args.get('source_url')
         category_id = args.get('category_id')
         _content.title = title if title else _content.title
         _content.keywords = keywords if keywords else _content.keywords
@@ -244,6 +259,9 @@ class ContentResource(Resource):
         _content.category_id = category_id if category_id else _content.category_id
         _content.last_editor = g.admin.username
         _content.sort = sort
+        _content.source = source if source else _content.source
+        _content.source_url = source_url if source_url else _content.source_url
+        _content.author = author if author else _content.author
         result = _content.updata()
         if result:
             data =  {

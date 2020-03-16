@@ -4,7 +4,7 @@
 @Autor: Allen
 @Date: 2019-11-13 17:29:28
 @LastEditors: Xuannan
-@LastEditTime: 2019-12-18 15:56:18
+@LastEditTime: 2020-03-16 16:45:06
 '''
 __author__ = 'Allen xu'
 from app.models.base import db,BaseModel
@@ -20,7 +20,8 @@ class MetalpartsContent(BaseModel):
     sort = db.Column(db.Integer, default=1)  # 排序
     author = db.Column(db.String(20))  # 发布用户
     category_id = db.Column(db.String(32),nullable=False)  # 所属分类
-
+    source = db.Column(db.String(100)) # 来源
+    source_url = db.Column(db.String(255)) # 来源地址
     def __repr__(self):
         return '<MetalpartsContent %r>' % self.title
 

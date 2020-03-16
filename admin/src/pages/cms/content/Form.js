@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-14 17:40:02
- * @LastEditTime: 2020-03-07 22:32:58
+ * @LastEditTime: 2020-03-16 17:35:46
  * @LastEditors: Xuannan
  */
 
@@ -132,6 +132,8 @@ function SubmitForm(props){
                     tags:params.tags?params.tags.split(','):[],
                     keywords:params.keywords?params.keywords.split(','):[],
                     description:params.description,
+                    source:params.source,
+                    source_url:params.source_url,
                     sort:params.sort?params.sort:1,
                 })
                 if(params.category_id){
@@ -254,6 +256,33 @@ function SubmitForm(props){
                                         className="markdown-content"   
                                         placeholder="请输入描述..."
                                         />,
+                                    )}
+                                    </Form.Item>
+                                    <Form.Item label='作者'>
+                                    {getFieldDecorator('author', {
+                                    })(
+                                        <Input
+                                        placeholder="请输入作者..."
+                                        size='large'
+                                        />
+                                    )}
+                                    </Form.Item>
+                                    <Form.Item label='来源'>
+                                    {getFieldDecorator('source', {
+                                    })(
+                                        <Input
+                                        placeholder="请输入来源..."
+                                        size='large'
+                                        />
+                                    )}
+                                    </Form.Item>
+                                    <Form.Item label='来源地址'>
+                                    {getFieldDecorator('source_url', {
+                                    })(
+                                        <Input
+                                        placeholder="请输入来源地址..."
+                                        size='large'
+                                        />
                                     )}
                                     </Form.Item>
                                     <Form.Item  {...getFieldDecorator('id')}/>

@@ -20,7 +20,8 @@ class BlogContent(BaseModel):
     sort = db.Column(db.Integer, default=1)  # 排序
     author = db.Column(db.String(20))  # 发布用户
     category_id = db.Column(db.String(32),nullable=False)  # 所属分类
-
+    source = db.Column(db.String(100)) # 来源
+    source_url = db.Column(db.String(255)) # 来源地址
     def __repr__(self):
         return '<BlogContent %r>' % self.title
 
