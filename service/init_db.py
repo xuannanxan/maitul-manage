@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-13 10:35:39
-@LastEditTime : 2020-02-02 22:20:47
-@LastEditors  : Xuannan
+@LastEditTime: 2020-03-17 09:19:06
+@LastEditors: Xuannan
 '''
 # -*- coding: utf-8 -*- 
 # Created by xuannan on 2019-01-31.
@@ -84,9 +84,9 @@ def insert_rules(data):
         cursor.execute("insert into rule(id,name,method,url,menu_id,is_del) values('%s','%s','%s','%s','%s','%d');"%(id,name,method,url,menu_id,is_del))
     db.commit()
 
-def init_data():
+def init_db():
     password = input("即将初始化数据，请输入操作密码：")
-    if check_password_hash('pbkdf2:sha256:150000$WxouU1qd$82060dd41e04168e5650f9f2b75360142e98a8e65e14c24a053fd56e8b09f502',password):
+    if check_password_hash(secret.get('INIT_PASSWORD'),password):
         check = input("确认添加初始化吗？如果二次初始化，可能会导致数据重复，1为确认，其他为取消：")
         if check == '1':
             init_json = load_data('./data/init_data.json')
@@ -104,4 +104,4 @@ def init_data():
         return
 
 if __name__ == '__main__':
-    init_data()
+    init_db()

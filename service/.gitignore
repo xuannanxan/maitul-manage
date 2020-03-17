@@ -2,8 +2,5 @@
 Pipfile.lock
 __pycache__
 secret.py
-init_data.py
 uploads
 migrations
-data
-help
