@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-14 17:40:02
- * @LastEditTime: 2020-03-16 17:35:46
+ * @LastEditTime: 2020-03-16 20:51:06
  * @LastEditors: Xuannan
  */
 
@@ -132,6 +132,7 @@ function SubmitForm(props){
                     tags:params.tags?params.tags.split(','):[],
                     keywords:params.keywords?params.keywords.split(','):[],
                     description:params.description,
+                    author:params.author,
                     source:params.source,
                     source_url:params.source_url,
                     sort:params.sort?params.sort:1,
@@ -175,6 +176,15 @@ function SubmitForm(props){
                                     <Editor/>,
                                 )}
                                 </Form.Item>
+                                <Form.Item  wrapperCol={{ span:24 }}>
+                                    {getFieldDecorator('description', {
+                                    })(
+                                        <TextArea 
+                                        rows={3}
+                                        placeholder="请输入描述..."
+                                        />,
+                                    )}
+                                </Form.Item>
                             </Row>
                         </Col>
                         <Col span={8}>
@@ -205,17 +215,7 @@ function SubmitForm(props){
                                             </Upload>,
                                         )}
                                     </Form.Item>
-                                    <Form.Item label='排序号'>
-                                    {getFieldDecorator('sort', {
-                                        initialValue: 1 ,
-                                    })(
-                                        <InputNumber 
-                                        min={1} 
-                                        max={9999} 
-                                        size='large'
-                                        />,
-                                    )}
-                                    </Form.Item>
+
                                     <Form.Item label='标  签'>
                                     {getFieldDecorator('tags', {
                                     })(
@@ -237,7 +237,7 @@ function SubmitForm(props){
                                     })(
                                         <Select
                                             mode="tags"
-                                            placeholder="请选择标签"
+                                            placeholder="请选择标签" 
                                             size='large'
                                         >
                                             {tagList.map(item=>{
@@ -246,16 +246,6 @@ function SubmitForm(props){
                                                 )
                                             })}
                                         </Select>,
-                                    )}
-                                    </Form.Item>
-                                    <Form.Item label='描  述'>
-                                    {getFieldDecorator('description', {
-                                    })(
-                                        <TextArea 
-                                        rows={3}
-                                        className="markdown-content"   
-                                        placeholder="请输入描述..."
-                                        />,
                                     )}
                                     </Form.Item>
                                     <Form.Item label='作者'>
@@ -276,13 +266,24 @@ function SubmitForm(props){
                                         />
                                     )}
                                     </Form.Item>
-                                    <Form.Item label='来源地址'>
+                                    <Form.Item label='来源URL'>
                                     {getFieldDecorator('source_url', {
                                     })(
                                         <Input
                                         placeholder="请输入来源地址..."
                                         size='large'
                                         />
+                                    )}
+                                    </Form.Item>
+                                    <Form.Item label='排序号'>
+                                    {getFieldDecorator('sort', {
+                                        initialValue: 1 ,
+                                    })(
+                                        <InputNumber 
+                                        min={1} 
+                                        max={9999} 
+                                        size='large'
+                                        />,
                                     )}
                                     </Form.Item>
                                     <Form.Item  {...getFieldDecorator('id')}/>
