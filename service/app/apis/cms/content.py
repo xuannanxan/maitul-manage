@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime: 2020-03-19 14:46:21
+@LastEditTime: 2020-03-19 15:20:26
 @LastEditors: Xuannan
 '''
 
@@ -144,30 +144,30 @@ class ContentResource(Resource):
         contentModel,contentTagModel,categoryModel,contentTable ,contentTagTable,TagTable,categoryTable = setModel(site)
         argsById = parse_id.parse_args()
         id = argsById.get('id')
-        # 如果有id,就返回单个内容
+        # 如果有id,进行计数
         if id:
-            sql='''
-                SELECT c.*,GROUP_CONCAT(t.id SEPARATOR ',') as tags,
-                GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
-                a.name as category_name,
-                a.url as category_url,
-                a.icon as category_icon
-                FROM %s as c
-                    left join %s as r on c.id = r.content_id
-                    left join %s as t on t.id = r.tag_id
-                    left join %s as a on a.id = c.category_id
-                WHERE c.id = '%s' and c.is_del = 0;
-                '''%(contentTable,contentTagTable,TagTable,categoryTable,id)
-            sql_data = Crud.auto_select(sql)
-            if not sql_data:
-                abort(RET.NotFound,msg='内容不存在')
-            data = sql_data.first()
+            # sql='''
+            #     SELECT c.*,GROUP_CONCAT(t.id SEPARATOR ',') as tags,
+            #     GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
+            #     a.name as category_name,
+            #     a.url as category_url,
+            #     a.icon as category_icon
+            #     FROM %s as c
+            #         left join %s as r on c.id = r.content_id
+            #         left join %s as t on t.id = r.tag_id
+            #         left join %s as a on a.id = c.category_id
+            #     WHERE c.id = '%s' and c.is_del = 0;
+            #     '''%(contentTable,contentTagTable,TagTable,categoryTable,id)
+            # sql_data = Crud.auto_select(sql)
+            # if not sql_data:
+            #     abort(RET.NotFound,msg='内容不存在')
+            # data = sql_data.first()
             _content = getContent(id,contentModel)
             _content.click = _content.click+1
             _content.updata()
             return {
                         'status':RET.OK,
-                        'data':mysql_to_json(dict(data))
+                        'click':_content.click
                 } 
         args = parse_page.parse_args()
         page = 1
