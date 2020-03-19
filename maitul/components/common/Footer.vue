@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-02 20:18:36
+ * @LastEditTime: 2020-03-19 14:53:37
  * @LastEditors: Xuannan
  -->
 <template>
@@ -16,11 +16,11 @@
               </div>
               <div class="nav"  v-for="item in category" :key='item.id' >
                 <nuxt-link :to="{path:item.url+item.id}">
-                  <a-icon :type="item.icon"/> {{item.name}}
+                  <a-icon v-if="item.icon" :type="item.icon"/> {{item.name}}
                 </nuxt-link>
                 <div v-if="item.children.length>0" v-for="child in item.children" :key='child.id' class="child-nav">
                   <nuxt-link :to="{path:child.url+child.id}">
-                    <a-icon :type="child.icon"/> {{child.name}}
+                    <a-icon v-if="child.icon" :type="child.icon"/> {{child.name}}
                   </nuxt-link>
                 </div>
               </div>

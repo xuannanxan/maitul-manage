@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime: 2020-02-29 22:10:02
+@LastEditTime: 2020-03-19 14:46:21
 @LastEditors: Xuannan
 '''
 
@@ -191,6 +191,8 @@ class ContentResource(Resource):
             ('(a.id = "{0}" OR a.pid = "{0}") and '.format(category_id)) if category_id else '',
             ('(c.title like "%{0}%" or c.content like "%{0}%") and '.format(search)) if search else ''
         )
+        # 分页大于=1000时，返回全部数据
+        limit = 'LIMIT {0},{1}'.format((page-1)*paginate,paginate) if paginate<1000 else ''
         sql = '''
             SELECT 
             SQL_CALC_FOUND_ROWS c.*,
@@ -206,8 +208,8 @@ class ContentResource(Resource):
             WHERE {4} c.is_del = 0
             GROUP BY c.id
             ORDER BY c.sort DESC,c.create_time DESC
-            LIMIT {5},{6};
-        '''.format(contentTable,contentTagTable,TagTable,categoryTable,query,(page-1)*paginate,paginate)
+            {5};
+        '''.format(contentTable,contentTagTable,TagTable,categoryTable,query,limit)
         sql_data,count = Crud.auto_select(sql,count=True)
         if  sql_data:
             fetchall_data = sql_data.fetchall()

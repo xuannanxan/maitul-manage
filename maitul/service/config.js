@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-14 16:01:34
- * @LastEditTime: 2020-02-28 09:37:22
+ * @LastEditTime: 2020-03-19 14:47:40
  * @LastEditors: Xuannan
  */
 export const siteInfo = {
@@ -13,6 +13,7 @@ export const siteInfo = {
         site:'maitul',
         articlePageSize:8,
         productPageSize:12,
+        contentPageSize:1000,
     }
   
 export const api = {

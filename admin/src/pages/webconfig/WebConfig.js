@@ -2,16 +2,14 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-22 19:25:04
- * @LastEditTime: 2020-03-07 11:09:15
+ * @LastEditTime: 2020-03-19 13:46:18
  * @LastEditors: Xuannan
  */
 
 import React, { useState,useEffect  } from 'react';
 import {_configList,_fileUpload,_webconfigEdit} from '../../utils/api'
 import Editor from '../components/Editor'
-import {webSites} from '../config'
-import {Select,InputNumber,Input,Form ,Tabs ,Upload,Checkbox,Icon  ,Button ,message,Col,Row,Spin} from 'antd';
-const { TabPane } = Tabs;
+import {Select,InputNumber,Input,Form  ,Upload,Checkbox,Icon  ,Button ,message,Col,Row,Spin} from 'antd';
 const { Option } = Select;
 const { TextArea } = Input;
 const WebConfigForm = (props)=>{
@@ -20,7 +18,7 @@ const WebConfigForm = (props)=>{
     const [isLoading,setIsLoading] = useState(false)
     const [loading,setLoading] = useState(false)
     const [confList,setConfList] = useState([])
-    const [activeTab,setActiveTab] = useState('')
+    const [site,setSite] = useState(props.match.params.site)
     const [imgObj,setImgObj] = useState({})
     const uploadImg = (e)=>{
         if(e.file){
@@ -42,9 +40,6 @@ const WebConfigForm = (props)=>{
     } 
     const initData = ()=>{
         setIsLoading(true)
-        let activeId = ''
-        activeId = webSites[0].site
-        setActiveTab(activeId)
         _configList().then(res=>{
             const obj = {}
             for (var i in res.data.data) {
@@ -95,155 +90,146 @@ const WebConfigForm = (props)=>{
         return isJpgOrPng && isLt1M;
       }  
     useEffect(()=>{
-    initData()
-    },[])
+        initData()
+        setSite(props.match.params.site)
+    },[props.match.params.site])
     return(
         <div className='main-content'>
-            {webSites && webSites.length?
-                <Tabs defaultActiveKey={activeTab} onChange={(key)=>{setActiveTab(key)}}>
-                {webSites.map(item=>{
-                    return (
-                        <TabPane tab={item.name} key={item.site}>
-                            <Spin tip="Loading..." spinning={isLoading}>
-                            { confList[item.site] && confList[item.site].length?
-                            <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }}>
-                            {confList[item.site].map(conf=>{
-                                switch (conf.fieldType) {
-                                    case 'Input':
-                                        return(
-                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
-                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
-                                                    initialValue:conf.value,
-                                                })(
-                                                    <Input
-                                                    placeholder={conf.placeholder?conf.placeholder:'请输入...'}
-                                                    size='large'
-                                                    />,
-                                                )}
-                                            </Form.Item>    
-                                        );
-                                    case 'Number':
-                                        return(
-                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
-                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
-                                                    initialValue:conf.value,
-                                                })(
-                                                    <InputNumber 
-                                                    placeholder={conf.placeholder?conf.placeholder:'请输入...'}
-                                                    size='large'
-                                                    />,
-                                                )}
-                                            </Form.Item>    
-                                        );
-                                    case 'Textarea':
-                                        return(
-                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
-                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
-                                                    initialValue:conf.value,
-                                                })(
-                                                    <TextArea 
-                                                    rows={3}
-                                                    placeholder={conf.placeholder?conf.placeholder:'请输入...'}
-                                                    />,
-                                                )}
-                                            </Form.Item>    
-                                        );
-                                    case 'Select':
-                                        return(
-                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
-                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
-                                                    initialValue:conf.value,
-                                                })(
-                                                    <Select size='large' placeholder={conf.placeholder?conf.placeholder:'请输入...'}>
-                                                        {
-                                                            conf.values.split(',').map(v=>{
-                                                                return (<Option key={conf.id+v} value={v}>{v}</Option>)
-                                                            })
-                                                        }
-                                                    </Select>,
-                                                )}
-                                            </Form.Item>    
-                                        );
-                                    case 'Checkbox':
-                                        return(
-                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
-                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
-                                                    initialValue:conf.value.split(','),
-                                                })(
-                                                    <Checkbox.Group style={{ width: '100%' }}>
-                                                    <Row>
-                                                        {
-                                                            conf.values.split(',').map(v=>{
-                                                                return (
-                                                                    <Col key={conf.id+v} span={4}>
-                                                                    <Checkbox value={v}>{v}</Checkbox>
-                                                                    </Col>
-                                                                )
-                                                            })
-                                                        }
-                                                    </Row>
-                                                    </Checkbox.Group>,
-                                                )}
-                                            </Form.Item>    
-                                        );
-                                    case 'Editor':
-                                        return(
-                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
-                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
-                                                    initialValue:conf.value,
-                                                })(
-                                                    <Editor/>,
-                                                )}
-                                            </Form.Item>    
-                                        );
-                                    case 'ImgUpload':
-                                        return(
-                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
-                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
-                                                    initialValue:conf.value,
-                                                    valuePropName:'file',
-                                                })(
-                                                    <Upload
-                                                        name={conf.site+'|'+conf.ename}
-                                                        listType="picture-card"
-                                                        className="avatar-uploader"
-                                                        showUploadList={false}
-                                                        customRequest={uploadImg}
-                                                        beforeUpload={beforeUpload} 
-                                                    >
-                                                        { imgObj[conf.site+'|'+conf.ename] ? <img src={imgObj[conf.site+'|'+conf.ename]} alt={conf.name} style={{ width: '100%' }} /> : uploadButton}
-                                                    </Upload>,
-                                                )}
-                                            </Form.Item>    
-                                        );
-                                    default:
-                                        return(
-                                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
-                                                {getFieldDecorator(conf.site+'|'+conf.ename, {
-                                                    initialValue:conf.value,
-                                                })(
-                                                    <Input
-                                                    placeholder={conf.placeholder?conf.placeholder:'请输入...'}
-                                                    size='large'
-                                                    />,
-                                                )}
-                                            </Form.Item>    
-                                        );
-                                } 
+            <Spin tip="Loading..." spinning={isLoading}>
+            { confList[site] && confList[site].length?
+            <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }}>
+            {confList[site].map(conf=>{
+                switch (conf.fieldType) {
+                    case 'Input':
+                        return(
+                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                {getFieldDecorator(conf.site+'|'+conf.ename, {
+                                    initialValue:conf.value,
+                                })(
+                                    <Input
+                                    placeholder={conf.placeholder?conf.placeholder:'请输入...'}
+                                    size='large'
+                                    />,
+                                )}
+                            </Form.Item>    
+                        );
+                    case 'Number':
+                        return(
+                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                {getFieldDecorator(conf.site+'|'+conf.ename, {
+                                    initialValue:conf.value,
+                                })(
+                                    <InputNumber 
+                                    placeholder={conf.placeholder?conf.placeholder:'请输入...'}
+                                    size='large'
+                                    />,
+                                )}
+                            </Form.Item>    
+                        );
+                    case 'Textarea':
+                        return(
+                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                {getFieldDecorator(conf.site+'|'+conf.ename, {
+                                    initialValue:conf.value,
+                                })(
+                                    <TextArea 
+                                    rows={3}
+                                    placeholder={conf.placeholder?conf.placeholder:'请输入...'}
+                                    />,
+                                )}
+                            </Form.Item>    
+                        );
+                    case 'Select':
+                        return(
+                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                {getFieldDecorator(conf.site+'|'+conf.ename, {
+                                    initialValue:conf.value,
+                                })(
+                                    <Select size='large' placeholder={conf.placeholder?conf.placeholder:'请输入...'}>
+                                        {
+                                            conf.values.split(',').map(v=>{
+                                                return (<Option key={conf.id+v} value={v}>{v}</Option>)
+                                            })
+                                        }
+                                    </Select>,
+                                )}
+                            </Form.Item>    
+                        );
+                    case 'Checkbox':
+                        return(
+                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                {getFieldDecorator(conf.site+'|'+conf.ename, {
+                                    initialValue:conf.value.split(','),
+                                })(
+                                    <Checkbox.Group style={{ width: '100%' }}>
+                                    <Row>
+                                        {
+                                            conf.values.split(',').map(v=>{
+                                                return (
+                                                    <Col key={conf.id+v} span={4}>
+                                                    <Checkbox value={v}>{v}</Checkbox>
+                                                    </Col>
+                                                )
+                                            })
+                                        }
+                                    </Row>
+                                    </Checkbox.Group>,
+                                )}
+                            </Form.Item>    
+                        );
+                    case 'Editor':
+                        return(
+                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                {getFieldDecorator(conf.site+'|'+conf.ename, {
+                                    initialValue:conf.value,
+                                })(
+                                    <Editor/>,
+                                )}
+                            </Form.Item>    
+                        );
+                    case 'ImgUpload':
+                        return(
+                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                {getFieldDecorator(conf.site+'|'+conf.ename, {
+                                    initialValue:conf.value,
+                                    valuePropName:'file',
+                                })(
+                                    <Upload
+                                        name={conf.site+'|'+conf.ename}
+                                        listType="picture-card"
+                                        className="avatar-uploader"
+                                        showUploadList={false}
+                                        customRequest={uploadImg}
+                                        beforeUpload={beforeUpload} 
+                                    >
+                                        { imgObj[conf.site+'|'+conf.ename] ? <img src={imgObj[conf.site+'|'+conf.ename]} alt={conf.name} style={{ width: '100%' }} /> : uploadButton}
+                                    </Upload>,
+                                )}
+                            </Form.Item>    
+                        );
+                    default:
+                        return(
+                            <Form.Item label={conf.name+`(${conf.ename})`} key={conf.id}>
+                                {getFieldDecorator(conf.site+'|'+conf.ename, {
+                                    initialValue:conf.value,
+                                })(
+                                    <Input
+                                    placeholder={conf.placeholder?conf.placeholder:'请输入...'}
+                                    size='large'
+                                    />,
+                                )}
+                            </Form.Item>    
+                        );
+                } 
 
-                            })}
-                            <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
-                            <Button type="primary"  size='large' onClick={submitFormData}>
-                                保存
-                            </Button>
-                            </Form.Item>
-                            </Form>: '暂无数据' }
-                            </Spin>
-                        </TabPane>
-                    )
-                })}
-                </Tabs>
-            : '暂无数据' }  
+            })}
+            <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
+            <Button type="primary"  size='large' onClick={submitFormData}>
+                保存
+            </Button>
+            </Form.Item>
+            </Form>: '暂无数据' }
+            </Spin>
         </div>
     )
 }

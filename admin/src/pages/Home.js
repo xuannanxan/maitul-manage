@@ -2,8 +2,8 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime : 2020-02-02 21:32:04
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-03-19 12:49:43
+ * @LastEditors: Xuannan
  */
 
 
@@ -40,7 +40,7 @@ const RouteList = [
   {path:"/adspace",component:AdSpaceList},
   {path:"/ad",component:AdList},
   {path:"/config",component:ConfList},
-  {path:"/webconfig",component:WebConfig},
+  {path:"/webconfig/:site",component:WebConfig},
   {path:"/cms/:site/tag",component:TagList},
   {path:"/cms/:site/category",component:CategoryList},
   {path:"/cms/:site/content",component:ContentList},
@@ -50,6 +50,7 @@ const RouteList = [
 
 function Home(props){
     const [collapsed,setCollapsed] = useState(false)
+    const [menuTree,setMenuTree] = useState([])
     const [headerMenu,setHeaderMenu] = useState([])
     const [leftMenu,setLeftMenu] = useState([])
     const [activeMenu,setActiveMenu] = useState([])
@@ -110,34 +111,42 @@ function Home(props){
     const onCollapse = collapsed => {
       setCollapsed(collapsed)
     };
-
-    useEffect(()=>{
-      _menuTree().then(res=>{
-        const menuData = []
-        res.data.data.forEach((item,index)=>{
-          menuData[item.id]=item
+    const initMenu = (res)=>{
+      let activeNode = getNode(res,location.pathname,'url')
+      let allParents = getAllParent(activeNode,res)
+      if(activeNode){
+        //当前URL对应的菜单
+        setActiveMenu(activeNode)
+      }
+      if(allParents){
+        //展开的菜单
+        setOpenMenu(allParents)
+        //选中的顶级菜单 
+        allParents.forEach((item,index)=>{
+          if(item.pid==='0'){
+            setActiveTopMenu(item)
+            setTopMenuName(item.name)
+            setLeftMenu(item.children)
+          }
         })
-        setHeaderMenu(menuData)
-        let activeNode = getNode(res.data.data,location.pathname,'url')
-        let allParents = getAllParent(activeNode,res.data.data)
-        if(activeNode){
-          //当前URL对应的菜单
-          setActiveMenu(activeNode)
-        }
-        if(allParents){
-          //展开的菜单
-          setOpenMenu(allParents)
-          //选中的顶级菜单 
-          allParents.forEach((item,index)=>{
-            if(item.pid==='0'){
-              setActiveTopMenu(item)
-              setTopMenuName(item.name)
-              setLeftMenu(item.children)
-            }
+      }
+    }
+    useEffect(()=>{
+      if(menuTree.length===0){
+        _menuTree().then(res=>{
+          const menuData = []
+          setMenuTree(res.data.data)
+          initMenu(res.data.data)
+          res.data.data.forEach((item,index)=>{
+            menuData[item.id]=item
           })
-        }
-      })
-    },[location])
+          setHeaderMenu(menuData)
+        })
+      }else{
+        initMenu(menuTree)
+      }
+
+    },[location,menuTree])
     return(
         <Layout style={{ minHeight: '100vh' }}>
         <Sider  collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ background: '#fff' }}>
