@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-19 14:49:55
+ * @LastEditTime: 2020-03-19 21:46:22
  * @LastEditors: Xuannan
  -->
 <template>
@@ -83,20 +83,13 @@
     },
     async asyncData({ store, error }){
       if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-        const  [webconfig]  = await Promise.all([store.dispatch('_webconfig')])
-        if(webconfig.status === 200) store.commit('setWebConfig',webconfig.data)
-      }
-      if(store.state.category && store.state.category.length===0){
-        const  [category]  = await Promise.all([store.dispatch('_category')])
-        if(category.status === 200) store.commit('setCategory',category.data)
-      }
-      if(store.state.banner && store.state.banner.length===0){
-        const  [banner]  = await Promise.all([store.dispatch('_banner')])
-        if(banner.status === 200) store.commit('setBanner',banner.data)
-      }
-      if(store.state.tags && store.state.tags.length===0){
-        const  [tags]  = await Promise.all([store.dispatch('_tags')])
-        if(tags.status === 200) store.commit('setTags',tags.data)
+        const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
+        if(siteData.status === 200) {
+            store.commit('setWebConfig',siteData.data.webconfig)
+            store.commit('setCategory',siteData.data.category)
+            store.commit('setTags',siteData.data.tags)
+            store.commit('setAdspace',(siteData.data.adspace))
+          }
       }
       if(store.state.about && store.state.about.length===0){
         const  [aboutData]  = await Promise.all([store.dispatch('_content',{

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime: 2020-03-19 15:20:26
+@LastEditTime: 2020-03-19 22:49:35
 @LastEditors: Xuannan
 '''
 
@@ -146,28 +146,28 @@ class ContentResource(Resource):
         id = argsById.get('id')
         # 如果有id,进行计数
         if id:
-            # sql='''
-            #     SELECT c.*,GROUP_CONCAT(t.id SEPARATOR ',') as tags,
-            #     GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
-            #     a.name as category_name,
-            #     a.url as category_url,
-            #     a.icon as category_icon
-            #     FROM %s as c
-            #         left join %s as r on c.id = r.content_id
-            #         left join %s as t on t.id = r.tag_id
-            #         left join %s as a on a.id = c.category_id
-            #     WHERE c.id = '%s' and c.is_del = 0;
-            #     '''%(contentTable,contentTagTable,TagTable,categoryTable,id)
-            # sql_data = Crud.auto_select(sql)
-            # if not sql_data:
-            #     abort(RET.NotFound,msg='内容不存在')
-            # data = sql_data.first()
+            sql='''
+                SELECT c.*,GROUP_CONCAT(t.id SEPARATOR ',') as tags,
+                GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
+                a.name as category_name,
+                a.url as category_url,
+                a.icon as category_icon
+                FROM %s as c
+                    left join %s as r on c.id = r.content_id
+                    left join %s as t on t.id = r.tag_id
+                    left join %s as a on a.id = c.category_id
+                WHERE c.id = '%s' and c.is_del = 0;
+                '''%(contentTable,contentTagTable,TagTable,categoryTable,id)
+            sql_data = Crud.auto_select(sql)
+            if not sql_data:
+                abort(RET.NotFound,msg='内容不存在')
+            data = sql_data.first()
             _content = getContent(id,contentModel)
             _content.click = _content.click+1
             _content.updata()
             return {
                         'status':RET.OK,
-                        'click':_content.click
+                        'data':mysql_to_json(dict(data))
                 } 
         args = parse_page.parse_args()
         page = 1
@@ -192,7 +192,7 @@ class ContentResource(Resource):
             ('(c.title like "%{0}%" or c.content like "%{0}%") and '.format(search)) if search else ''
         )
         # 分页大于=1000时，返回全部数据
-        limit = 'LIMIT {0},{1}'.format((page-1)*paginate,paginate) if paginate<1000 else ''
+        limit = 'LIMIT {0},{1}'.format((page-1)*paginate,paginate)
         sql = '''
             SELECT 
             SQL_CALC_FOUND_ROWS c.*,

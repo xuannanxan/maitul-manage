@@ -8,7 +8,7 @@
 export default () => ({
     webconfig: {},
     category:[],
-    banner:[],
+    adspace:{},
     articleList:[],
     contentList:[],
     content:{},

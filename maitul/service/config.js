@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-14 16:01:34
- * @LastEditTime: 2020-03-19 14:47:40
+ * @LastEditTime: 2020-03-19 22:43:38
  * @LastEditors: Xuannan
  */
 export const siteInfo = {
@@ -17,12 +17,9 @@ export const siteInfo = {
     }
   
 export const api = {
-        webconfigUrl: '/api/webconfig' ,  //  站点配置接口
-        categoryUrl:`/api/cms/${siteInfo.site}/category`,//分类
         contentUrl:`/api/cms/${siteInfo.site}/content`,//内容
-        adUrl:'/api/resource/ad',//广告
-        tagsUrl:`/api/cms/${siteInfo.site}/tag`,//标签
         messageUrl:'/api/message',//留言
+        siteDataUrl:`/api/${siteInfo.site}/data`,//站点数据
     }
     
 

@@ -2,11 +2,11 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-03-04 21:06:09
+ * @LastEditTime: 2020-03-19 22:33:12
  * @LastEditors: Xuannan
  -->
 <template>
-    <a-carousel arrows :style="{ backgroundImage: 'url('+(banner.length?banner[0].img:'')+')'}">
+    <a-carousel arrows :style="{ backgroundImage: 'url('+(adspace[banner].length?adspace[banner][0].img:'')+')'}">
         <div
         slot="prevArrow"
         slot-scope="props"
@@ -18,7 +18,7 @@
         <div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 1.5rem">
         <a-icon type="right" />
         </div>
-            <div v-for="item in banner" :key="item.id" class='banner' :style="{ backgroundImage: 'url('+item.img+')'}">
+            <div v-for="item in adspace[banner]" :key="item.id" class='banner' :style="{ backgroundImage: 'url('+item.img+')'}">
                 <div class='shade'> </div>
                 <div class='info'>
                     <h1>{{item.name}}</h1>
@@ -30,9 +30,15 @@
 </template>
 <script>
     import {mapState} from 'vuex'
+    import {siteInfo}  from "@/service/config";
     export default {
         name: 'Banner',
-        computed:mapState(["banner"]),
+        data() {
+            return {
+                banner:siteInfo.banner
+            }
+        },
+        computed:mapState(["adspace"]),
     };
 </script>
 <style  lang="less" scoped>

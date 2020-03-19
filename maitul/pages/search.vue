@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-07 10:34:50
+ * @LastEditTime: 2020-03-19 22:52:13
  * @LastEditors: Xuannan
  -->
 <template>
@@ -65,18 +65,15 @@
       }
     },
     async asyncData({ store,params,query, error }){
-        if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-            const  [webconfig]  = await Promise.all([store.dispatch('_webconfig')])
-            if(webconfig.status === 200) store.commit('setWebConfig',webconfig.data)
-        }
-        if(store.state.category && store.state.category.length===0){
-            const  [category]  = await Promise.all([store.dispatch('_category')])
-            if(category.status === 200) store.commit('setCategory',category.data)
-        }
-        if(store.state.tags && store.state.tags.length===0){
-            const  [tags]  = await Promise.all([store.dispatch('_tags')])
-            if(tags.status === 200) store.commit('setTags',tags.data)
-        }
+      if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
+        const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
+        if(siteData.status === 200) {
+            store.commit('setWebConfig',siteData.data.webconfig)
+            store.commit('setCategory',siteData.data.category)
+            store.commit('setTags',siteData.data.tags)
+            store.commit('setAdspace',(siteData.data.adspace))
+          }
+      }
         const  [article]  = await Promise.all([store.dispatch('_content',{
             paginate:siteInfo.productPageSize,
             page:query.page,
