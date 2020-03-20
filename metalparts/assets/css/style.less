@@ -1,0 +1,145 @@
+
+
+body{
+    background-color: #f6f6f6;  
+  }
+ul{
+    padding: 0;
+}
+p{
+    margin-bottom: 0em;
+}
+.floatLeft{
+    float: left;
+}
+.floatRight{
+    float: right;
+}
+.center{
+    text-align: center;
+}
+.ant-layout-header{
+    background-color: #fff;
+    -webkit-box-shadow: 0 1px 6px 0 hsla(0,0%,60.8%,.5);
+    box-shadow: 0 1px 6px 0 hsla(0,0%,60.8%,.5);
+    padding: 0 5rem;
+}
+
+.ant-menu{
+    border-bottom:0px;
+}
+.content{
+    
+    background: #fff; 
+    .main{
+        padding: 1.5rem 5rem 1.2rem 5rem;
+        overflow: hidden;
+        .ant-divider-inner-text{
+            font-size: 2rem;
+            color: rgba(0, 0, 0, 0.6);
+        }
+    };
+    .right{
+        margin-left: 0.5rem;
+    }
+}
+.right-btn {
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    text-align: center;
+    font-size: 20px;
+
+  }
+  .right-btn:hover{
+    background-color: rgba(0, 0, 0, 0.55);
+    color: #00cccc !important;
+    a{
+        color: #00cccc !important;
+    }
+  }
+@media only screen and (max-width:750px),
+only screen and (max-device-width:750px) {
+    .main{
+        padding: .5rem !important;
+    }
+    .ant-layout-header{
+        padding: 0 0.5rem;
+    }
+}
+
+.page-enter {
+    transform: translateX(0%);
+  }
+  .page-leave,
+  .page-enter-to {
+    transform: translateX(0%);
+  }
+  .page-leave-to {
+    transform: translateX(-100%);
+  }
+  .page-enter-active,
+  .page-leave-active {
+    transition: opacity .8s, transform .8s;
+  }
+  .page-enter,
+  .page-leave-active {
+    opacity: 0.5;
+  }
+
+.ant-back-top{
+    right: 2rem;
+  }
+.ant-menu-submenu .ant-menu-submenu-title  a,
+.ant-menu .ant-menu-submenu-open .ant-menu-sub .ant-menu-item  a
+    {
+        display: block;
+        color: rgba(0, 0, 0, 0.65);
+    }
+.ant-menu{
+    .ant-menu-submenu a:hover,
+    .ant-menu-submenu-active a,
+    .ant-menu-submenu-open a,
+    .ant-menu-submenu-selected a
+    {
+        color: #00cccc ;
+    }
+}
+.ant-card .ant-card-cover{
+    overflow: hidden;
+}
+.dark{ //深色背景下的TABS
+    background-color: #00cccc;
+    .ant-tabs-nav .ant-tabs-tab{//平时的颜色
+        color: rgba(245, 245, 245, 0.95);
+        font-size: 1.8rem;
+    }
+    .ant-tabs-nav .ant-tabs-tab-active{//选择时的颜色
+        color: #fff;
+    }
+    .ant-tabs-bar {//tab下面的线e
+        border-color: #ffffff40;
+    }
+    .ant-tabs-ink-bar{//选中的线
+        background-color:#fff;
+    }
+    .ant-divider-inner-text{//分割线中间的文字
+        color: #fff !important;
+    }
+    .ant-tabs-tab-prev:hover, .ant-tabs-tab-next:hover {//tabs太多时左右移动按钮
+        color: #ffffff9e;
+    }
+    .ant-tabs-tab-prev, .ant-tabs-tab-next {//tabs太多时左右移动按钮
+        color: #fff;
+    }
+    .ant-tabs-tabpane{//内容区
+        color: #fff;
+    }
+
+  }
+.ant-card-bordered:hover {
+    border: 1px solid #00cccc;
+}
