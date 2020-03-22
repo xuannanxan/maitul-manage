@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-19 23:17:13
+ * @LastEditTime: 2020-03-19 22:42:02
  * @LastEditors: Xuannan
  -->
 <template>
@@ -11,14 +11,13 @@
     <a-back-top>
       <div class="right-btn"><a-icon type="to-top"/></div>
     </a-back-top>
-    <Header :currentCategory="[category_id?category_id:'']"/>
+    <Header :currentCategory="[Object.keys(data).length?data.category_id:'']"/>
     <a-layout-content class="content">
       <a-row>
         <a-col :span="24">
           <div class="main">
-            <Info
+            <Article
             :data="data"
-            :maxHeight='false'
             />
           </div>
         </a-col>
@@ -32,8 +31,7 @@
 <script>
     import Header from '@/components/common/Header';
     import Footer from '@/components/common/Footer';
-    import Tags from '@/components/common/Tags';
-    import Info from '@/components/list/Info';
+    import Article from '@/components/detail/Article';
     import Contact from '@/components/common/Contact';
     import RightContact from '@/components/common/RightContact';
     import {mapState} from 'vuex';
@@ -41,27 +39,20 @@
     import {findNodes} from '@/utils/treeNodes'
  
   const articleData =  {
-        data:[],
-        paginate:{},
-        category_id:'',
-        tag:'',
-        search:'',
-        category:{},
-        topCategory:{},
+        data:{},
       };
   export default {
-    watchQuery: ['page','tag','search'],
     scrollToTop: true,
-    components:{Header,Footer,Info,Contact,RightContact},
+    components:{Header,Footer,Article,Contact,RightContact},
     computed:mapState(["webconfig"]),
     head () {
-        const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com')
-        const pageTitle = articleData.category.name?'|'+articleData.category.name:''
+        const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com');
+        const pageTitle = articleData.data.title?'|'+articleData.data.title:'';
         return {
             title: siteTitle+pageTitle,
             meta: [
-            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul')+(articleData.category.keywords?','+articleData.category.keywords:'') },
-            { hid: 'description', name: 'description', content: articleData.category.description?articleData.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul'  }
+            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul')+(articleData.data.keywords?','+articleData.data.keywords:'') },
+            { hid: 'description', name: 'description', content: articleData.data.description?articleData.data.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul'  }
             ]
         }
     },
@@ -75,13 +66,20 @@
             store.commit('setAdspace',(siteData.data.adspace))
           }
       }
-        const  [article]  = await Promise.all([store.dispatch('_content',{
+        if(store.state.productList && store.state.productList.length===0){
+            const  [productList]  = await Promise.all([store.dispatch('_content',{
+              paginate:siteInfo.productPageSize,
+              category:siteInfo.products,
+            })])
+            if(productList.status === 200) store.commit('setProductList',productList.data)
+        }
+        const  [product]  = await Promise.all([store.dispatch('_content',{
             id:params.id,
             })])
-        if(article.status === 200) {
-            articleData.data = [article.data]
+        if(product.status === 200) {
+            articleData.data = product.data
         }else{
-            articleData.data = []
+            articleData.data = {}
         }
       return articleData;
     }

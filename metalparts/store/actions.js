@@ -2,17 +2,11 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-13 22:45:12
- * @LastEditTime: 2020-02-27 13:14:09
+ * @LastEditTime: 2020-03-22 20:01:33
  * @LastEditors: Xuannan
  */
-/*
- * @Description: 
- * @Author: Xuannan
- * @Date: 2020-02-13 22:45:12
- * @LastEditTime : 2020-02-14 22:49:33
- * @LastEditors  : Xuannan
- */
-import {api,siteInfo}  from "@/service/config"
+
+import {api,siteInfo}  from "@/config"
 import request from "@/service";
 import cookieparse from '@/utils/cookieparse'
 

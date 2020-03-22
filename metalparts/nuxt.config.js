@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-03 19:50:15
+ * @LastEditTime: 2020-03-22 20:32:35
  * @LastEditors: Xuannan
  */
 module.exports = {
@@ -88,7 +88,7 @@ module.exports = {
       })
     }
   },
-  plugins: [
+  plugins: ['@/plugins/i18n.js',
     {
       src: '@/plugins/antd',ssr:true
     }
@@ -120,7 +120,9 @@ module.exports = {
   env: {
     BASE_URL: process.env.BASE_URL,
     NODE_ENV: process.env.NODE_ENV
-  }
-  
+  },
+  router: {
+    middleware: 'lang'
+  },
 }
 

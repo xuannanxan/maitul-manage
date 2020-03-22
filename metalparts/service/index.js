@@ -2,24 +2,24 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-14 16:02:55
- * @LastEditTime: 2020-02-24 21:38:41
+ * @LastEditTime: 2020-03-22 19:58:52
  * @LastEditors: Xuannan
  */
 import axios from 'axios'
 // import qs from 'qs'
-import {config,api} from './config'
+import {axiosConfig} from '@/config'
 
 if (process.server) {
-  config.baseURL = process.env.BASE_URL
+  axiosConfig.baseURL = process.env.BASE_URL
 }
 
-const service = axios.create(config)
+const service = axios.create(axiosConfig)
 
 // POST 传参序列化
 service.interceptors.request.use(
-  config => {
+  axiosConfig => {
     // if (config.method === 'post') config.data = qs.stringify(config.data)
-    return config
+    return axiosConfig
   },
   error => {
     return Promise.reject(error)

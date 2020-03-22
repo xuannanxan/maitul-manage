@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:26:57
- * @LastEditTime: 2020-03-04 21:36:00
+ * @LastEditTime: 2020-03-22 21:40:20
  * @LastEditors: Xuannan
  */
 
@@ -34,8 +34,7 @@ import {
     BackTop,
     Card,
     Tabs,
-    message} from 'ant-design-vue';
-    
+    message} from 'ant-design-vue'; 
 Vue.use(Avatar)
 Vue.use(Button)
 Vue.use(Tag)

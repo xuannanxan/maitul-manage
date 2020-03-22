@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-20 13:47:40
+ * @LastEditTime: 2020-03-22 21:35:14
  * @LastEditors: Xuannan
  -->
 <template>
@@ -44,16 +44,16 @@
             </a-menu-item>
             <template v-for="item in category">
               <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                <nuxt-link :to="{path:item.url+item.id}"><a-icon v-if="item.icon" :type="item.icon" :style="{ fontSize: '16px'}"/>{{item.name}}</nuxt-link>
+                <nuxt-link :to="{path:(item.url?item.url:'article/')+item.id}"><a-icon v-if="item.icon" :type="item.icon" :style="{ fontSize: '16px'}"/>{{item.name}}</nuxt-link>
               </a-menu-item>
               <sub-menu v-else :menu-info="item" :key="item.id" />
             </template>
             </a-menu>
           </a-col>
-          <a-col :xs='0' :sm='0' :md='0' :lg='0' :xl='5' :offset="1">
+          <a-col :xs='0' :sm='0' :md='0' :lg='0' :xl='5' class="search">
             <a-input-search size="large" placeholder="Search..." @search="onSearch" />
           </a-col>
-          <a-col :xs='0' :sm='0' :md='1' :lg='1' :xl='0' :offset="1">
+          <a-col :xs='0' :sm='0' :md='1' :lg='1' :xl='0'>
             <a-popover placement="bottomRight" trigger="click">
               <template slot="content">
                 <a-input-search size="large" placeholder="Search..." @search="onSearch" />
@@ -61,7 +61,7 @@
               <a-button icon="search"></a-button>
             </a-popover>
           </a-col>
-          <a-col :xs='3' :sm='3' :md='0' :lg='0' :xl='0' >
+          <a-col :xs='3' :sm='3' :md='0' :lg='0' :xl='0'>
             <a-button icon="menu" @click="showDrawer"></a-button>
             <a-drawer
               placement="right"
@@ -81,7 +81,7 @@
               </a-menu-item>
               <template v-for="item in category">
                 <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                  <nuxt-link :to="{path:item.url+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
+                  <nuxt-link :to="{path:(item.url?item.url:'article/')+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
                 </a-menu-item>
                 <sub-menu v-else :menu-info="item" :key="item.id" />
               </template>
@@ -89,6 +89,9 @@
               <a-divider/>
               <div style="text-align:center"><Contact/></div>
             </a-drawer>
+          </a-col>
+          <a-col :xs='0' :sm='0' :md='1' :lg='1' :xl='1'>
+            <LangSwitcher/>
           </a-col>
         </a-layout-header>
         </a-affix>
@@ -99,9 +102,10 @@
 <script>
   import SubMenu from './SubMenu.vue'
   import Contact from './Contact.vue'
+  import LangSwitcher from './LangSwitcher.vue'
   import {mapState} from 'vuex'
   export default {
-    components:{SubMenu,Contact},
+    components:{SubMenu,Contact,LangSwitcher},
     name: 'Header',
     data() {
       return {
@@ -159,6 +163,9 @@
     .menu{
       line-height: 62px;
       font-size: 1.1rem;
+    }
+    .search{
+      padding: 0 1rem;
     }
   }
 

@@ -1,99 +1,11 @@
 <!--
  * @Description: 
  * @Author: Xuannan
- * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-19 22:52:13
+ * @Date: 2020-03-22 09:09:12
+ * @LastEditTime: 2020-03-22 22:16:15
  * @LastEditors: Xuannan
  -->
-<template>
-  <a-layout class="layout ">
-    <RightContact/>
-    <a-back-top>
-      <div class="right-btn"><a-icon type="to-top"/></div>
-    </a-back-top>
-    <Header :currentCategory="[]"/>
-    <a-layout-content class="content">
-      <a-row>
-        <a-col :span="24">
-          <div class="main">
-            <ArticleList
-            :data="data"
-            :paginate="paginate"
-            :search="search"
-            :tag="tag"
-            />
-          </div>
-        </a-col>
-      </a-row>
-      <a-row>
-        <Footer/>
-      </a-row>
-    </a-layout-content>
-  </a-layout>
-</template>
 <script>
-    import Header from '@/components/common/Header';
-    import Footer from '@/components/common/Footer';
-    import ArticleList from '@/components/list/ArticleList';
-    import Contact from '@/components/common/Contact';
-    import RightContact from '@/components/common/RightContact';
-    import {mapState} from 'vuex';
-    import {siteInfo}  from "@/service/config";
-    import {findNodes} from '@/utils/treeNodes'
- 
-  const contentData =  {
-        data:[],
-        paginate:{},
-        search:'',
-        tag:'',
-      };
-  export default {
-    watchQuery: ['page','tag','search'],
-    scrollToTop: true,
-    components:{Header,Footer,ArticleList,Contact,RightContact},
-    computed:mapState(["webconfig"]),
-    head () {
-      const title = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com');
-      const search = this.$route.query.search?'|'+this.$route.query.search:'';
-      const tag = this.$route.query.tag?'|'+this.$route.query.tag:'';
-      return {
-        title: title+search+tag,
-        meta: [
-          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul' },
-          { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul' }
-        ]
-      }
-    },
-    async asyncData({ store,params,query, error }){
-      if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-        const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
-        if(siteData.status === 200) {
-            store.commit('setWebConfig',siteData.data.webconfig)
-            store.commit('setCategory',siteData.data.category)
-            store.commit('setTags',siteData.data.tags)
-            store.commit('setAdspace',(siteData.data.adspace))
-          }
-      }
-        const  [article]  = await Promise.all([store.dispatch('_content',{
-            paginate:siteInfo.productPageSize,
-            page:query.page,
-            search:query.search,
-            tag:query.tag,
-            })])
-        if(article.status === 200) {
-            contentData.data = article.data
-            contentData.paginate = article.paginate
-        }else{
-            contentData.data = []
-            contentData.paginate = {}
-        }
-        contentData.search = query.search?query.search:''
-        contentData.tag = query.tag?query.tag:''
-      return contentData;
-    }
-  };
+  import Search from '~/pages/_lang/search'
+  export default Search
 </script>
-<style lang="less" scoped>
-
-
-</style>

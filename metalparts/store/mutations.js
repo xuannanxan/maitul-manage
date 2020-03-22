@@ -58,5 +58,10 @@ export default {
         if(data && Object.keys(data).length){
             state.adspace = data
         }
-    }
+    },
+    setLang (state, locale) {
+        if (state.locales.includes(locale)) {
+          state.locale = locale
+        }
+      }
   }

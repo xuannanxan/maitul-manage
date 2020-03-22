@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-19 23:17:13
+ * @LastEditTime: 2020-03-19 22:52:13
  * @LastEditors: Xuannan
  -->
 <template>
@@ -11,14 +11,16 @@
     <a-back-top>
       <div class="right-btn"><a-icon type="to-top"/></div>
     </a-back-top>
-    <Header :currentCategory="[category_id?category_id:'']"/>
+    <Header :currentCategory="[]"/>
     <a-layout-content class="content">
       <a-row>
         <a-col :span="24">
           <div class="main">
-            <Info
+            <ArticleList
             :data="data"
-            :maxHeight='false'
+            :paginate="paginate"
+            :search="search"
+            :tag="tag"
             />
           </div>
         </a-col>
@@ -32,38 +34,35 @@
 <script>
     import Header from '@/components/common/Header';
     import Footer from '@/components/common/Footer';
-    import Tags from '@/components/common/Tags';
-    import Info from '@/components/list/Info';
+    import ArticleList from '@/components/list/ArticleList';
     import Contact from '@/components/common/Contact';
     import RightContact from '@/components/common/RightContact';
     import {mapState} from 'vuex';
     import {siteInfo}  from "@/config";
     import {findNodes} from '@/utils/treeNodes'
  
-  const articleData =  {
+  const contentData =  {
         data:[],
         paginate:{},
-        category_id:'',
-        tag:'',
         search:'',
-        category:{},
-        topCategory:{},
+        tag:'',
       };
   export default {
     watchQuery: ['page','tag','search'],
     scrollToTop: true,
-    components:{Header,Footer,Info,Contact,RightContact},
+    components:{Header,Footer,ArticleList,Contact,RightContact},
     computed:mapState(["webconfig"]),
     head () {
-        const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com')
-        const pageTitle = articleData.category.name?'|'+articleData.category.name:''
-        return {
-            title: siteTitle+pageTitle,
-            meta: [
-            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul')+(articleData.category.keywords?','+articleData.category.keywords:'') },
-            { hid: 'description', name: 'description', content: articleData.category.description?articleData.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul'  }
-            ]
-        }
+      const title = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com');
+      const search = this.$route.query.search?'|'+this.$route.query.search:'';
+      const tag = this.$route.query.tag?'|'+this.$route.query.tag:'';
+      return {
+        title: title+search+tag,
+        meta: [
+          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul' },
+          { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul' }
+        ]
+      }
     },
     async asyncData({ store,params,query, error }){
       if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
@@ -76,14 +75,21 @@
           }
       }
         const  [article]  = await Promise.all([store.dispatch('_content',{
-            id:params.id,
+            paginate:siteInfo.productPageSize,
+            page:query.page,
+            search:query.search,
+            tag:query.tag,
             })])
         if(article.status === 200) {
-            articleData.data = [article.data]
+            contentData.data = article.data
+            contentData.paginate = article.paginate
         }else{
-            articleData.data = []
+            contentData.data = []
+            contentData.paginate = {}
         }
-      return articleData;
+        contentData.search = query.search?query.search:''
+        contentData.tag = query.tag?query.tag:''
+      return contentData;
     }
   };
 </script>
