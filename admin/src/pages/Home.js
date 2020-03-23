@@ -2,7 +2,7 @@
  * @Description: 工作台首页
  * @Author: Xuannan
  * @Date: 2019-12-13 23:33:09
- * @LastEditTime: 2020-03-19 12:49:43
+ * @LastEditTime: 2020-03-23 13:01:10
  * @LastEditors: Xuannan
  */
 
@@ -25,6 +25,7 @@ import TagList from './cms/tag/List'
 import CategoryList from './cms/category/List'
 import ContentList from './cms/content/List'
 import MessageList from './message/List'
+import LangList from './lang/List'
 import {_menuTree} from '../utils/api'
 import { CSSTransition,TransitionGroup } from 'react-transition-group'
 import {getAllParent,getNode} from '../utils/treeNodes'
@@ -45,6 +46,7 @@ const RouteList = [
   {path:"/cms/:site/category",component:CategoryList},
   {path:"/cms/:site/content",component:ContentList},
   {path:"/message/:site",component:MessageList},
+  {path:"/lang",component:LangList},
 ]
 
 

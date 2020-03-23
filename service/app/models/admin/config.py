@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-13 17:29:28
-@LastEditTime : 2020-02-02 22:02:43
-@LastEditors  : Xuannan
+@LastEditTime: 2020-03-23 14:31:31
+@LastEditors: Xuannan
 '''
 # -*- coding: utf-8 -*- 
 # Created by xuannan on 2019-01-26.
@@ -24,6 +24,7 @@ class WebConfig(BaseModel):
     values = db.Column(db.Text) #可选值
     value = db.Column(db.Text)
     sort = db.Column(db.Integer, default=0)  # 排序
+    lang = db.Column(db.String(20))
 
     def __repr__(self):
         return '<WebConfig %r>' % self.name

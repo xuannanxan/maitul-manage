@@ -17,7 +17,7 @@ class MaitulTag(BaseModel):
     __tablename__ = "maitul_tag"
     name = db.Column(db.String(100), nullable=False)
     sort = db.Column(db.Integer, default=0)  # 排序
-
+    lang = db.Column(db.String(20))
     def __repr__(self):
         return '<MaitulTag %r>' % self.name
 

@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2019-12-18 21:53:35
- * @LastEditTime : 2020-02-08 17:32:30
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-03-23 12:57:04
+ * @LastEditors: Xuannan
  */
 import {Method} from "./http";
 const Http = require('./http');
@@ -20,7 +20,7 @@ const blogTagUrl = '/api/cms/blog/tag'
 const blogCategoryUrl = '/api/cms/blog/category'
 const blogContentUrl = '/api/cms/blog/content'
 const messageUrl = '/api/message'
-
+const langUrl = '/api/admin/lang'
 
 
 //登录
@@ -367,4 +367,24 @@ export const _messageReply = async (formData)=>{
 //删除留言
 export const _messageDelete = async (formData)=>{
   return await Http.request(messageUrl, Method.DELETE,formData)
+};
+
+// 语言配置--------------------------
+// 列表
+export const _langList = async ()=>{
+  return await Http.request(langUrl, Method.GET)
+};
+
+//新增
+export const _langAdd = async (formData)=>{
+  return await Http.request(langUrl, Method.POST,formData)
+};
+
+//修改
+export const _langEdit = async (formData)=>{
+  return await Http.request(langUrl, Method.PUT,formData)
+};
+//删除
+export const _langDelete = async (id)=>{
+  return await Http.request(langUrl, Method.DELETE,{id})
 };

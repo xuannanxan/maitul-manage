@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 19:28:32
-@LastEditTime : 2020-02-05 13:26:40
-@LastEditors  : Xuannan
+@LastEditTime: 2020-03-23 12:44:26
+@LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
@@ -93,6 +93,8 @@ class TagResource(Resource):
 
 
     @api.doc(api_doc=tag_doc.lst)
+    @login_required
+    @permission_required
     def get(self,site):
         '''
         标签列表

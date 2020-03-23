@@ -22,7 +22,7 @@ class MetalpartsCategory(BaseModel):
     pid = db.Column(db.String(32), default=0)  # 上级分类,0为最上级
     sort = db.Column(db.Integer, default=0)  # 排序
     url = db.Column(db.String(255))
-   
+    lang = db.Column(db.String(20))
 
     def __repr__(self):
         return '<MetalpartsCategory %r>' % self.name

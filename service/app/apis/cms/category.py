@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime: 2020-02-26 22:21:26
+@LastEditTime: 2020-03-23 12:45:02
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -120,6 +120,8 @@ class CategoryResource(Resource):
         
 
     @api.doc(api_doc=category_doc.lst)
+    @login_required
+    @permission_required
     def get(self,site):
         '''
         获取分类树

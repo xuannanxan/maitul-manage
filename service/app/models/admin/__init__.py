@@ -15,3 +15,4 @@ from .menu import Menu
 from .rule import Rule
 from .role import Role,RoleRule
 from .config import WebConfig
+from .lang import Lang

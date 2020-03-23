@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime: 2020-03-19 13:35:06
+@LastEditTime: 2020-03-23 12:42:37
 @LastEditors: Xuannan
 '''
 
@@ -191,6 +191,8 @@ class ConfigResource(Resource):
 
 class WebConfigResource(Resource):
     @api.doc(api_doc=doc.lst)
+    @login_required
+    @permission_required
     def get(self):
         '''
         获取配置列表

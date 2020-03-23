@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime: 2020-03-19 22:49:35
+@LastEditTime: 2020-03-23 12:44:37
 @LastEditors: Xuannan
 '''
 
@@ -137,6 +137,8 @@ class ContentResource(Resource):
 
         
     @api.doc(api_doc=content_doc.lst)
+    @login_required
+    @permission_required
     def get(self,site):
         '''
         内容列表1

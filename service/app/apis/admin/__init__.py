@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-13 10:35:39
-@LastEditTime : 2020-02-02 15:08:28
-@LastEditors  : Xuannan
+@LastEditTime: 2020-03-23 11:35:45
+@LastEditors: Xuannan
 '''
 from flask_restful import Api
 from app.apis.admin.admin import AdminResource,AdminLogin,AdminCurrent,AdminAuth
@@ -13,6 +13,7 @@ from app.apis.admin.menu import MenuResource
 from app.apis.admin.rule import RuleResource
 from app.apis.admin.role import RoleResource,RoleAuthResource
 from app.apis.admin.config import WebConfigResource,ConfigResource
+from app.apis.admin.lang import LangResource
 from app.apis import api_blueprint
 
 
@@ -36,3 +37,6 @@ admin_api.add_resource(RoleAuthResource,'/admin/role/auth')
 # 配置项
 admin_api.add_resource(WebConfigResource,'/webconfig')
 admin_api.add_resource(ConfigResource,'/admin/config')
+
+# 语言
+admin_api.add_resource(LangResource,'/admin/lang')

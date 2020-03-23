@@ -1,38 +1,29 @@
 
 from flask_restful import Resource,reqparse,fields,marshal,abort
 from app.apis.api_constant import *
-from app.models import Ad,Crud
+from app.models import Lang
 from app.utils import object_to_json,mysql_to_json
 from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
-from app.api_docs.resource import ad_doc as doc
+from app.api_docs.admin import lang_doc as doc
 from flask import g
 from app.config import PAGINATE_NUM
 
-api = Apidoc('通用-广告管理')
+api = Apidoc('系统-语言类型管理')
 
 # 单数据操作
 parse_id = reqparse.RequestParser()
 parse_id.add_argument('id',type=str)
-parse_id.add_argument('space_id',type=str)
-parse_id.add_argument('ename',type=str)
 
 parse_base = parse_id.copy()
 parse_base.add_argument('name',type=str,required=True,help='请输入名称')
-parse_base.add_argument('url',type=str)
-parse_base.add_argument('info',type=str)
-parse_base.add_argument('img',type=str,required=True,help='请上传图片')
+parse_base.add_argument('ename',type=str,required=True,help='请输入调用名称')
 parse_base.add_argument('sort',type=int,help='排序号只能是数字')
 
 
-
 _fields = {
-    'space_id':fields.String,
     'name':fields.String,
-    'info':fields.String,
-    'img':fields.String,
-    'url':fields.String,
-    'sort':fields.Integer,
+    'ename':fields.String,
     'id':fields.String
 }
 sing_fields = {
@@ -42,12 +33,12 @@ sing_fields = {
 }
 
 def getSingData(id):
-    data = Ad.query.filter_by(id = id , is_del = '0').first()
+    data = Lang.query.filter_by(id = id , is_del = '0').first()
     if not data :
-        abort(RET.NotFound,msg='广告位不存在')
+        abort(RET.NotFound,msg='语言类型不存在')
     return data
 
-class AdResource(Resource):
+class LangResource(Resource):
     @api.doc(api_doc=doc.add)
     @login_required
     @permission_required
@@ -56,18 +47,15 @@ class AdResource(Resource):
         添加
         '''
         args = parse_base.parse_args()
-        space_id = args.get('space_id')
-        url = args.get('url')
-        info = args.get('info')
-        img = args.get('img')
         name = args.get('name')
+        ename = args.get('ename')
         sort = args.get('sort')
-        model_data = Ad()
-        model_data.space_id = space_id
-        model_data.img = img
-        model_data.url = url
-        model_data.info = info
+        _data = Lang.query.filter_by(ename=ename,is_del = '0').first()
+        if _data:
+            abort(RET.Forbidden,msg='语言类型已存在')
+        model_data = Lang()
         model_data.name = name
+        model_data.ename = ename
         model_data.sort = sort
         model_data.last_editor = g.admin.username
         if model_data.add():
@@ -78,10 +66,10 @@ class AdResource(Resource):
             }
             return marshal(data,sing_fields)
         abort(RET.BadRequest,msg='添加失败，请重试')
-        
+
     @api.doc(api_doc=doc.put)
-    @login_required 
-    @permission_required 
+    @login_required  
+    @permission_required
     def put(self):
         '''
         修改
@@ -91,20 +79,18 @@ class AdResource(Resource):
         if not id:
             abort(RET.BadRequest,msg='请勿非法操作')
         sing_data = getSingData(id)
-        space_id = args.get('space_id')
-        url = args.get('url')
-        info = args.get('info')
-        img = args.get('img')
         name = args.get('name')
+        ename = args.get('ename')
         sort = args.get('sort')
+        # 如果名称存在，并且ID不是当前ID
+        _data = Lang.query.filter(Lang.id != id , Lang.is_del == '0',Lang.ename == ename).first()
+        if _data:
+            abort(RET.Forbidden,msg='权限规则已存在')
         sing_data.name = name
+        sing_data.ename = ename 
         sing_data.sort = sort if sort else sing_data.sort
-        sing_data.space_id = space_id if space_id else sing_data.space_id
-        sing_data.url = url if url else sing_data.url
-        sing_data.info = info if info else sing_data.info
-        sing_data.img = img if img else sing_data.img
         sing_data.last_editor = g.admin.username
-        result =sing_data.updata()
+        result = sing_data.updata()
         if result:
             data =  {
                 'status':RET.OK,
@@ -113,58 +99,31 @@ class AdResource(Resource):
             }
             return marshal(data,sing_fields)
         abort(RET.BadRequest,msg='修改失败，请重试')
-        
 
-    @api.doc(api_doc=doc.lst)
+    @api.doc(api_doc=doc.get)
     @login_required
     @permission_required
     def get(self):
         '''
-        获取列表
+        获取数据，如果有ID就是单个数据，没有就是全部数据
         '''
         args_id = parse_id.parse_args()
         id = args_id.get('id')
-        space_id = args_id.get('space_id')
-        ename = args_id.get('ename')
         if id:
             return {
                         'status':RET.OK,
                         'data':object_to_json(getSingData(id))
                 } 
-        if space_id:
-            _list = Ad.query.filter_by(is_del = '0',space_id=space_id).order_by(Ad.sort.desc()).all()
-            if not _list:
-                abort(RET.BadRequest,msg='暂无数据')
-            data = {
+        _list = Lang.query.filter_by(is_del = '0').order_by(Lang.sort.desc()).all()
+        if not _list:
+            abort(RET.BadRequest,msg='暂无数据')
+        data = {
                     'status':RET.OK,
                     'data':[object_to_json(v) for v in _list]
             }
-            return data 
-        if ename:
-            sql = '''
-                SELECT 
-                a.name,a.info,a.url,a.img
-                FROM ad as a
-                left join ad_space as s on s.id = a.space_id
-                WHERE a.is_del = 0
-                AND s.ename = '%s'
-                ORDER BY a.sort DESC;
-            '''%ename
-            sql_data = Crud.auto_select(sql)
-            if  sql_data:
-                fetchall_data = sql_data.fetchall()
-                if not fetchall_data:
-                    abort(RET.NotFound,msg='暂无数据')
-                data = {
-                            'status':RET.OK,
-                            'data':([mysql_to_json(dict(v))  for v in fetchall_data])
-                    }
-                return data    
-        abort(RET.BadRequest,msg='暂无数据')
-        
+        return data 
 
-    
-        
+ 
     @api.doc(api_doc=doc.delete)
     @login_required
     @permission_required
