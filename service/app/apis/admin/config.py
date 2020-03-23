@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime: 2020-03-23 16:56:13
+@LastEditTime: 2020-03-23 23:43:14
 @LastEditors: Xuannan
 '''
 
@@ -230,7 +230,8 @@ class WebConfigResource(Resource):
         _list = WebConfig.query.filter_by(is_del = '0').order_by(WebConfig.sort.desc()).all()
         for v in _list:
             # 加|区分站点，因为调用名称要多站复用
-            v.value = data.get(v.site+'|'+v.ename)
+            if data.get(v.site+'|'+v.ename):
+                v.value = data.get(v.site+'|'+v.ename)
         result = WebConfig().updata()
         if result:
             data =  {

@@ -2,21 +2,22 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime: 2020-03-23 14:40:46
+ * @LastEditTime: 2020-03-23 23:27:55
  * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
 import {_configList,_configDelete,_langList} from '../../utils/api'
-import {Table ,Divider ,Icon ,Menu ,Button ,Modal,message,Col,Row,Spin} from 'antd';
+import {Table ,Divider ,Icon ,Menu ,Button ,Tabs ,Modal,message,Col,Row,Spin} from 'antd';
 import ConfForm from './Form'
 import {webSites} from '../config'
-
+const { TabPane } = Tabs;
 const { confirm } = Modal;
 const ConfList = ()=>{
     const [langList,setLangList] = useState([])
     const [isLoading,setIsLoading] = useState(false)
     const [confList,setConfList] = useState([])
-    const [site,setSite] = useState('')
+    const [site,setSite] = useState(webSites[0].site)
+    const [lang,setLang] = useState('common')
     const [visible,setVisible] = useState(false)
     const [confirmLoading,setConfirmLoading] = useState(false)
     const [title,setTitle] = useState('新增权限规则')
@@ -26,6 +27,12 @@ const ConfList = ()=>{
     const initData = ()=>{
       _configList().then(res=>{
         setConfList(res.data.data)
+      })
+      _langList().then(res=>{
+        setLangList(res.data.data)
+        if(res.data.data.length){
+          setLang(res.data.data[0].ename)
+        }
       })
     }
    
@@ -86,13 +93,27 @@ const ConfList = ()=>{
           initData()
         },300)
     }
+    const changeLang = (key)=>{
+      setLang(key)
+    }
+    
+
+    const selectData = ()=>{
+      let arr = []
+      confList[site].forEach(item => {
+        if(item.lang===lang || item.lang===null||item.lang==='common'){
+          arr.push(item)
+        }
+      });
+      return arr
+    }
+    
+    const confData = confList[site]?selectData():[]
 
     useEffect(()=>{
         initData()
-        _langList().then(res=>{
-          setLangList(res.data.data)
-        })
       },[])
+
     const columns = [
         {
           title: '配置项名称',
@@ -121,6 +142,18 @@ const ConfList = ()=>{
             ),
         },
     ];  
+    const confTable =(
+        <Spin tip="Loading..." spinning={isLoading}>
+          {confData && confData.length? 
+            <Table rowKey="id" 
+            dataSource={confData} 
+            columns={columns} 
+            pagination={false} 
+            />
+              : '暂无数据' }
+        </Spin>
+      )
+    
     return (
         <div className='main-content'>
             <Row>
@@ -130,6 +163,7 @@ const ConfList = ()=>{
                 {webSites && webSites.length?
                   <Menu 
                   onClick = {showConfigItem}
+                  defaultSelectedKeys={[site]}
                   >
                     {sitesItem()}
                   </Menu>
@@ -139,15 +173,18 @@ const ConfList = ()=>{
                 <Col span={20} style={{paddingLeft:'10px'}}>
                   <Button type="primary" onClick={showModal} size="large"><Icon type="plus"/> 添加</Button>
                   <Divider className='divider'/>
-                  <Spin tip="Loading..." spinning={isLoading}>
-                  {confList[site] && confList[site].length? 
-                    <Table rowKey="id" 
-                    dataSource={confList[site]} 
-                    columns={columns} 
-                    pagination={false} 
-                    />
-                      : '暂无数据' }
-                  </Spin>
+                  <Tabs defaultActiveKey={lang} onChange={changeLang}>
+                    {langList && langList.length? 
+                    langList.map(item => (
+                      <TabPane tab={item.name} key={item.ename}>
+                        {confTable}
+                      </TabPane>
+                    ))
+                    :
+                    <TabPane tab="通用" key="common">
+                      {confTable}
+                    </TabPane>}
+                  </Tabs>
                 </Col>
             </Row>
             <Modal
