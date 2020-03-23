@@ -5,7 +5,7 @@ import {webSites} from '../config'
 const { Option } = Select;
 
 function SubmitForm(props){
-    let { form,params,handleCancel} = props
+    let { form,params,langList,handleCancel} = props
     const [fieldType,setFieldType] = useState('')
     const [selectValue,setSelectValue] = useState([])
     const { getFieldDecorator } = form; //表单内容
@@ -55,6 +55,7 @@ function SubmitForm(props){
                     fieldType:params.fieldType,
                     placeholder:params.placeholder,
                     value:params.value,
+                    lang:params.lang,
                     sort:params.sort?params.sort:1,
                     values:params.values?params.values.split(','):[],
                 })
@@ -87,7 +88,23 @@ function SubmitForm(props){
                         </Select>,
                     )}
                 </Form.Item>
-                
+                <Form.Item label='语言类型'>
+                    {getFieldDecorator('lang', {
+                    })(
+                        <Select
+                            placeholder="请选择语言类型..."
+                            size='large'
+                        >
+                        <Option key="common">通用</Option>
+                        {langList && langList.length? 
+                            langList.map((item,index)=>{
+                            return(
+                                <Option key={item.ename}>{item.name}</Option>
+                            )
+                        }):''}
+                        </Select>,
+                    )}
+                </Form.Item>
                 <Form.Item label='配置项名称'>
                     {getFieldDecorator('name', {
                         rules: [{ required: true, message: '请输入配置项名称!' }],

@@ -2,17 +2,18 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-02-02 22:32:20
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-03-23 14:40:46
+ * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
-import {_configList,_configDelete} from '../../utils/api'
+import {_configList,_configDelete,_langList} from '../../utils/api'
 import {Table ,Divider ,Icon ,Menu ,Button ,Modal,message,Col,Row,Spin} from 'antd';
 import ConfForm from './Form'
 import {webSites} from '../config'
 
 const { confirm } = Modal;
 const ConfList = ()=>{
+    const [langList,setLangList] = useState([])
     const [isLoading,setIsLoading] = useState(false)
     const [confList,setConfList] = useState([])
     const [site,setSite] = useState('')
@@ -88,6 +89,9 @@ const ConfList = ()=>{
 
     useEffect(()=>{
         initData()
+        _langList().then(res=>{
+          setLangList(res.data.data)
+        })
       },[])
     const columns = [
         {
@@ -154,7 +158,7 @@ const ConfList = ()=>{
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             >
-            <ConfForm cRef={formRef} params={formData}  handleCancel={handleCancel}/>
+            <ConfForm cRef={formRef} params={formData} langList={langList} handleCancel={handleCancel} />
             </Modal>
         </div>
     )

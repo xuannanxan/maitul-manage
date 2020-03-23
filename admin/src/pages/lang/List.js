@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime: 2020-03-23 14:26:22
+ * @LastEditTime: 2020-03-23 14:41:01
  * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -10,7 +10,6 @@ import {_langList,_langDelete} from '../../utils/api'
 import {Table ,Divider ,Icon  ,Button ,Modal,message,Spin} from 'antd';
 import TagForm from './Form'
 
-const pageSize = 8
 const { confirm } = Modal;
 const LangList = (props)=>{
     const [isLoading,setIsLoading] = useState(false)

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime: 2020-03-23 12:42:37
+@LastEditTime: 2020-03-23 16:56:13
 @LastEditors: Xuannan
 '''
 
@@ -33,6 +33,7 @@ parse_base.add_argument('fieldType',type=str,required=True,help='请选择字段
 parse_base.add_argument('placeholder')
 parse_base.add_argument('values')
 parse_base.add_argument('value')
+parse_base.add_argument('lang')
 parse_base.add_argument('sort',type=int,help='排序号只能是数字')
 
 
@@ -43,6 +44,7 @@ _fields = {
     'site':fields.String,
     'name':fields.String,
     'ename':fields.String,
+    'lang':fields.String,
     'fieldType':fields.String,
     'placeholder':fields.String,
     'values':fields.String,
@@ -79,7 +81,8 @@ class ConfigResource(Resource):
         values = args.get('values')
         value = args.get('value')
         sort = args.get('sort')
-        _data = WebConfig.query.filter_by(ename = ename,site=site,is_del = '0').first()
+        lang = args.get('lang')
+        _data = WebConfig.query.filter_by(lang = lang,ename = ename,site=site,is_del = '0').first()
         if _data:
             abort(RET.Forbidden,msg='配置项已存在')
         model_data = WebConfig()
@@ -91,6 +94,7 @@ class ConfigResource(Resource):
         model_data.values = values
         model_data.value = value
         model_data.sort = sort
+        model_data.lang = lang
         model_data.last_editor = g.admin.username
         if model_data.add():
             data = {
@@ -121,13 +125,15 @@ class ConfigResource(Resource):
         values = args.get('values')
         value = args.get('value')
         sort = args.get('sort')
+        lang = args.get('lang')
         # 如果名称存在，并且ID不是当前ID
-        _data = WebConfig.query.filter(WebConfig.id != id , WebConfig.is_del == '0',WebConfig.ename == ename,WebConfig.site == site).first()
+        _data = WebConfig.query.filter(WebConfig.id != id , WebConfig.is_del == '0',WebConfig.ename == ename,WebConfig.lang == lang,WebConfig.site == site).first()
         if _data:
             abort(RET.Forbidden,msg='配置项已存在')
         sing_data.ename = ename
         sing_data.name = name
         sing_data.site = site
+        sing_data.lang = lang
         sing_data.fieldType = fieldType
         sing_data.placeholder = placeholder if placeholder else sing_data.placeholder
         sing_data.values = values if values else sing_data.values
