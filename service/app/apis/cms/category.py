@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime: 2020-03-23 12:45:02
+@LastEditTime: 2020-03-24 18:24:38
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -15,7 +15,7 @@ from app.apis.admin.common import login_required,permission_required
 from app.utils.api_doc import Apidoc
 from app.api_docs.cms import category_doc
 from flask import g
-
+from sqlalchemy import or_,and_
 from app.models import BlogCategory,MaitulCategory,MetalpartsCategory,InfoCategory
 
 
@@ -34,6 +34,7 @@ parse_base.add_argument('description')
 parse_base.add_argument('icon')
 parse_base.add_argument('cover')
 parse_base.add_argument('url')
+parse_base.add_argument('lang')
 parse_base.add_argument('sort',type=int,help='排序号只能是数字')
 
 cate_fields = {
@@ -46,6 +47,7 @@ cate_fields = {
     'cover':fields.String,
     'url':fields.String,
     'sort':fields.Integer,
+    'lang':fields.String,
     'id':fields.String
 }
 sing_cate_fields = {
@@ -93,8 +95,12 @@ class CategoryResource(Resource):
         icon = args.get('icon')
         cover = args.get('cover')
         sort = args.get('sort')
+        lang = args.get('lang')
         url = args.get('url')
-        cate = categoryModel.query.filter_by(ename = ename,is_del = '0').first()
+        cate = categoryModel.query.filter(
+            categoryModel.is_del == '0',
+            categoryModel.ename == ename,
+            or_(categoryModel.lang == lang,categoryModel.lang == 'common',categoryModel.lang == None)).first()
         if cate:
             abort(RET.Forbidden,msg='分类已存在')
         cateData = categoryModel()
@@ -107,6 +113,7 @@ class CategoryResource(Resource):
         cateData.cover = cover
         cateData.sort = sort
         cateData.url = url
+        cateData.lang = lang
         cateData.last_editor = g.admin.username
         if cateData.add():
             data = {
@@ -165,14 +172,20 @@ class CategoryResource(Resource):
         description = args.get('description')
         icon = args.get('icon')
         cover = args.get('cover')
+        lang = args.get('lang')
         sort = args.get('sort')
         url = args.get('url')
         # 如果名称存在，并且ID不是当前ID
-        cate = categoryModel.query.filter(categoryModel.id != id , categoryModel.is_del == '0',categoryModel.ename == ename).first()
+        cate = categoryModel.query.filter(
+            categoryModel.id != id ,
+            categoryModel.is_del == '0',
+            categoryModel.ename == ename,
+            or_(categoryModel.lang == lang,categoryModel.lang == 'common',categoryModel.lang == None)).first()
         if cate:
             abort(RET.Forbidden,msg='标签已存在')
         cateData.name = name
         cateData.ename = ename
+        cateData.lang = lang
         cateData.pid = pid if pid else cateData.pid
         cateData.keywords = keywords if keywords else cateData.keywords
         cateData.description = description if description else cateData.description

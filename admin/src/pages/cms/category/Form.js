@@ -1,10 +1,10 @@
 import React, { useState ,useImperativeHandle} from 'react';
 import { Input ,Form ,InputNumber,TreeSelect,Select,message} from 'antd';
 import {_cmsCategoryAdd,_cmsCategoryEdit} from '../../../utils/api'
-const {TextArea} = Input
-
+const {TextArea} = Input;
+const { Option } = Select;
 function SubmitForm(props){
-    let { form,params,dataTree,site,handleCancel} = props
+    let { form,params,dataTree,site,handleCancel,langList} = props
     const { getFieldDecorator } = form; //表单内容
     const [treeData,setTreeData] = useState([])
     const edit= (formData) => {
@@ -52,6 +52,7 @@ function SubmitForm(props){
                     ename:params.ename,
                     url:params.url,
                     icon:params.icon,
+                    lang:params.lang,
                     description:params.description,
                     keywords:params.keywords?params.keywords.split(','):[],
                     sort:params.sort?params.sort:1
@@ -88,6 +89,23 @@ function SubmitForm(props){
                             placeholder="请选择上级分类"
                             treeDefaultExpandAll
                         />,
+                    )}
+                </Form.Item>
+                <Form.Item label='语言类型'>
+                    {getFieldDecorator('lang', {
+                    })(
+                        <Select
+                            placeholder="请选择语言类型..."
+                            size='large'
+                        >
+                        <Option key="common">通用</Option>
+                        {langList && langList.length? 
+                            langList.map((item,index)=>{
+                            return(
+                                <Option key={item.ename}>{item.name}</Option>
+                            )
+                        }):''}
+                        </Select>,
                     )}
                 </Form.Item>
                 <Form.Item label='分类名称'>

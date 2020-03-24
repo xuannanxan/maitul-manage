@@ -2,22 +2,23 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime: 2020-02-26 22:47:39
+ * @LastEditTime: 2020-03-24 18:33:58
  * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
-import {Table ,Divider ,Icon ,Button ,Modal,message} from 'antd';
-import {_cmsCategoryList ,_cmsCategoryDelete } from '../../../utils/api'
+import {Table ,Divider ,Icon ,Button ,Modal,message,Tabs} from 'antd';
+import {_cmsCategoryList ,_cmsCategoryDelete,_langList } from '../../../utils/api'
 import CategoryForm from './Form'
 
 const { confirm } = Modal;
-
+const { TabPane } = Tabs;
 function CategoryList(props){
     const [dataTree,setDataTree] = useState([])
     const [visible,setVisible] = useState(false)
     const [confirmLoading,setConfirmLoading] = useState(false)
     const [title,setTitle] = useState('新增菜单')
     const [editData,setEditData] = useState({})
+    const [langList,setLangList] = useState([])
     const formRef = useRef();
     // 获取分类树
     const getCategoryTree = ()=>{
@@ -112,8 +113,21 @@ function CategoryList(props){
           getCategoryTree()
         },500)
     }
-
+    
+    const selectData = (lang)=>{
+      let arr = []
+      dataTree.forEach(item => {
+        if(item.lang===lang || item.lang===null||item.lang==='common'){
+          arr.push(item)
+        }
+      });
+      return arr
+    }
+    
     useEffect(()=>{
+      _langList().then(res=>{
+        setLangList(res.data.data)
+      })
       _cmsCategoryList({},props.match.params.site).then(res=>{
         setDataTree(res.data.data)
       })
@@ -122,13 +136,30 @@ function CategoryList(props){
         <div className='main-content'>
             <Button type="primary" onClick={showFormModal} size="large"><Icon type="plus"/> 添加</Button>
             <Divider className='divider'/>
-            {dataTree && dataTree.length? 
-            <Table rowKey="id" 
-            dataSource={dataTree} 
-            columns={columns} 
-            pagination={false} 
-            defaultExpandAllRows={true}/>
-              : '暂无数据' }
+            <Tabs defaultActiveKey={langList.length?langList[0].ename:'common'}>
+              {langList && langList.length? 
+              langList.map(item => (
+                <TabPane tab={item.name} key={item.ename}>
+                  {selectData(item.ename) && selectData(item.ename).length? 
+                    <Table rowKey="id" 
+                    dataSource={selectData(item.ename)} 
+                    columns={columns} 
+                    pagination={false} 
+                    defaultExpandAllRows={true}/>
+                      : '暂无数据' }
+                </TabPane>
+              ))
+              :
+              <TabPane tab="通用" key="common">
+                {dataTree && dataTree.length? 
+                  <Table rowKey="id" 
+                  dataSource={dataTree} 
+                  columns={columns} 
+                  pagination={false} 
+                  defaultExpandAllRows={true}/>
+                    : '暂无数据' }
+              </TabPane>}
+            </Tabs>
             
             <Modal
             width={600}
@@ -144,6 +175,7 @@ function CategoryList(props){
             site={props.match.params.site} 
             dataTree={dataTree} 
             handleCancel={handleCancel} 
+            langList={langList}
             />
             </Modal>
         </div>

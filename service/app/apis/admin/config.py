@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-20 18:05:19
-@LastEditTime: 2020-03-23 23:43:14
+@LastEditTime: 2020-03-24 17:34:01
 @LastEditors: Xuannan
 '''
 
@@ -17,6 +17,7 @@ from app.utils.api_doc import Apidoc
 from app.api_docs.admin import conf_doc as doc
 from flask import g ,request
 import json
+from sqlalchemy import or_,and_
 
 api = Apidoc('系统-配置项')
 
@@ -82,7 +83,11 @@ class ConfigResource(Resource):
         value = args.get('value')
         sort = args.get('sort')
         lang = args.get('lang')
-        _data = WebConfig.query.filter_by(lang = lang,ename = ename,site=site,is_del = '0').first()
+        _data = WebConfig.query.filter(
+            WebConfig.is_del == '0',
+            WebConfig.ename == ename,
+            WebConfig.site == site,
+            or_(WebConfig.lang == lang,WebConfig.lang == 'common',WebConfig.lang == None)).first()
         if _data:
             abort(RET.Forbidden,msg='配置项已存在')
         model_data = WebConfig()
@@ -127,7 +132,12 @@ class ConfigResource(Resource):
         sort = args.get('sort')
         lang = args.get('lang')
         # 如果名称存在，并且ID不是当前ID
-        _data = WebConfig.query.filter(WebConfig.id != id , WebConfig.is_del == '0',WebConfig.ename == ename,WebConfig.lang == lang,WebConfig.site == site).first()
+        _data = WebConfig.query.filter(
+            WebConfig.id != id ,
+            WebConfig.is_del == '0',
+            WebConfig.ename == ename,
+            WebConfig.site == site,
+            or_(WebConfig.lang == lang,WebConfig.lang == 'common',WebConfig.lang == None)).first()
         if _data:
             abort(RET.Forbidden,msg='配置项已存在')
         sing_data.ename = ename

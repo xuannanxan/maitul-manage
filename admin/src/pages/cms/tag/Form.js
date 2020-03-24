@@ -2,16 +2,16 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-27 21:27:29
- * @LastEditTime : 2020-01-27 21:49:30
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-03-24 13:40:18
+ * @LastEditors: Xuannan
  */
 import React, {useImperativeHandle} from 'react';
-import { Input ,Form ,InputNumber,message} from 'antd';
+import { Input ,Form ,InputNumber,message,Select} from 'antd';
 import {_cmsTagAdd,_cmsTagEdit} from '../../../utils/api'
-
+const { Option } = Select;
 
 function SubmitForm(props){
-    let { form,params,site ,handleCancel} = props
+    let { form,params,site ,handleCancel,langList} = props
     const { getFieldDecorator } = form; //表单内容
     
 
@@ -50,6 +50,7 @@ function SubmitForm(props){
                 form.setFieldsValue({
                     id:params.id,
                     name:params.name,
+                    lang:params.lang,
                     sort:params.sort?params.sort:1,
                 })
             }
@@ -68,6 +69,23 @@ function SubmitForm(props){
                         placeholder="请输入标签名称..."
                         size='large'
                         />,
+                    )}
+                </Form.Item>
+                <Form.Item label='语言类型'>
+                    {getFieldDecorator('lang', {
+                    })(
+                        <Select
+                            placeholder="请选择语言类型..."
+                            size='large'
+                        >
+                        <Option key="common">通用</Option>
+                        {langList && langList.length? 
+                            langList.map((item,index)=>{
+                            return(
+                                <Option key={item.ename}>{item.name}</Option>
+                            )
+                        }):''}
+                        </Select>,
                     )}
                 </Form.Item>
                 <Form.Item label='排序号'>

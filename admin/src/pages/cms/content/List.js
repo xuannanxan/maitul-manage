@@ -2,17 +2,18 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime: 2020-02-28 10:02:05
+ * @LastEditTime: 2020-03-24 19:03:29
  * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef , useReducer} from 'react';
-import {_cmsTagList , _cmsCategoryList,_cmsContentList,_cmsContentDelete} from '../../../utils/api'
-import {Table ,Tree ,Divider ,Avatar ,Icon ,Input ,Button ,Modal,message,Col,Row,Spin} from 'antd';
+import {_cmsTagList , _cmsCategoryList,_cmsContentList,_cmsContentDelete,_langList} from '../../../utils/api'
+import {Table ,Tree ,Divider ,Avatar ,Icon ,Input ,Button ,Modal,message,Col,Row,Spin,Tabs} from 'antd';
 import ContentForm from './Form';
 const pageSize = 8
 const { TreeNode } = Tree;
 const { confirm } = Modal;
 const { Search } = Input;
+const { TabPane } = Tabs;
 const ContentList = (props)=>{
     const [isLoading,setIsLoading] = useState(false)
     const [dataTree,setDataTree] = useState([])
@@ -25,6 +26,7 @@ const ContentList = (props)=>{
     const [dataTotal,setDataTotal] = useState('')
     const [searchKeywords,setSearchKeywords] = useState('')
     const [currentPage,setCurrentPage] = useState(1)
+    const [langList,setLangList] = useState([])
     const formRef = useRef();
 
     const [content,setContent] = useReducer((state,action)=>{
@@ -169,10 +171,18 @@ const ContentList = (props)=>{
         },
     ]; 
 
-
+    const selectData = (lang)=>{
+      let arr = []
+      dataTree.forEach(item => {
+        if(item.lang===lang || item.lang===null||item.lang==='common'){
+          arr.push(item)
+        }
+      });
+      return arr
+    }
     useEffect(()=>{
       _cmsCategoryList({},props.match.params.site).then(res=>{
-        setDataTree(res.data.data)
+        setDataTree(res.data.data) 
       })
       _cmsTagList({},props.match.params.site).then(res=>{
         setTagList(res.data.data)
@@ -180,6 +190,9 @@ const ContentList = (props)=>{
       _cmsContentList({category_id:'',page:1,paginate:pageSize},props.match.params.site).then(res=>{
         setContentList(res.data.data)
         setDataTotal(res.data.paginate.total)
+      })
+      _langList().then(res=>{
+        setLangList(res.data.data)
       })
     },[props.match.params.site])
     return (
@@ -189,17 +202,42 @@ const ContentList = (props)=>{
             <Col span={4} style={{paddingRight:'10px',borderRight:'1px solid #e8e8e8'}}>
             <div><h3>内容分类</h3></div>
             <Divider className='divider'/>
-            {dataTree && dataTree.length?
-            <Tree
-            showIcon
-            blockNode
-            defaultExpandAll={true}
-            onSelect={showContentList}
-            selectedKeys={[categoryId]}
-            >
-                {loop(dataTree)}
-            </Tree>
-            : '暂无数据' }     
+            <Tabs defaultActiveKey={langList.length?langList[0].ename:'common'}>
+              {langList && langList.length? 
+              langList.map(item => (
+                <TabPane tab={item.name} key={item.ename}>
+                  {selectData(item.ename) && selectData(item.ename).length?
+                    <Tree
+                    showIcon
+                    blockNode
+                    defaultExpandAll={true}
+                    onSelect={showContentList}
+                    selectedKeys={[categoryId]}
+                    >
+                        {loop(selectData(item.ename))}
+                    </Tree>
+                    : '暂无数据' } 
+                </TabPane>
+              ))
+              :
+              <TabPane tab="通用" key="common">
+                {dataTree && dataTree.length?
+                  <Tree
+                  showIcon
+                  blockNode
+                  defaultExpandAll={true}
+                  onSelect={showContentList}
+                  selectedKeys={[categoryId]}
+                  >
+                      {loop(dataTree)}
+                  </Tree>
+                  : '暂无数据' } 
+                </TabPane>}
+            </Tabs>
+
+
+
+    
             </Col>
             <Col span={20} style={{paddingLeft:'10px'}}>
               <div>

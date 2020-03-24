@@ -2,15 +2,14 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime : 2020-02-05 13:17:46
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-03-24 18:38:23
+ * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
-import {_cmsTagList,_cmsTagDelete} from '../../../utils/api'
-import {Table ,Divider ,Icon  ,Button ,Modal,message,Spin} from 'antd';
+import {_cmsTagList,_cmsTagDelete,_langList} from '../../../utils/api'
+import {Table ,Divider ,Icon ,Tabs ,Button ,Modal,message,Spin} from 'antd';
 import TagForm from './Form'
-
-const pageSize = 8
+const { TabPane } = Tabs;
 const { confirm } = Modal;
 const TagList = (props)=>{
     const [isLoading,setIsLoading] = useState(false)
@@ -19,26 +18,21 @@ const TagList = (props)=>{
     const [confirmLoading,setConfirmLoading] = useState(false)
     const [title,setTitle] = useState('新增博客标签')
     const [formData,setFormData] = useState({})
-    const [tagTotal,setTagTotal] = useState('')
-    const [currentPage,setCurrentPage] = useState(1)
+    const [langList,setLangList] = useState([])
+
     const formRef = useRef();
 
     //获取权限规则列表
-    const getList = (page = currentPage)=>{
+    const getList = ()=>{
       setIsLoading(true)
-      _cmsTagList({page:page,paginate:pageSize},props.match.params.site).then(res=>{
+      _cmsTagList({},props.match.params.site).then(res=>{
         setTagList(res.data.data)
-        setTagTotal(res.data.paginate.total)
       })
       setTimeout(()=>{
         setIsLoading(false)
       },300)
     }
     
-    const getCurrentList = (page)=>{
-      getList(page)
-      setCurrentPage(page)
-    }
 
     const showModal=(record)=>{
       if(record.id){
@@ -81,12 +75,24 @@ const TagList = (props)=>{
           getList()
         },300)
     }
-    
+
+    const selectData = (lang)=>{
+      let arr = []
+      tagList.forEach(item => {
+        if(item.lang===lang || item.lang===null||item.lang==='common'){
+          arr.push(item)
+        }
+      });
+      return arr
+    }
+
     useEffect(()=>{
       setIsLoading(true)
-      _cmsTagList({page:1,paginate:pageSize},props.match.params.site).then(res=>{
+      _cmsTagList({},props.match.params.site).then(res=>{
         setTagList(res.data.data)
-        setTagTotal(res.data.paginate.total)
+      })
+      _langList().then(res=>{
+        setLangList(res.data.data)
       })
       setTimeout(()=>{
         setIsLoading(false)
@@ -119,27 +125,40 @@ const TagList = (props)=>{
               </span>
             ),
         },
-    ];  
+    ];
+
     return (
         <div className='main-content'>
             <Button type="primary" onClick={showModal} size="large"><Icon type="plus"/> 添加</Button>
             <Divider className='divider'/>
-            <Spin tip="Loading..." spinning={isLoading}>
-            {tagList && tagList.length? 
-              <Table rowKey="id" 
-              dataSource={tagList} 
-              columns={columns} 
-              pagination={{
-                total: tagTotal,
-                pageSize:pageSize,
-                showTotal:(total, range) => `${range[0]}-${range[1]} 总计: ${total} `,
-                defaultCurrent:currentPage,
-                current:currentPage,
-                onChange:(page)=>getCurrentList(page)
-              }}
-              />
-                : '暂无数据' }
-            </Spin>
+            <Tabs defaultActiveKey={langList.length?langList[0].ename:'common'} >
+              {langList && langList.length? 
+              langList.map(item => (
+                <TabPane tab={item.name} key={item.ename}>
+                  <Spin tip="Loading..." spinning={isLoading}>
+                  {selectData(item.ename) && selectData(item.ename).length? 
+                    <Table rowKey="id" 
+                    dataSource={selectData(item.ename)} 
+                    columns={columns} 
+                    pagination={false} 
+                    />
+                      : '暂无数据' }
+                  </Spin>
+                </TabPane>
+              ))
+              :
+              <TabPane tab="通用" key="common">
+                <Spin tip="Loading..." spinning={isLoading}>
+                {tagList && tagList.length? 
+                  <Table rowKey="id" 
+                  dataSource={tagList} 
+                  columns={columns} 
+                  pagination={false} 
+                  />
+                    : '暂无数据' }
+                </Spin>
+              </TabPane>}
+            </Tabs>
             <Modal
             width={720}
             title={title}
@@ -152,6 +171,7 @@ const TagList = (props)=>{
             cRef={formRef} 
             params={formData}  
             site = {props.match.params.site}
+            langList={langList}
             handleCancel={handleCancel}/>
             </Modal>
         </div>
