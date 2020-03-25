@@ -17,7 +17,7 @@ export const siteInfo = {
     }
   
 export const api = {
-        contentUrl:`/api/cms/${siteInfo.site}/content`,//内容
+        contentUrl:`/api/${siteInfo.site}/content`,//内容
         messageUrl:'/api/message',//留言
         siteDataUrl:`/api/${siteInfo.site}/data`,//站点数据
     }

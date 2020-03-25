@@ -187,7 +187,7 @@ class ContentsResource(Resource):
         if  sql_data:
             fetchall_data = sql_data.fetchall()
             if not fetchall_data:
-                abort(RET.NotFound,msg='暂无数据')
+                abort(RET.NotFound,msg='No Data...')
             data = {
                         'status':RET.OK,
                         'paginate':{
