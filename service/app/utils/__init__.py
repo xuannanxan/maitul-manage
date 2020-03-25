@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-25 09:57:46
-@LastEditTime : 2020-02-01 23:32:45
-@LastEditors  : Xuannan
+@LastEditTime: 2020-03-25 15:03:22
+@LastEditors: Xuannan
 '''
 
 import json ,random,time
@@ -34,6 +34,17 @@ def object_to_json(obj):
     data = json.dumps(data, default=str, ensure_ascii=False)
     data = json.loads(data)
     return data
+
+# 多个对象
+def result_to_dict(obj):
+    result = {}
+    for key in obj.keys():
+        if key not in ("password","_password","is_del"):
+            if getattr(obj, key) is not None:
+                result[key] = str(getattr(obj, key))
+            else:
+                result[key] = getattr(obj, key)
+    return result
 
 def error_to_string(err):
     """
@@ -72,7 +83,6 @@ class JsonToDatetime(json.JSONEncoder):
     所以，重写default()函数来处理datetime类型的数据。
 
     """
-
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.strftime('%Y-%m-%d %H: %M: %S')

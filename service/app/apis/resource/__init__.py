@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2020-01-17 10:34:59
-@LastEditTime: 2020-03-19 15:23:57
+@LastEditTime: 2020-03-25 18:16:50
 @LastEditors: Xuannan
 '''
 from flask_restful import Api
@@ -14,7 +14,7 @@ from app.apis.resource.ad import AdResource
 from app.apis.resource.uploads import UploadResource
 from app.apis.resource.captcha import CaptchaResource
 from app.apis.resource.message import MessageResource,ShowMessageResource
-from app.apis.resource.site_data import SiteDataResource
+from app.apis.resource.site_data import SiteDataResource,ContentsResource
 
 
 resource_api = Api(api_blueprint)
@@ -38,3 +38,5 @@ resource_api.add_resource(ShowMessageResource,'/message/show')
 
 # 站点数据
 resource_api.add_resource(SiteDataResource,'/<site>/data')
+# 站点内容数据
+resource_api.add_resource(ContentsResource,'/<site>/content')

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-09 16:36:45
- * @LastEditTime: 2020-03-24 18:44:31
+ * @LastEditTime: 2020-03-25 15:29:42
  * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -92,11 +92,13 @@ const ConfList = ()=>{
 
     const selectData = (lang)=>{
       let arr = []
-      confList[site].forEach(item => {
-        if(item.lang===lang || item.lang===null||item.lang==='common'){
-          arr.push(item)
-        }
-      });
+      if(confList[site]){
+        confList[site].forEach(item => {
+          if(item.lang===lang || item.lang===null||item.lang==='common'){
+            arr.push(item)
+          }
+        });
+      }
       return arr
     }
     

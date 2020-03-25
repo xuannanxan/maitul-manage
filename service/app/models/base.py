@@ -4,8 +4,8 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-08 10:03:50
-@LastEditTime : 2020-02-11 13:33:28
-@LastEditors  : Xuannan
+@LastEditTime: 2020-03-25 14:49:38
+@LastEditors: Xuannan
 '''
 # -*- coding: utf-8 -*- 
 # Created by xuannan on 2019-01-26.
@@ -62,6 +62,33 @@ class BaseModel(db.Model):
             self.is_del = self.id
         return True
 
+    def to_dict(obj):
+        """
+        对象转字典
+        :param model:
+        :return:
+        """
+        model_dict = dict(self.__dict__)
+        if "_sa_instance_state" in model_dict:
+            del model_dict["_sa_instance_state"]
+        if "password" in model_dict:
+            del model_dict["password"]
+        if "_password" in model_dict:
+            del model_dict["_password"]
+        if "is_del" in model_dict:
+            del model_dict["is_del"]
+        return model_dict
+            
+    # 多个对象
+    def dobule_to_dict(self):
+        result = {}
+        for key in self.__mapper__.c.keys():
+            if key not in ("password","_password","is_del"):
+                if getattr(self, key) is not None:
+                    result[key] = str(getattr(self, key))
+                else:
+                    result[key] = getattr(self, key)
+        return result
 
 
 class Crud:
