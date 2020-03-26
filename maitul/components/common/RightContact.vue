@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-03 23:34:47
+ * @LastEditTime: 2020-03-26 20:05:32
  * @LastEditors: Xuannan
  -->
 <template>
@@ -34,11 +34,14 @@
     </div>
 </template>
 <script>
-  import {mapState} from 'vuex'
   export default {
     name: 'RightContact',
-    computed:{
-      ...mapState(["webconfig"]),
+    data () {
+        const locale = this.$store.state.locale;
+        const locales = this.$store.state.locales;
+        return {
+            webconfig: locales.length?this.$store.state.common[locale].webconfig: this.$store.state.common.webconfig
+        }
     },
   };
 </script>

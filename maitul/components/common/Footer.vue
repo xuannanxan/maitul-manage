@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-19 14:53:37
+ * @LastEditTime: 2020-03-26 20:10:13
  * @LastEditors: Xuannan
  -->
 <template>
@@ -71,15 +71,17 @@
   import SubMenu from './SubMenu.vue'
   import Contact from './Contact.vue'
   import Message from './Message.vue'
-  import {mapState} from 'vuex'
   export default {
     components:{SubMenu,Contact,Message},
     name: 'Footer',
-    computed:{
-      ...mapState(["webconfig"]),
-      ...mapState(["category"]),
+    data () {
+        const locale = this.$store.state.locale;
+        const locales = this.$store.state.locales;
+        return {
+            webconfig: locales.length?this.$store.state.common[locale].webconfig: this.$store.state.common.webconfig,
+            category: locales.length?this.$store.state.common[locale].category: this.$store.state.common.category
+        }
     },
-
   };
 </script>
 <style lang="less" >

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-19 23:17:13
+ * @LastEditTime: 2020-03-19 22:41:43
  * @LastEditors: Xuannan
  -->
 <template>
@@ -16,9 +16,13 @@
       <a-row>
         <a-col :span="24">
           <div class="main">
-            <Info
+            <ArticleList
             :data="data"
-            :maxHeight='false'
+            :paginate="paginate"
+            :tag="tag"
+            :search="search"
+            :category="category"
+            :topCategory="topCategory"
             />
           </div>
         </a-col>
@@ -32,8 +36,7 @@
 <script>
     import Header from '@/components/common/Header';
     import Footer from '@/components/common/Footer';
-    import Tags from '@/components/common/Tags';
-    import Info from '@/components/list/Info';
+    import ArticleList from '@/components/list/ArticleList';
     import Contact from '@/components/common/Contact';
     import RightContact from '@/components/common/RightContact';
     import {mapState} from 'vuex';
@@ -52,13 +55,15 @@
   export default {
     watchQuery: ['page','tag','search'],
     scrollToTop: true,
-    components:{Header,Footer,Info,Contact,RightContact},
+    components:{Header,Footer,ArticleList,Contact,RightContact},
     computed:mapState(["webconfig"]),
     head () {
+        const search = this.$route.query.search?'|'+this.$route.query.search:'';
+        const tag = this.$route.query.tag?'|'+this.$route.query.tag:'';
         const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com')
         const pageTitle = articleData.category.name?'|'+articleData.category.name:''
         return {
-            title: siteTitle+pageTitle,
+            title: siteTitle+pageTitle+search+tag,
             meta: [
             { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul')+(articleData.category.keywords?','+articleData.category.keywords:'') },
             { hid: 'description', name: 'description', content: articleData.category.description?articleData.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul'  }
@@ -76,12 +81,37 @@
           }
       }
         const  [article]  = await Promise.all([store.dispatch('_content',{
-            id:params.id,
+            paginate:siteInfo.productPageSize,
+            category_id:params.id,
+            category:params.id?'':siteInfo.news,
+            page:query.page,
+            search:query.search,
+            tag:query.tag,
             })])
         if(article.status === 200) {
-            articleData.data = [article.data]
+            articleData.data = article.data
+            articleData.paginate = article.paginate
         }else{
             articleData.data = []
+            articleData.paginate = {}
+        }
+        articleData.category_id = params.id?params.id:''
+        articleData.tag = query.tag?query.tag:''
+        articleData.search = query.search?query.search:''
+        if(params.id){
+            let cateoryData = findNodes(store.state.category,params.id)
+            if(cateoryData.length){
+                articleData.category  = cateoryData[0]
+                if(cateoryData[0].pid ==0){
+                    articleData.topCategory  = cateoryData[0]
+                }else{
+                    let topCateoryData = findNodes(store.state.category,cateoryData[0].pid)
+                    if(topCateoryData.length){
+                        articleData.topCategory  = topCateoryData[0]
+                    }
+                }
+            }
+           
         }
       return articleData;
     }

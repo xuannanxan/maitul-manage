@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-22 09:14:20
+ * @LastEditTime: 2020-03-26 20:20:28
  * @LastEditors: Xuannan
  -->
 <template>
@@ -13,8 +13,11 @@
             <a-col :span="12">
                <nuxt-link to="/"><span>{{webconfig.siteName?webconfig.siteSlogan:'Maitul.com'}}</span></nuxt-link>
             </a-col>
-            <a-col :span="12">
+            <a-col :span="10">
               <Contact :shownumber="true"/>
+            </a-col>
+            <a-col :span="2">
+              <LangSwitcher/>
             </a-col>
           </div>
         </a-col>
@@ -111,13 +114,17 @@
 <script>
   import SubMenu from './SubMenu.vue'
   import Contact from './Contact.vue'
-  import {mapState} from 'vuex'
+  import LangSwitcher from './LangSwitcher.vue'
   export default {
-    components:{SubMenu,Contact},
+    components:{SubMenu,Contact,LangSwitcher},
     name: 'Header',
-    data() {
+    data () {
+      const locale = this.$store.state.locale;
+      const locales = this.$store.state.locales;
       return {
         visible: false,
+        webconfig: locales.length?this.$store.state.common[locale].webconfig: this.$store.state.common.webconfig,
+        category:locales.length?this.$store.state.common[locale].category: this.$store.state.common.category,
       }
     },
     methods: {
@@ -130,10 +137,6 @@
         onClose() {
           this.visible = false;
         },
-    },
-    computed:{
-      ...mapState(["webconfig"]),
-      ...mapState(["category"]),
     },
     props:['currentCategory']
   };

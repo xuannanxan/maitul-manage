@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-14 13:09:20
- * @LastEditTime : 2020-02-14 13:19:44
- * @LastEditors  : Xuannan
+ * @LastEditTime: 2020-03-26 14:34:11
+ * @LastEditors: Xuannan
  */
 const cookieparse =  (cname, req)=> {
     let name = cname + "="

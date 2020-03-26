@@ -12,7 +12,7 @@
  * @LastEditTime : 2020-02-14 22:49:33
  * @LastEditors  : Xuannan
  */
-import {api,siteInfo}  from "@/service/config"
+import {api,siteInfo}  from "@/config"
 import request from "@/service";
 import cookieparse from '@/utils/cookieparse'
 

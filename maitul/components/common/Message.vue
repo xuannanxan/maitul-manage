@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-27 09:09:07
- * @LastEditTime: 2020-03-05 22:29:24
+ * @LastEditTime: 2020-03-26 20:11:28
  * @LastEditors: Xuannan
  -->
 <template>
@@ -77,11 +77,15 @@ import Contact from './Contact.vue'
 export default {
     name: 'Message',
     components:{Contact},
-    data() {
+    data () {
+        const locale = this.$store.state.locale;
+        const locales = this.$store.state.locales;
         return {
+            visible: false,
+            webconfig: locales.length?this.$store.state.common[locale].webconfig: this.$store.state.common.webconfig,
             form: this.$form.createForm(this, { name: Math.random().toString(36).substr(2) }),
             loading: false,
-        };
+      }
     },
     methods: {
         handleSubmit(e) {
@@ -118,9 +122,6 @@ export default {
             type: Boolean,
             default: false
         },
-    },
-    computed:{
-      ...mapState(["webconfig"]),
     },
 };
 </script>

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-03-20 10:27:29
+ * @LastEditTime: 2020-03-26 15:07:12
  * @LastEditors: Xuannan
  -->
 <template>
@@ -32,7 +32,7 @@
 </template>
 <script>
     import {mapState} from 'vuex'
-    import {siteInfo}  from "@/service/config";
+    import {siteInfo}  from "@/config";
     export default {
         name: 'Banner',
         data() {
