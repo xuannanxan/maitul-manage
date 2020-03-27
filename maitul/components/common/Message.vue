@@ -78,11 +78,9 @@ export default {
     name: 'Message',
     components:{Contact},
     data () {
-        const locale = this.$store.state.locale;
-        const locales = this.$store.state.locales;
         return {
             visible: false,
-            webconfig: locales.length?this.$store.state.common[locale].webconfig: this.$store.state.common.webconfig,
+            webconfig: this.$store.state.webconfig,
             form: this.$form.createForm(this, { name: Math.random().toString(36).substr(2) }),
             loading: false,
       }

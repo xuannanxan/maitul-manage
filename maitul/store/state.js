@@ -9,7 +9,9 @@ import {i18n}  from "@/config"
 export default () => ({
     token:'',
     adspace:{},
-    common: {},
+    webconfig: {},
+    category: [],
+    tags: [],
     content:{},
     relatedList:[],
     lang:[],

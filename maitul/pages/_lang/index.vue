@@ -71,10 +71,8 @@
     scrollToTop: true,
     components:{Header,Footer,Banner,ArticleList,Tags,ProductList,Info,Contact,RightContact},
     data () {
-      const locale = this.$store.state.locale;
-      const locales = this.$store.state.locales;
       return {
-        webconfig: locales.length?this.$store.state.common[locale].webconfig: this.$store.state.common.webconfig,
+        webconfig: this.$store.state.webconfig,
         about:[],
       }
     },
@@ -91,7 +89,7 @@
       if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
         const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
         if(siteData.status === 200) {
-            store.commit('setWebConfig',siteData.data.webconfig)
+            store.commit('setWebconfig',siteData.data.webconfig)
             store.commit('setCategory',siteData.data.category)
             store.commit('setTags',siteData.data.tags)
             store.commit('setAdspace',(siteData.data.adspace))

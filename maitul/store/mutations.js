@@ -18,9 +18,19 @@ export default {
         }
     },
 
-    setCommon(state,data) {
+    setWebconfig(state,data) {
         if(data && Object.keys(data).length){
-            state.common = data
+            state.webconfig = data
+        }
+    },
+    setCategory(state,data) {
+        if(data && data.length){
+            state.category = data
+        }
+    },
+    setTags(state,data) {
+        if(data && data.length){
+            state.tags = data
         }
     },
 

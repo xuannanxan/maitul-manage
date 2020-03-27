@@ -75,11 +75,9 @@
     components:{SubMenu,Contact,Message},
     name: 'Footer',
     data () {
-        const locale = this.$store.state.locale;
-        const locales = this.$store.state.locales;
         return {
-            webconfig: locales.length?this.$store.state.common[locale].webconfig: this.$store.state.common.webconfig,
-            category: locales.length?this.$store.state.common[locale].category: this.$store.state.common.category
+            webconfig: this.$store.state.webconfig,
+            category: this.$store.state.category
         }
     },
   };

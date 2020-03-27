@@ -33,10 +33,8 @@
   export default {
     name: 'Contact',
     data () {
-        const locale = this.$store.state.locale;
-        const locales = this.$store.state.locales;
         return {
-            webconfig: locales.length?this.$store.state.common[locale].webconfig: this.$store.state.common.webconfig
+            webconfig: this.$store.state.webconfig
         }
     },
     props:{

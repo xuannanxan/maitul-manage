@@ -122,12 +122,10 @@
     components:{SubMenu,Contact,LangSwitcher},
     name: 'Header',
     data () {
-      const locale = this.$store.state.locale;
-      const locales = this.$store.state.locales;
       return {
         visible: false,
-        webconfig: locales.length?this.$store.state.common[locale].webconfig: this.$store.state.common.webconfig,
-        category:locales.length?this.$store.state.common[locale].category: this.$store.state.common.category,
+        webconfig: this.$store.state.webconfig,
+        category:this.$store.state.category,
       }
     },
     methods: {
