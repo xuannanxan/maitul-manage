@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-27 16:36:34
+ * @LastEditTime: 2020-03-27 20:22:42
  * @LastEditors: Xuannan
  -->
 <template>
@@ -58,7 +58,7 @@
               :selectedKeys="currentCategory"
             >
             <a-menu-item :key="'home'">
-              <nuxt-link to="/" ><a-icon type="home" :style="{ fontSize: '16px'}"/>{{$t('home')}}</nuxt-link>
+              <nuxt-link to="/" ><a-icon type="home" :style="{ fontSize: '16px'}"/>{{$t('lang.home')}}</nuxt-link>
             </a-menu-item>
             <template v-for="item in category">
               <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">

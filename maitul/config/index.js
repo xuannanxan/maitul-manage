@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-22 19:51:35
- * @LastEditTime: 2020-03-26 19:51:48
+ * @LastEditTime: 2020-03-27 20:27:11
  * @LastEditors: Xuannan
  */
 
@@ -14,7 +14,8 @@ export const i18n = {
 
 // 站点信息配置
 export const siteInfo = {
-    banner:'maitulBanner',
+    enBanner:'maitulBanner',
+    zhBanner:'blogRightAd',
     about:'about',
     products:'products',
     news:'news',

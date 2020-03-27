@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-03-26 15:07:12
+ * @LastEditTime: 2020-03-27 20:29:15
  * @LastEditors: Xuannan
  -->
 <template>
@@ -24,7 +24,7 @@
                     <div class='info'>
                         <h1>{{item.name}}</h1>
                         <p>{{item.info}}</p>
-                        <a-button  target="_blank" :href="item.url" type="primary">Learn More</a-button>
+                        <a-button  target="_blank" :href="item.url" type="primary">{{$t('lang.more')}}</a-button>
                     </div>        
                 </div>
         </a-carousel>
@@ -32,12 +32,11 @@
 </template>
 <script>
     import {mapState} from 'vuex'
-    import {siteInfo}  from "@/config";
     export default {
         name: 'Banner',
         data() {
             return {
-                banner:siteInfo.banner
+                banner:this.$t('lang.banner')
             }
         },
         computed:mapState(["adspace"]),
