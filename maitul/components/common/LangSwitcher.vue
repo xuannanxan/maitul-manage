@@ -2,23 +2,22 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-22 21:03:01
- * @LastEditTime: 2020-03-26 20:38:05
+ * @LastEditTime: 2020-03-27 16:12:21
  * @LastEditors: Xuannan
  -->
 <template>
-  <span class="lang-switcher" v-if="lang.length">
-    <!-- <NuxtLink v-if="$i18n.locale === defaultLocale" :to="'/'+lang.ename + $route.fullPath" exact>
-      <a-button>{{ lang.name}}</a-button>
-    </NuxtLink>
-    <NuxtLink v-else :to="$route.fullPath.replace(/^\/[^\/]+/, '')" exact>
-      <a-button>{{lang.name}}</a-button>
-    </NuxtLink> -->
-    <div v-for="item in lang" :key="item.ename">
-      <NuxtLink v-if="$i18n.locale === defaultLocale" :to="'/'+item.ename + $route.fullPath" exact>
-        <a-button>{{ item.name}}</a-button>
-      </NuxtLink>
-    </div>
-  </span>
+  <div class="floatRight" v-if="lang.length">
+  <a-dropdown>
+    <a class="ant-dropdown-link" @click="e => e.preventDefault()"> {{locale}} <a-icon type="down" /> </a>
+    <a-menu slot="overlay">
+      <a-menu-item  v-for="item in lang" :key="item.ename">
+        <NuxtLink :to="'/'+item.ename" exact>
+          <p>{{item.name}}</p>
+        </NuxtLink>
+      </a-menu-item>
+    </a-menu>
+  </a-dropdown>
+  </div>
 </template>
  
 <script>
@@ -29,7 +28,15 @@ export default {
     return {
       defaultLocale:i18n.locale,
       lang: this.$store.state.lang,
+      locale:''
     }
   },
+  created(){
+        this.lang.forEach(item => {
+          if(item.ename === this.$i18n.locale){
+            this.locale = item.name
+          }
+        });
+  }
 };
 </script>

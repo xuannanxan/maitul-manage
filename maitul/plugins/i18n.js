@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-22 20:06:30
- * @LastEditTime: 2020-03-22 20:29:40
+ * @LastEditTime: 2020-03-27 16:15:31
  * @LastEditors: Xuannan
  */
 import Vue from 'vue'
@@ -16,10 +16,10 @@ export default ({ app, store }) => {
   app.i18n = new VueI18n({
     locale: store.state.locale,
     fallbackLocale: i18n.locale,
-    // messages: {
-    //   'en': require('@/lang/en.json'),
-    //   'zh': require('@/lang/zh.json')
-    // }
+    messages: {
+      'en': require('@/lang/en.json'),
+      'zh': require('@/lang/zh.json')
+    }
   })
 
   app.i18n.path = (link) => {

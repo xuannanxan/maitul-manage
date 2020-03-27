@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:26:57
- * @LastEditTime: 2020-03-04 21:36:00
+ * @LastEditTime: 2020-03-27 15:33:53
  * @LastEditors: Xuannan
  */
 
@@ -34,6 +34,7 @@ import {
     BackTop,
     Card,
     Tabs,
+    Dropdown,
     message} from 'ant-design-vue';
     
 Vue.use(Avatar)
@@ -59,4 +60,5 @@ Vue.use(Empty)
 Vue.use(Drawer)
 Vue.use(BackTop)
 Vue.use(Form)
+Vue.use(Dropdown)
 Vue.prototype.$message = message;

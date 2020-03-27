@@ -2,21 +2,24 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-26 20:20:28
+ * @LastEditTime: 2020-03-27 16:36:34
  * @LastEditors: Xuannan
  -->
 <template>
     <div> 
       <a-row>
-        <a-col :xs='0' :sm='0' :md='24' :lg='24' :xl='24'>
+        <a-col>
           <div class="topbar">
-            <a-col :span="12">
-               <nuxt-link to="/"><span>{{webconfig.siteName?webconfig.siteSlogan:'Maitul.com'}}</span></nuxt-link>
+            <a-col :xs='0' :sm='0' :md='8' :lg='10' :xl='12'>
+               <nuxt-link to="/"><span>{{webconfig.siteSlogan?webconfig.siteSlogan:'Maitul.com'}}</span></nuxt-link>
             </a-col>
-            <a-col :span="10">
+            <a-col :xs='12' :sm='12' :md='0' :lg='0' :xl='0'>
+               <nuxt-link to="/"><span>{{webconfig.siteName?webconfig.siteName:'Maitul.com'}}</span></nuxt-link>
+            </a-col>
+            <a-col :xs='0' :sm='0' :md='12' :lg='10' :xl='10'>
               <Contact :shownumber="true"/>
             </a-col>
-            <a-col :span="2">
+            <a-col :xs='12' :sm='12' :md='4' :lg='4' :xl='2'>
               <LangSwitcher/>
             </a-col>
           </div>
@@ -55,7 +58,7 @@
               :selectedKeys="currentCategory"
             >
             <a-menu-item :key="'home'">
-              <nuxt-link to="/" ><a-icon type="home" :style="{ fontSize: '16px'}"/>Home</nuxt-link>
+              <nuxt-link to="/" ><a-icon type="home" :style="{ fontSize: '16px'}"/>{{$t('home')}}</nuxt-link>
             </a-menu-item>
             <template v-for="item in category">
               <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
