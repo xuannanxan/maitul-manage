@@ -8,6 +8,7 @@
 import {i18n}  from "@/config"
 export default () => ({
     token:'',
+    siteData:{},
     adspace:{},
     webconfig: {},
     category: [],

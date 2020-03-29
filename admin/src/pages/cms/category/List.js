@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-01 14:28:32
- * @LastEditTime: 2020-03-24 18:33:58
+ * @LastEditTime: 2020-03-29 18:23:56
  * @LastEditors: Xuannan
  */
 import React, { useState,useEffect ,useRef} from 'react';
@@ -44,9 +44,9 @@ function CategoryList(props){
           key: 'ename',
         },
         {
-          title: 'Url',
-          dataIndex: 'url',
-          key: 'url',
+          title: '模型',
+          dataIndex: 'module',
+          key: 'module',
         },
         {
           title: '最后修改人',

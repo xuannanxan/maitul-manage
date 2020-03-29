@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-26 20:10:13
+ * @LastEditTime: 2020-03-29 20:33:50
  * @LastEditors: Xuannan
  -->
 <template>
@@ -15,11 +15,11 @@
                 </nuxt-link>
               </div>
               <div class="nav"  v-for="item in category" :key='item.id' >
-                <nuxt-link :to="{path:item.url+item.id}">
+                <nuxt-link :to="{path:locale+'/'+item.module+item.id}">
                   <a-icon v-if="item.icon" :type="item.icon"/> {{item.name}}
                 </nuxt-link>
                 <div v-if="item.children.length>0" v-for="child in item.children" :key='child.id' class="child-nav">
-                  <nuxt-link :to="{path:child.url+child.id}">
+                  <nuxt-link :to="{path:locale+'/'+child.module+child.id}">
                     <a-icon v-if="child.icon" :type="child.icon"/> {{child.name}}
                   </nuxt-link>
                 </div>
@@ -69,15 +69,16 @@
 </template>
 <script>
   import SubMenu from './SubMenu.vue'
-  import Contact from './Contact.vue'
   import Message from './Message.vue'
+  import {i18n}  from "@/config"
   export default {
-    components:{SubMenu,Contact,Message},
+    components:{SubMenu,Message},
     name: 'Footer',
     data () {
         return {
-            webconfig: this.$store.state.webconfig,
-            category: this.$store.state.category
+          locale:this.$i18n.locale===i18n.locale?'':this.$i18n.locale,
+          webconfig: this.$store.state.webconfig,
+          category: this.$store.state.category
         }
     },
   };

@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-26 09:05:26
-@LastEditTime: 2020-03-25 18:32:09
+@LastEditTime: 2020-03-29 19:23:06
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,abort,reqparse
@@ -102,12 +102,12 @@ class SiteDataResource(Resource):
             GROUP_CONCAT(t.id SEPARATOR ',') as tags,
             GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
             c.name as category_name,
-            c.url as category_url,
+            c.module as module,
             c.icon as category_icon
             from {0} a 
             left join {1} as r on a.id = r.content_id
             left join {2} as t on t.id = r.tag_id
-            left join {3} as c on c.id = a.category_id
+            left join {3} as c on c.id = a.category_id 
             where (select count(*) from {0} 
             where category_id = a.category_id  and( sort > a.sort or id < a.id) and is_del=0  ) <13  and a.is_del=0 
             GROUP BY a.id
@@ -172,12 +172,12 @@ class ContentsResource(Resource):
             GROUP_CONCAT(t.id SEPARATOR ',') as tags,
             GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
             a.name as category_name,
-            a.url as category_url,
+            a.module as module,
             a.icon as category_icon
             FROM {0} as c
             left join {1} as r on c.id = r.content_id
             left join {2} as t on t.id = r.tag_id
-            left join {3} as a on a.id = c.category_id
+            left join {3} as a on a.id = c.category_id or a.pid = c.category_id
             WHERE {4} c.is_del = 0
             GROUP BY c.id
             ORDER BY c.sort DESC,c.create_time DESC

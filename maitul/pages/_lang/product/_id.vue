@@ -38,7 +38,6 @@
     import Footer from '@/components/common/Footer';
     import Tags from '@/components/common/Tags';
     import ProductList from '@/components/list/ProductList';
-    import Contact from '@/components/common/Contact';
     import RightContact from '@/components/common/RightContact';
     import {mapState} from 'vuex';
     import {siteInfo}  from "@/config";
@@ -56,7 +55,7 @@
   export default {
     watchQuery: ['page','tag','search'],
     scrollToTop: true,
-    components:{Header,Footer,Tags,ProductList,Contact,RightContact},
+    components:{Header,Footer,Tags,ProductList,RightContact},
     computed:mapState(["webconfig"]),
     head () {
         const search = this.$route.query.search?'|'+this.$route.query.search:'';

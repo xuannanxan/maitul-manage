@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-11 17:28:51
-@LastEditTime: 2020-03-25 17:59:06
+@LastEditTime: 2020-03-29 19:11:22
 @LastEditors: Xuannan
 '''
 
@@ -45,7 +45,6 @@ parse_page.add_argument('page',type=int,help='页码只能是数字')
 parse_page.add_argument('paginate',type=int,help='每页数量只能是数字')
 parse_page.add_argument('tag')
 parse_page.add_argument('category_id')
-parse_page.add_argument('category')
 parse_page.add_argument('search')
 
 content_fields = {
@@ -153,10 +152,6 @@ class ContentResource(Resource):
             paginate = int(args.get('paginate'))
         tag = args.get('tag')
         category_id = args.get('category_id')
-        category = args.get('category')
-        if category:
-            cateData = categoryModel.query.filter_by(ename = category , is_del = '0').first()
-            category_id = cateData.id if cateData else ''
         search = args.get('search')
         if search:
             current_app.logger.info(request.remote_addr+':'+search)
@@ -174,7 +169,7 @@ class ContentResource(Resource):
             GROUP_CONCAT(t.id SEPARATOR ',') as tags,
             GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
             a.name as category_name,
-            a.url as category_url,
+            a.module as module,
             a.icon as category_icon
             FROM {0} as c
             left join {1} as r on c.id = r.content_id

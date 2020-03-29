@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-19 22:41:43
+ * @LastEditTime: 2020-03-29 20:29:30
  * @LastEditors: Xuannan
  -->
 <template>
@@ -37,7 +37,6 @@
     import Header from '@/components/common/Header';
     import Footer from '@/components/common/Footer';
     import ArticleList from '@/components/list/ArticleList';
-    import Contact from '@/components/common/Contact';
     import RightContact from '@/components/common/RightContact';
     import {mapState} from 'vuex';
     import {siteInfo}  from "@/config";
@@ -55,7 +54,7 @@
   export default {
     watchQuery: ['page','tag','search'],
     scrollToTop: true,
-    components:{Header,Footer,ArticleList,Contact,RightContact},
+    components:{Header,Footer,ArticleList,RightContact},
     computed:mapState(["webconfig"]),
     head () {
         const search = this.$route.query.search?'|'+this.$route.query.search:'';

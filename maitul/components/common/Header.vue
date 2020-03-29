@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-27 20:22:42
+ * @LastEditTime: 2020-03-29 20:31:57
  * @LastEditors: Xuannan
  -->
 <template>
@@ -17,7 +17,7 @@
                <nuxt-link to="/"><span>{{webconfig.siteName?webconfig.siteName:'Maitul.com'}}</span></nuxt-link>
             </a-col>
             <a-col :xs='0' :sm='0' :md='12' :lg='10' :xl='10'>
-              <Contact :shownumber="true"/>
+              <contact-btn :shownumber="true"/>
             </a-col>
             <a-col :xs='12' :sm='12' :md='4' :lg='4' :xl='2'>
               <LangSwitcher/>
@@ -62,9 +62,9 @@
             </a-menu-item>
             <template v-for="item in category">
               <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                <nuxt-link :to="{path:item.url+item.id}"><a-icon v-if="item.icon" :type="item.icon" :style="{ fontSize: '16px'}"/>{{item.name}}</nuxt-link>
+                <nuxt-link :to="{path:locale+'/'+item.module+'/'+item.id}"><a-icon v-if="item.icon" :type="item.icon" :style="{ fontSize: '16px'}"/>{{item.name}}</nuxt-link>
               </a-menu-item>
-              <sub-menu v-else :menu-info="item" :key="item.id" />
+              <sub-menu v-else :menu-info="item" :locale="locale" :key="item.id" />
             </template>
             </a-menu>
           </a-col>
@@ -95,17 +95,17 @@
               :selectedKeys="currentCategory"
               >
               <a-menu-item :key="'home'">
-                <nuxt-link to="/" ><a-icon type="home" />Home</nuxt-link>
+                <nuxt-link to="/" ><a-icon type="home" />{{$t('lang.home')}}</nuxt-link>
               </a-menu-item>
               <template v-for="item in category">
                 <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                  <nuxt-link :to="{path:item.url+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
+                  <nuxt-link :to="{path:locale+'/'+item.module+'/'+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
                 </a-menu-item>
-                <sub-menu v-else :menu-info="item" :key="item.id" />
+                <sub-menu v-else :menu-info="item" :locale="locale" :key="item.id" />
               </template>
               </a-menu>
               <a-divider/>
-              <div style="text-align:center"><Contact/></div>
+              <div style="text-align:center"><contact-btn/></div>
             </a-drawer>
           </a-col>
         </a-layout-header>
@@ -116,14 +116,16 @@
 </template>
 <script>
   import SubMenu from './SubMenu.vue'
-  import Contact from './Contact.vue'
+  import ContactBtn from './ContactBtn.vue'
   import LangSwitcher from './LangSwitcher.vue'
+  import {i18n}  from "@/config"
   export default {
-    components:{SubMenu,Contact,LangSwitcher},
+    components:{SubMenu,ContactBtn,LangSwitcher},
     name: 'Header',
     data () {
       return {
         visible: false,
+        locale:this.$i18n.locale===i18n.locale?'':this.$i18n.locale,
         webconfig: this.$store.state.webconfig,
         category:this.$store.state.category,
       }

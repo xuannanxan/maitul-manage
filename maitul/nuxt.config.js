@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-26 19:54:36
+ * @LastEditTime: 2020-03-29 12:52:03
  * @LastEditors: Xuannan
  */
 module.exports = {
@@ -123,7 +123,7 @@ module.exports = {
     NODE_ENV: process.env.NODE_ENV
   },
   router: {
-    middleware: ['init','lang']
+    middleware: ['lang']
   },
 }
 

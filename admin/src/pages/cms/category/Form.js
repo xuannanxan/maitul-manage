@@ -49,8 +49,7 @@ function SubmitForm(props){
                     id:params.id,
                     pid:params.pid,
                     name:params.name,
-                    ename:params.ename,
-                    url:params.url,
+                    module:params.module,
                     icon:params.icon,
                     lang:params.lang,
                     description:params.description,
@@ -118,21 +117,11 @@ function SubmitForm(props){
                         />,
                     )}
                 </Form.Item>
-                <Form.Item label='调用名称'>
-                    {getFieldDecorator('ename', {
-                        rules: [{ required: true, message: '请输入调用名称!' }],
+                <Form.Item label='模型'>
+                    {getFieldDecorator('module', {
                     })(
                         <Input 
-                        placeholder="请输入调用名称..."
-                        size='large'
-                        />,
-                    )}
-                </Form.Item>
-                <Form.Item label='Url'>
-                    {getFieldDecorator('url', {
-                    })(
-                        <Input 
-                        placeholder="请输入URL地址..."
+                        placeholder="请输入模型名称..."
                         size='large'
                         />,
                     )}

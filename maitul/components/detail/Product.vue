@@ -66,12 +66,11 @@
     </div>
 </template>
 <script>
-    import Contact from '../common/Contact.vue'
     import Message from '../common/Message.vue'
     import RelatedProduct from '../common/RelatedProduct.vue'
     import {mapState} from 'vuex'
     export default {
-        components:{Contact,Message,RelatedProduct},
+        components:{Message,RelatedProduct},
         name: 'Product',
         data() {
             return {

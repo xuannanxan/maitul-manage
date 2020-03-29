@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-07 10:25:27
+ * @LastEditTime: 2020-03-29 20:39:00
  * @LastEditors: Xuannan
  -->
 <template>
@@ -33,7 +33,6 @@
     import Footer from '@/components/common/Footer';
     import Tags from '@/components/common/Tags';
     import Product from '@/components/detail/Product';
-    import Contact from '@/components/common/Contact';
     import RightContact from '@/components/common/RightContact';
     import {mapState} from 'vuex';
     import {siteInfo}  from "@/config";
@@ -44,7 +43,7 @@
       };
   export default {
     scrollToTop: true,
-    components:{Header,Footer,Tags,Product,Contact,RightContact},
+    components:{Header,Footer,Tags,Product,RightContact},
     computed:mapState(["webconfig"]),
     head () {
         const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com');

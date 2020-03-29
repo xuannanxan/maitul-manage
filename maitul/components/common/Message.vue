@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-27 09:09:07
- * @LastEditTime: 2020-03-26 20:11:28
+ * @LastEditTime: 2020-03-29 20:40:22
  * @LastEditors: Xuannan
  -->
 <template>
@@ -64,7 +64,7 @@
             </a>
         </div>
         <div style="font-size:1.2rem;">
-            <Contact/>
+            <contact-btn/>
         </div>
       </div>
     </a-form-item>
@@ -73,10 +73,10 @@
 
 <script>
 import {mapState} from 'vuex'
-import Contact from './Contact.vue'
+import ContactBtn from './ContactBtn.vue'
 export default {
     name: 'Message',
-    components:{Contact},
+    components:{ContactBtn},
     data () {
         return {
             visible: false,

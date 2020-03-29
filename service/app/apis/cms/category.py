@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-12-09 21:47:54
-@LastEditTime: 2020-03-24 18:24:38
+@LastEditTime: 2020-03-29 18:25:11
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,reqparse,fields,marshal,abort
@@ -28,24 +28,22 @@ parse_id.add_argument('id')
 parse_base = parse_id.copy()
 parse_base.add_argument('pid',type=str,required=True,help='请选择上级分类')
 parse_base.add_argument('name',type=str,required=True,help='请输入分类名称')
-parse_base.add_argument('ename',type=str,required=True,help='请输入调用名称')
 parse_base.add_argument('keywords')
 parse_base.add_argument('description')
 parse_base.add_argument('icon')
 parse_base.add_argument('cover')
-parse_base.add_argument('url')
+parse_base.add_argument('module')
 parse_base.add_argument('lang')
 parse_base.add_argument('sort',type=int,help='排序号只能是数字')
 
 cate_fields = {
     'pid':fields.String,
     'name':fields.String,
-    'ename':fields.String,
     'keywords':fields.String,
     'description':fields.String,
     'icon':fields.String,
     'cover':fields.String,
-    'url':fields.String,
+    'module':fields.String,
     'sort':fields.Integer,
     'lang':fields.String,
     'id':fields.String
@@ -89,30 +87,28 @@ class CategoryResource(Resource):
         args = parse_base.parse_args()
         pid = args.get('pid')
         name = args.get('name')
-        ename = args.get('ename')
         keywords = args.get('keywords')
         description = args.get('description')
         icon = args.get('icon')
         cover = args.get('cover')
         sort = args.get('sort')
         lang = args.get('lang')
-        url = args.get('url')
+        module = args.get('module')
         cate = categoryModel.query.filter(
             categoryModel.is_del == '0',
-            categoryModel.ename == ename,
+            categoryModel.name == name ,
             or_(categoryModel.lang == lang,categoryModel.lang == 'common',categoryModel.lang == None)).first()
         if cate:
             abort(RET.Forbidden,msg='分类已存在')
         cateData = categoryModel()
         cateData.pid = pid
         cateData.name = name
-        cateData.ename = ename
         cateData.keywords = keywords
         cateData.description = description
         cateData.icon = icon
         cateData.cover = cover
         cateData.sort = sort
-        cateData.url = url
+        cateData.module = module
         cateData.lang = lang
         cateData.last_editor = g.admin.username
         if cateData.add():
@@ -167,24 +163,22 @@ class CategoryResource(Resource):
         cateData = getCategory(id,categoryModel)
         pid = args.get('pid')
         name = args.get('name')
-        ename = args.get('ename')
         keywords = args.get('keywords')
         description = args.get('description')
         icon = args.get('icon')
         cover = args.get('cover')
         lang = args.get('lang')
         sort = args.get('sort')
-        url = args.get('url')
+        module = args.get('module')
         # 如果名称存在，并且ID不是当前ID
         cate = categoryModel.query.filter(
             categoryModel.id != id ,
             categoryModel.is_del == '0',
-            categoryModel.ename == ename,
+            categoryModel.name == name ,
             or_(categoryModel.lang == lang,categoryModel.lang == 'common',categoryModel.lang == None)).first()
         if cate:
-            abort(RET.Forbidden,msg='标签已存在')
+            abort(RET.Forbidden,msg='分类已存在')
         cateData.name = name
-        cateData.ename = ename
         cateData.lang = lang
         cateData.pid = pid if pid else cateData.pid
         cateData.keywords = keywords if keywords else cateData.keywords
@@ -192,7 +186,7 @@ class CategoryResource(Resource):
         cateData.icon = icon if icon else cateData.icon
         cateData.cover = cover if cover else cateData.cover
         cateData.sort = sort if sort else cateData.sort
-        cateData.url = url if url else cateData.url
+        cateData.module = module if module else cateData.module
         cateData.last_editor = g.admin.username
         result = cateData.updata()
         if result:

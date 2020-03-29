@@ -1,6 +1,13 @@
 <!--
  * @Description: 
  * @Author: Xuannan
+ * @Date: 2020-03-27 19:41:12
+ * @LastEditTime: 2020-03-29 20:35:35
+ * @LastEditors: Xuannan
+ -->
+<!--
+ * @Description: 
+ * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
  * @LastEditTime: 2020-03-19 23:17:13
  * @LastEditors: Xuannan
@@ -34,7 +41,6 @@
     import Footer from '@/components/common/Footer';
     import Tags from '@/components/common/Tags';
     import Info from '@/components/list/Info';
-    import Contact from '@/components/common/Contact';
     import RightContact from '@/components/common/RightContact';
     import {mapState} from 'vuex';
     import {siteInfo}  from "@/config";
@@ -52,7 +58,7 @@
   export default {
     watchQuery: ['page','tag','search'],
     scrollToTop: true,
-    components:{Header,Footer,Info,Contact,RightContact},
+    components:{Header,Footer,Info,RightContact},
     computed:mapState(["webconfig"]),
     head () {
         const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com')
