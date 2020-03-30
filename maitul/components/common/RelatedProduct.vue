@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-04 01:19:40
+ * @LastEditTime: 2020-03-30 23:07:13
  * @LastEditors: Xuannan
  -->
 <template>
@@ -10,10 +10,10 @@
         <div class="related">
             <span>Related Product...</span>
         </div>
-        <a-row  v-if="productList.length">
+        <a-row  v-if="relatedList.length">
             <a-col 
             :xs='24' :sm='24' :md='12' :lg='6' :xl='6'
-            v-for="item in productList" 
+            v-for="item in relatedList" 
             :key="item.id"
             class="product"
             :title="item.title"
@@ -44,7 +44,12 @@
     import {mapState} from 'vuex'
     export default {
         name: 'RelatedProduct',
-        computed:mapState(["productList"])
+        computed:mapState(["relatedList"]),
+        data () {
+            return {
+                locale:this.$i18n.locale,
+            }
+        },
     }
 </script>
 <style lang='less' scoped>

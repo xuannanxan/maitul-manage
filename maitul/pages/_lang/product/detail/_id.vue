@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-29 20:39:00
+ * @LastEditTime: 2020-03-30 23:03:49
  * @LastEditors: Xuannan
  -->
 <template>
@@ -56,28 +56,26 @@
             ]
         }
     },
-    async asyncData({ store,params,query, error }){
-      if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-        const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
-        if(siteData.status === 200) {
-            store.commit('setWebConfig',siteData.data.webconfig)
-            store.commit('setCategory',siteData.data.category)
-            store.commit('setTags',siteData.data.tags)
-            store.commit('setAdspace',(siteData.data.adspace))
+    async asyncData({ store,params,query, error ,app}){
+      const locale = params.lang || app.i18n.fallbackLocale
+      if(store.state.siteData && Object.keys(store.state.siteData).length===0){
+          const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
+          if(siteData.status === 200) {
+            store.commit('initData',({data:siteData.data,locale:locale}))
           }
+      }else{
+            store.commit('initData',({data:store.state.siteData,locale:locale}))
       }
-        if(store.state.productList && store.state.productList.length===0){
-            const  [productList]  = await Promise.all([store.dispatch('_content',{
-              paginate:siteInfo.productPageSize,
-              category:siteInfo.products,
-            })])
-            if(productList.status === 200) store.commit('setProductList',productList.data)
-        }
+ 
         const  [product]  = await Promise.all([store.dispatch('_content',{
             id:params.id,
             })])
         if(product.status === 200) {
             productData.data = product.data
+            if((store.state.relatedList).length===0){
+              store.commit('setRelatedList',(store.state.content[product.data.pid===0?product.data.category_id:product.data.pid]))
+            }
+            
         }else{
             productData.data = {}
         }

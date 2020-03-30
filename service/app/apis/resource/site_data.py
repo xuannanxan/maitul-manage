@@ -4,7 +4,7 @@
 @Description: 
 @Author: Xuannan
 @Date: 2019-11-26 09:05:26
-@LastEditTime: 2020-03-29 19:23:06
+@LastEditTime: 2020-03-30 22:29:36
 @LastEditors: Xuannan
 '''
 from flask_restful import Resource,abort,reqparse
@@ -98,7 +98,13 @@ class SiteDataResource(Resource):
                     adData[v.ename] = [result_to_dict(v)]
         # 获取初始内容
         content_sql = '''
-            select a.* ,
+            SELECT c.* 
+            FROM (
+            SELECT id FROM {3} WHERE is_del = 0 and pid=0
+            ) as a
+            RIGHT JOIN 
+            (
+            select a.* ,c.pid,
             GROUP_CONCAT(t.id SEPARATOR ',') as tags,
             GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
             c.name as category_name,
@@ -107,21 +113,23 @@ class SiteDataResource(Resource):
             from {0} a 
             left join {1} as r on a.id = r.content_id
             left join {2} as t on t.id = r.tag_id
-            left join {3} as c on c.id = a.category_id 
-            where (select count(*) from {0} 
-            where category_id = a.category_id  and( sort > a.sort or id < a.id) and is_del=0  ) <13  and a.is_del=0 
+            left join {3}  as c on c.id = a.category_id
+            where (select count(*) from  {0}  
+            where category_id = a.category_id  and( sort > a.sort or id < a.id) and is_del=0  ) <12  and a.is_del=0 
             GROUP BY a.id
-            ORDER BY a.sort DESC,a.create_time DESC;
+            ) as c
+            on   a.id in ( c.pid,c.category_id)
+            ORDER BY c.sort DESC,c.create_time DESC;
         '''.format(contentTable,contentTagTable,tagTable,categoryTable)
         content_data = Crud.auto_select(content_sql)
         if  content_data:
             content_fetchall_data = content_data.fetchall()
             for v in content_fetchall_data:
-                if contentData.get(v.category_id):
-                   contentData[v.category_id].append(result_to_dict(v))
+                if contentData.get(v.pid if v.pid!='0' else v.category_id):
+                    if len(contentData[v.pid if v.pid!='0' else v.category_id]) <12:
+                        contentData[v.pid if v.pid!='0' else v.category_id].append(result_to_dict(v))
                 else:
-                    contentData[v.category_id] = [result_to_dict(v)]
- 
+                    contentData[v.pid if v.pid!='0' else v.category_id] = [result_to_dict(v)]
         siteData['adspace']=adData 
         siteData['lang']= langData
         siteData['content']= contentData
@@ -143,10 +151,35 @@ class ContentsResource(Resource):
         id = args.get('id')
         # 如果有id,进行计数
         if id:
+            sql = '''
+            SELECT 
+            SQL_CALC_FOUND_ROWS c.*,
+            GROUP_CONCAT(t.id SEPARATOR ',') as tags,
+            GROUP_CONCAT(t.name SEPARATOR ',') as tags_name,
+            a.name as category_name,
+            a.module as module,
+            a.pid as pid,
+            a.icon as category_icon
+            FROM {0} as c
+            left join {1} as r on c.id = r.content_id
+            left join {2} as t on t.id = r.tag_id
+            left join {3} as a on a.id = c.category_id or a.pid = c.category_id
+            WHERE c.is_del = 0
+            AND c.id = {4};
+            '''.format(contentTable,contentTagTable,tagTable,categoryTable,id)
+            sql_data = Crud.auto_select(sql)
+            if  sql_data:
+                fetchall_data = sql_data.fetchone()
+            if not fetchall_data:
+                abort(RET.NotFound,msg='No Data...')
             _content = contentModel.query.filter_by(id = id , is_del = '0').first()
             _content.click = _content.click+1
             _content.updata()
-            return _content.click
+            data = {
+                        'status':RET.OK,
+                        'data':(result_to_dict(fetchall_data))
+                }
+            return data 
         page = 1
         paginate = PAGINATE_NUM
         if args.get('page'):

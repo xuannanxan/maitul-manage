@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-29 20:31:57
+ * @LastEditTime: 2020-03-30 21:42:05
  * @LastEditors: Xuannan
  -->
 <template>
@@ -11,10 +11,10 @@
         <a-col>
           <div class="topbar">
             <a-col :xs='0' :sm='0' :md='8' :lg='10' :xl='12'>
-               <nuxt-link to="/"><span>{{webconfig.siteSlogan?webconfig.siteSlogan:'Maitul.com'}}</span></nuxt-link>
+               <nuxt-link :to="{path:'/'+locale}"><span>{{webconfig.siteSlogan?webconfig.siteSlogan:'Maitul.com'}}</span></nuxt-link>
             </a-col>
             <a-col :xs='12' :sm='12' :md='0' :lg='0' :xl='0'>
-               <nuxt-link to="/"><span>{{webconfig.siteName?webconfig.siteName:'Maitul.com'}}</span></nuxt-link>
+               <nuxt-link :to="{path:'/'+locale}"><span>{{webconfig.siteName?webconfig.siteName:'Maitul.com'}}</span></nuxt-link>
             </a-col>
             <a-col :xs='0' :sm='0' :md='12' :lg='10' :xl='10'>
               <contact-btn :shownumber="true"/>
@@ -30,7 +30,7 @@
         <a-layout-header class="header">
           <a-col :xs='21' :sm='21' :md='8' :lg='6' :xl='4'>
             <div class="logo">
-              <nuxt-link to="/">
+              <nuxt-link :to="{path:'/'+locale}">
                 <img 
                 v-if="webconfig.siteLogo" 
                 :src="webconfig.siteLogo" 
@@ -43,7 +43,7 @@
                 :title="webconfig.siteName?webconfig.siteName:'MT'">
               </nuxt-link> 
               <a-divider type="vertical" />
-              <nuxt-link to="/">
+              <nuxt-link :to="{path:'/'+locale}">
                 <div class="title">
                   {{webconfig.siteName?webconfig.siteName:'Maitul'}}
                 </div>
@@ -62,7 +62,7 @@
             </a-menu-item>
             <template v-for="item in category">
               <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                <nuxt-link :to="{path:locale+'/'+item.module+'/'+item.id}"><a-icon v-if="item.icon" :type="item.icon" :style="{ fontSize: '16px'}"/>{{item.name}}</nuxt-link>
+                <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.id}"><a-icon v-if="item.icon" :type="item.icon" :style="{ fontSize: '16px'}"/>{{item.name}}</nuxt-link>
               </a-menu-item>
               <sub-menu v-else :menu-info="item" :locale="locale" :key="item.id" />
             </template>
@@ -99,7 +99,7 @@
               </a-menu-item>
               <template v-for="item in category">
                 <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                  <nuxt-link :to="{path:locale+'/'+item.module+'/'+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
+                  <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
                 </a-menu-item>
                 <sub-menu v-else :menu-info="item" :locale="locale" :key="item.id" />
               </template>
@@ -125,7 +125,7 @@
     data () {
       return {
         visible: false,
-        locale:this.$i18n.locale===i18n.locale?'':this.$i18n.locale,
+        locale:this.$i18n.locale,
         webconfig: this.$store.state.webconfig,
         category:this.$store.state.category,
       }

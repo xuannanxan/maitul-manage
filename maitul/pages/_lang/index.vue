@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-29 20:58:54
+ * @LastEditTime: 2020-03-30 13:02:14
  * @LastEditors: Xuannan
  -->
 <template>
@@ -18,12 +18,12 @@
         <a-col :span = "24" v-for="(cate,index) in category" :key="cate.id" :style="index%2===0?'':'background-color:rgb(232, 236, 236)'">
           <div class="main">
             <a-divider>{{cate.name}}</a-divider>
-            <ProductList
-            :data="content[cate.children[0].id]"
+            <product-list
+            :data="content[cate.id]"
             :topCategory="cate"
             v-if="cate.module==='product'"
             />
-            <ArticleList
+            <article-list
             :data="content[cate.id]"
             v-if="cate.module==='article'"
             />
@@ -39,31 +39,6 @@
           
           </div>
         </a-col>
-        <!-- <a-col :span="24">
-          <div class="main">
-            <a-divider>Products</a-divider>
-            <ProductList
-            :data="productData.data"
-            :paginate="productData.paginate"
-            />
-          </div>
-        </a-col>
-        <a-col :span="24">
-          <div class="main dark">
-            <Info
-            :data="about"
-            />
-          </div>
-        </a-col>
-        <a-col :span="24">
-          <div class="main">
-            <a-divider>News</a-divider>
-            <ArticleList
-            :data="newsData.data"
-            :paginate="newsData.paginate"
-            />
-          </div>
-        </a-col> -->
       </a-row>
       <a-row>
         <Footer/>

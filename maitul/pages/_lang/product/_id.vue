@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-22 20:02:30
+ * @LastEditTime: 2020-03-30 21:49:32
  * @LastEditors: Xuannan
  -->
 <template>
@@ -70,50 +70,49 @@
             ]
         }
     },
-    async asyncData({ store,params,query, error }){
-      if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-        const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
-        if(siteData.status === 200) {
-            store.commit('setWebConfig',siteData.data.webconfig)
-            store.commit('setCategory',siteData.data.category)
-            store.commit('setTags',siteData.data.tags)
-            store.commit('setAdspace',(siteData.data.adspace))
+    async asyncData({ store,app,params,query, error }){
+      const locale = params.lang || app.i18n.fallbackLocale
+      if(store.state.siteData && Object.keys(store.state.siteData).length===0){
+          const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
+          if(siteData.status === 200) {
+            store.commit('initData',({data:siteData.data,locale:locale}))
           }
+      }else{
+            store.commit('initData',({data:store.state.siteData,locale:locale}))
       }
-        const  [product]  = await Promise.all([store.dispatch('_content',{
-            paginate:siteInfo.productPageSize,
-            category_id:params.id,
-            category:params.id?'':siteInfo.products,
-            page:query.page,
-            search:query.search,
-            tag:query.tag,
-            })])
-        if(product.status === 200) {
-            productData.data = product.data
-            productData.paginate = product.paginate
-            store.commit('setProductList',product.data)
-        }else{
-            productData.data = []
-            productData.paginate = {}
-        }
-        productData.category_id = params.id?params.id:''
-        productData.tag = query.tag?query.tag:''
-        productData.search = query.search?query.search:''
-        if(params.id){
-            let cateoryData = findNodes(store.state.category,params.id)
-            if(cateoryData.length){
-                productData.category  = cateoryData[0]
-                if(cateoryData[0].pid ==0){
-                    productData.topCategory  = cateoryData[0]
-                }else{
-                    let topCateoryData = findNodes(store.state.category,cateoryData[0].pid)
-                    if(topCateoryData.length){
-                        productData.topCategory  = topCateoryData[0]
-                    }
-                }
-            }
-           
-        }
+      const  [product]  = await Promise.all([store.dispatch('_content',{
+          paginate:siteInfo.productPageSize,
+          category_id:params.id,
+          page:query.page,
+          search:query.search,
+          tag:query.tag,
+          })])
+      if(product.status === 200) {
+          productData.data = product.data
+          productData.paginate = product.paginate
+          store.commit('setRelatedList',product.data)
+      }else{
+          productData.data = []
+          productData.paginate = {}
+      }
+      productData.category_id = params.id?params.id:''
+      productData.tag = query.tag?query.tag:''
+      productData.search = query.search?query.search:''
+      if(params.id){
+          let cateoryData = findNodes(store.state.category,params.id)
+          if(cateoryData.length){
+              productData.category  = cateoryData[0]
+              if(cateoryData[0].pid ==0){
+                  productData.topCategory  = cateoryData[0]
+              }else{
+                  let topCateoryData = findNodes(store.state.category,cateoryData[0].pid)
+                  if(topCateoryData.length){
+                      productData.topCategory  = topCateoryData[0]
+                  }
+              }
+          }
+          
+      }
       return productData;
     }
   };

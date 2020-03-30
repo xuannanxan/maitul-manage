@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-22 19:51:35
- * @LastEditTime: 2020-03-27 20:27:11
+ * @LastEditTime: 2020-03-30 20:15:11
  * @LastEditors: Xuannan
  */
 
@@ -16,9 +16,6 @@ export const i18n = {
 export const siteInfo = {
     enBanner:'maitulBanner',
     zhBanner:'blogRightAd',
-    about:'about',
-    products:'products',
-    news:'news',
     site:'maitul',
     articlePageSize:8,
     productPageSize:12,
@@ -26,7 +23,7 @@ export const siteInfo = {
 }
 //api地址
 export const api = {
-    contentUrl:`/api/cms/${siteInfo.site}/content`,//内容
+    contentUrl:`/api/${siteInfo.site}/content`,//内容
     messageUrl:'/api/message',//留言
     siteDataUrl:`/api/${siteInfo.site}/data`,//站点数据
 }

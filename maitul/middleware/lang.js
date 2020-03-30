@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-22 19:24:32
- * @LastEditTime: 2020-03-26 19:54:00
+ * @LastEditTime: 2020-03-30 20:58:05
  * @LastEditors: Xuannan
  */
 
@@ -14,7 +14,7 @@ export default function({ isHMR, app, store, route, params, error, redirect }) {
     // Get locale from params
     const locale = params.lang || defaultLocale
     if (store.state.locales.indexOf(locale) === -1) {
-      return error({ message: 'This page could not be found.', statusCode: 404 })
+      return error({ message: 'This page could not be found...', statusCode: 404 })
     }
     // Set locale
     store.commit('setLocale', locale)
