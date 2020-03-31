@@ -2,17 +2,17 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-30 21:43:56
+ * @LastEditTime: 2020-03-31 14:19:22
  * @LastEditors: Xuannan
  -->
 <template>
     <div>
         <a-row class="crumb" v-if="Object.keys(category).length>0 || tag || search">
             <a-col :xs='24' :sm='24' :md='14' :lg='16' :xl='18'>
-                <div v-if='tag || search'>{{tag?`Tag:${tag}...`:(search?`Search:${search}...`:'Newest...')}}</div>
+                <div v-if='tag || search'>{{tag?`Tag:${tag}...`:(search?`Search:${search}...`:$t("lang.newest"))}}</div>
                     <a-breadcrumb v-else-if='category.id' >
                         <a-breadcrumb-item>
-                            <nuxt-link to="/"><a-icon type="home" /><span> {{$t('lang.home')}}</span></nuxt-link>
+                            <nuxt-link :to="{path:'/'+locale}" ><a-icon type="home" /><span> {{$t('lang.home')}}</span></nuxt-link>
                         </a-breadcrumb-item>
                         <a-breadcrumb-item v-if="Object.keys(topCategory).length>0">
                             <nuxt-link :to="{path:'/'+locale+'/'+topCategory.module+'/'+topCategory.id}">

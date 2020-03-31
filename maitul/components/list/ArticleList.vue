@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-29 20:05:06
+ * @LastEditTime: 2020-03-31 17:14:46
  * @LastEditors: Xuannan
  -->
 <template>
@@ -10,13 +10,13 @@
         <a-row class="crumb" v-if="Object.keys(category).length>0 || tag || search">
             <div v-if='category.id'>
                 <a-col :xs='24' :sm='24' :md='14' :lg='16' :xl='18'>
-                    <div v-if='tag || search'>{{tag?`Tag:${tag}...`:(search?`Search:${search}...`:'Newest...')}}</div>
+                    <div v-if='tag || search'>{{tag?`Tag:${tag}...`:(search?`Search:${search}...`:$t("lang.newest"))}}</div>
                     <a-breadcrumb  v-else>
                         <a-breadcrumb-item>
-                            <nuxt-link to="/"><a-icon type="home" /><span> {{$t('lang.home')}}</span></nuxt-link>
+                            <nuxt-link :to="{path:'/'+locale}" ><a-icon type="home" /><span> {{$t('lang.home')}}</span></nuxt-link>
                         </a-breadcrumb-item>
                         <a-breadcrumb-item v-if="Object.keys(topCategory).length>0">
-                            <nuxt-link :to="{path:locale+'/'+topCategory.module+'/'+topCategory.id}">
+                            <nuxt-link :to="{path:'/'+locale+'/'+topCategory.module+'/'+topCategory.id}">
                                 <a-icon v-if="topCategory.icon" :type="topCategory.icon" />
                                 <span> {{topCategory.name}}</span>
                             </nuxt-link>
@@ -42,7 +42,7 @@
                     </a-col>
                 </div>
             </div>
-            <div v-else>Newest...</div>
+            <div v-else>{{$t("lang.newest")}}</div>
             <a-col :span='24'><a-divider/></a-col>
         </a-row>
         <a-list 
@@ -51,18 +51,18 @@
         >         
             <a-list-item slot="renderItem" slot-scope="item, index">
                 <a-list-item-meta>
-                    <nuxt-link :to="{path:locale+'/'+item.module+'/'+'detail/'+item.id}" slot="title" class= "list-title">
+                    <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+'detail/'+item.id}" slot="title" class= "list-title">
                     {{item.title}}
                     </nuxt-link>
                     <div v-if="item.cover" slot="avatar">
-                        <nuxt-link :to="{path:locale+'/'+item.module+'/'+'detail/'+item.id}">
+                        <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+'detail/'+item.id}">
                             <img :src="item.cover" :alt="item.title" :title="item.title"/>
                         </nuxt-link>    
                     </div>
                     <div slot="description" class= "list-context">
                         <div class="list-icon">
                             <span><a-icon type="calendar" /> {{item.create_time.slice(0,10)}}</span>
-                            <nuxt-link :to="{path:locale+'/'+item.module+'/'+item.category_id}" class="list-link">
+                            <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.category_id}" class="list-link">
                                 <a-icon :type="item.category_icon?item.category_icon:'folder'" /> {{item.category_name}}
                             </nuxt-link>
                             <span><a-icon type="fire" /> {{item.click}}</span>
@@ -90,7 +90,7 @@
         components:{Tags},
         data () {
             return {
-                locale:this.$i18n.locale===i18n.locale?'':this.$i18n.locale,
+                locale:this.$i18n.locale,
             }
         },
         methods: {
@@ -99,11 +99,11 @@
             },
             paginateRender(page, type, originalElement){
                 if (type === "page") {
-                    return <nuxt-link to={locale+'/'+(this.category.url?this.category.module:(this.search?'/search/':'article'))+(this.category.id?this.category.id:'')+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
+                    return <nuxt-link to={'/'+this.locale+'/'+(this.category.url?this.category.module:(this.search?'/search/':'article'))+'/'+(this.category.id?this.category.id:'')+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
                 } else if (type === "prev") {
-                    return <nuxt-link to={locale+'/'+(this.category.url?this.category.module:(this.search?'/search/':'article'))+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page===1?1:this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="left"/></nuxt-link>;
+                    return <nuxt-link to={'/'+this.locale+'/'+(this.category.url?this.category.module:(this.search?'/search/':'article'))+'/'+(this.category.id?this.category.id:'')+'?page='+(this.paginate.page===1?1:this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="left"/></nuxt-link>;
                 } else if (type === "next") {
-                    return <nuxt-link to={locale+'/'+(this.category.url?this.category.module:(this.search?'/search/':'article'))+(this.category.id?this.category.id:'')+'?page='+(page<(this.paginate.total/this.paginate.per_page)?this.paginate.page+1:page)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="right"/></nuxt-link>;
+                    return <nuxt-link to={'/'+this.locale+'/'+(this.category.url?this.category.module:(this.search?'/search/':'article'))+'/'+(this.category.id?this.category.id:'')+'?page='+(page<(this.paginate.total/this.paginate.per_page)?this.paginate.page+1:page)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="right"/></nuxt-link>;
                 }
                 return originalElement;
             },

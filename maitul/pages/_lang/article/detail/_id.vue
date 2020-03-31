@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-29 20:38:39
+ * @LastEditTime: 2020-03-31 15:10:52
  * @LastEditors: Xuannan
  -->
 <template>
@@ -55,31 +55,25 @@
             ]
         }
     },
-    async asyncData({ store,params,query, error }){
-      if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-        const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
-        if(siteData.status === 200) {
-            store.commit('setWebConfig',siteData.data.webconfig)
-            store.commit('setCategory',siteData.data.category)
-            store.commit('setTags',siteData.data.tags)
-            store.commit('setAdspace',(siteData.data.adspace))
+    async asyncData({ store,params,query, error,app }){
+      const locale = params.lang || app.i18n.fallbackLocale
+      if(store.state.siteData && Object.keys(store.state.siteData).length===0){
+          const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
+          if(siteData.status === 200) {
+            store.commit('initData',({data:siteData.data,locale:locale}))
           }
+      }else{
+            store.commit('initData',({data:store.state.siteData,locale:locale}))
       }
-        if(store.state.productList && store.state.productList.length===0){
-            const  [productList]  = await Promise.all([store.dispatch('_content',{
-              paginate:siteInfo.productPageSize,
-              category:siteInfo.products,
-            })])
-            if(productList.status === 200) store.commit('setProductList',productList.data)
-        }
-        const  [product]  = await Promise.all([store.dispatch('_content',{
-            id:params.id,
-            })])
-        if(product.status === 200) {
-            articleData.data = product.data
-        }else{
-            articleData.data = {}
-        }
+
+      const  [article]  = await Promise.all([store.dispatch('_content',{
+          id:params.id,
+          })])
+      if(article.status === 200) {
+          articleData.data = article.data
+      }else{
+          articleData.data = {}
+      }
       return articleData;
     }
   };

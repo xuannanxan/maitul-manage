@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-30 13:02:14
+ * @LastEditTime: 2020-03-31 17:19:59
  * @LastEditors: Xuannan
  -->
 <template>
@@ -15,8 +15,8 @@
     <Banner/>
     <a-layout-content class="content">
       <a-row>
-        <a-col :span = "24" v-for="(cate,index) in category" :key="cate.id" :style="index%2===0?'':'background-color:rgb(232, 236, 236)'">
-          <div class="main">
+        <a-col :span = "24" v-for="(cate,index) in category" :key="cate.id" :style="index%2===0?'':'background-color:rgb(209, 210, 211,.3)'">
+          <div class="main"  v-if="content[cate.id]">
             <a-divider>{{cate.name}}</a-divider>
             <product-list
             :data="content[cate.id]"

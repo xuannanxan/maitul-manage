@@ -66,7 +66,6 @@
       }else{
             store.commit('initData',({data:store.state.siteData,locale:locale}))
       }
- 
         const  [product]  = await Promise.all([store.dispatch('_content',{
             id:params.id,
             })])
@@ -75,7 +74,6 @@
             if((store.state.relatedList).length===0){
               store.commit('setRelatedList',(store.state.content[product.data.pid===0?product.data.category_id:product.data.pid]))
             }
-            
         }else{
             productData.data = {}
         }

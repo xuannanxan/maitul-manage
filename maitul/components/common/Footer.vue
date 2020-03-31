@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-30 21:43:35
+ * @LastEditTime: 2020-03-31 14:19:49
  * @LastEditors: Xuannan
  -->
 <template>
@@ -10,7 +10,7 @@
       <a-row class="footer">
         <a-col :xs='24' :sm='24' :md='14' :lg='14' :xl='14'>
               <div class="nav">
-                <nuxt-link to="/">
+                <nuxt-link :to="{path:'/'+locale}" >
                   <a-icon type="home"/> {{$t('lang.home')}}
                 </nuxt-link>
               </div>
@@ -52,7 +52,7 @@
                     <a-icon type="environment"/> {{webconfig.address}}
                 </span>
               </div>
-              <a-divider style="color:#fff">Inquiry</a-divider>
+              <a-divider style="color:#fff">{{$t("lang.inquiry")}}</a-divider>
               <div>
                 <Message/>
               </div>

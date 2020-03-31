@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-30 21:42:05
+ * @LastEditTime: 2020-03-31 14:18:00
  * @LastEditors: Xuannan
  -->
 <template>
@@ -58,7 +58,7 @@
               :selectedKeys="currentCategory"
             >
             <a-menu-item :key="'home'">
-              <nuxt-link to="/" ><a-icon type="home" :style="{ fontSize: '16px'}"/>{{$t('lang.home')}}</nuxt-link>
+              <nuxt-link :to="{path:'/'+locale}" ><a-icon type="home" :style="{ fontSize: '16px'}"/>{{$t('lang.home')}}</nuxt-link>
             </a-menu-item>
             <template v-for="item in category">
               <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
@@ -132,7 +132,7 @@
     },
     methods: {
         onSearch(value) {
-            this.$router.push('/search?search='+value)    
+            this.$router.push('/'+this.$i18n.locale+'/search?search='+value)    
         },
         showDrawer() {
           this.visible = true;

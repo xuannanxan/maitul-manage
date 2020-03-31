@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-13 22:45:12
- * @LastEditTime: 2020-02-27 13:14:09
+ * @LastEditTime: 2020-03-31 11:32:11
  * @LastEditors: Xuannan
  */
 /*
@@ -26,7 +26,6 @@ export const nuxtServerInit=({ commit }, { req })=>{
 
 //内容
 export const _content = async (store, params={})=>{
-  params['site'] = siteInfo.site
   return await request.get(api.contentUrl, { params: params })
 };
 
