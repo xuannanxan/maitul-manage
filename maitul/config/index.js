@@ -19,7 +19,6 @@ export const siteInfo = {
     site:'maitul',
     articlePageSize:8,
     productPageSize:12,
-    contentPageSize:1000,
 }
 //api地址
 export const api = {

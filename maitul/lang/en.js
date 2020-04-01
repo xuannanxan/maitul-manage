@@ -8,6 +8,7 @@
 
 import {siteInfo}  from "@/config"
 export const lang = {
+    siteName:"Maitul",
     home: "home",
     banner:siteInfo.enBanner,
     more:"Learn More",

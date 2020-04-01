@@ -2,11 +2,12 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-27 19:41:11
- * @LastEditTime: 2020-03-31 15:32:28
+ * @LastEditTime: 2020-04-01 15:43:45
  * @LastEditors: Xuannan
  */
 import {siteInfo}  from "@/config"
 export const lang = {
+  siteName:"麦拓电子",
   home: "首页",
   banner:siteInfo.zhBanner,
   more:"了解详情",
