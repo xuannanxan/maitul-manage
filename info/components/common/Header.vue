@@ -2,29 +2,11 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-01 15:46:01
+ * @LastEditTime: 2020-04-02 21:05:07
  * @LastEditors: Xuannan
  -->
 <template>
     <div> 
-      <a-row>
-        <a-col>
-          <div class="topbar">
-            <a-col :xs='0' :sm='0' :md='8' :lg='10' :xl='12'>
-               <nuxt-link :to="{path:'/'+locale}"><span>{{webconfig.siteSlogan?webconfig.siteSlogan:$t("lang.siteName")}}</span></nuxt-link>
-            </a-col>
-            <a-col :xs='12' :sm='12' :md='0' :lg='0' :xl='0'>
-               <nuxt-link :to="{path:'/'+locale}"><span>{{webconfig.siteName?webconfig.siteName:$t("lang.siteName")}}</span></nuxt-link>
-            </a-col>
-            <a-col :xs='0' :sm='0' :md='12' :lg='10' :xl='10'>
-              <contact-btn :shownumber="true"/>
-            </a-col>
-            <a-col :xs='12' :sm='12' :md='4' :lg='4' :xl='2'>
-              <LangSwitcher/>
-            </a-col>
-          </div>
-        </a-col>
-      </a-row>
       <a-row>
         <a-affix :offsetTop="0">
         <a-layout-header class="header">
@@ -50,7 +32,7 @@
               </nuxt-link> 
             </div>
           </a-col>     
-          <a-col :xs='0' :sm='0' :md='12' :lg='14' :xl='14' style="text-align:right">
+          <a-col :xs='0' :sm='0' :md='9' :lg='11' :xl='13' style="text-align:right">
             <a-menu
               mode="horizontal"
               :defaultSelectedKeys="currentCategory"
@@ -68,7 +50,7 @@
             </template>
             </a-menu>
           </a-col>
-          <a-col :xs='0' :sm='0' :md='0' :lg='0' :xl='5' :offset="1">
+          <a-col :xs='0' :sm='0' :md='0' :lg='0' :xl='4' :offset="1">
             <a-input-search size="large" placeholder="Search..." @search="onSearch" />
           </a-col>
           <a-col :xs='0' :sm='0' :md='1' :lg='1' :xl='0' :offset="1">
@@ -79,6 +61,9 @@
               <a-button icon="search"></a-button>
             </a-popover>
           </a-col>
+          <a-col :xs='0' :sm='0' :md='4' :lg='4' :xl='2'>
+            <LangSwitcher/>
+          </a-col>
           <a-col :xs='3' :sm='3' :md='0' :lg='0' :xl='0' >
             <a-button icon="menu" @click="showDrawer"></a-button>
             <a-drawer
@@ -87,6 +72,7 @@
               @close="onClose"
               :visible="visible"
             >
+              <LangSwitcher style="margin-bottom:1rem"/>
               <a-input-search size="large" placeholder="Search..." @search="onSearch" />
               <a-divider/>
               <a-menu

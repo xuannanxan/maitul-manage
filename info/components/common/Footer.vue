@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-01 15:46:55
+ * @LastEditTime: 2020-04-02 21:06:42
  * @LastEditors: Xuannan
  -->
 <template>
@@ -52,10 +52,6 @@
                     <a-icon type="environment"/> {{webconfig.address}}
                 </span>
               </div>
-              <a-divider style="color:#fff">{{$t("lang.inquiry")}}</a-divider>
-              <div>
-                <Message/>
-              </div>
             </div>
         </a-col>
 
@@ -69,10 +65,9 @@
 </template>
 <script>
   import SubMenu from './SubMenu.vue'
-  import Message from './Message.vue'
   import {i18n}  from "@/config"
   export default {
-    components:{SubMenu,Message},
+    components:{SubMenu},
     name: 'Footer',
     data () {
         return {

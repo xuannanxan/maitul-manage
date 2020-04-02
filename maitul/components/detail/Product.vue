@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-31 15:15:41
+ * @LastEditTime: 2020-04-02 21:08:10
  * @LastEditors: Xuannan
  -->
 <template>
@@ -90,7 +90,6 @@
     }
     .cover{
         padding:1rem 1rem;
-        
         border: 1px solid #ccc;
         background-size: 100%;
         background-repeat: no-repeat;
