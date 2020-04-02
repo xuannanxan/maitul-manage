@@ -2,11 +2,11 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-22 21:03:01
- * @LastEditTime: 2020-03-27 16:12:21
+ * @LastEditTime: 2020-04-02 09:42:46
  * @LastEditors: Xuannan
  -->
 <template>
-  <div class="floatRight" v-if="lang.length">
+  <div class="floatRight" v-if="lang.length && (locales.length>1)">
   <a-dropdown>
     <a class="ant-dropdown-link" @click="e => e.preventDefault()"> {{locale}} <a-icon type="down" /> </a>
     <a-menu slot="overlay">
@@ -28,7 +28,8 @@ export default {
     return {
       defaultLocale:i18n.locale,
       lang: this.$store.state.lang,
-      locale:''
+      locale:'',
+      locales:i18n.locales,
     }
   },
   created(){
