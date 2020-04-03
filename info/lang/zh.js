@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-27 19:41:11
- * @LastEditTime: 2020-04-01 15:43:11
+ * @LastEditTime: 2020-04-03 19:47:24
  * @LastEditors: Xuannan
  */
 import {siteInfo}  from "@/config"
@@ -10,7 +10,7 @@ export const lang = {
   siteName:"轻资讯",
   home: "首页",
   banner:siteInfo.zhBanner,
-  more:"了解详情",
+  more:"更多",
   relatedProduct:"关联产品...",
   inquiry:"留言",
   newest:"最新...",

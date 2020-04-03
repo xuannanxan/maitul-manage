@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-02 09:49:17
+ * @LastEditTime: 2020-04-03 19:13:07
  * @LastEditors: Xuannan
  -->
 <template>
@@ -77,7 +77,9 @@
             </a-popover>
           </a-col>
           <a-col :xs='3' :sm='3' :md='0' :lg='0' :xl='0' >
-            <a-button icon="menu" @click="showDrawer"></a-button>
+            <div style="float:right;line-height:64px">
+              <a-button icon="menu" @click="showDrawer"></a-button>
+            </div>
             <a-drawer
               placement="right"
               :closable="false"

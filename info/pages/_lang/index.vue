@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-01 15:58:19
+ * @LastEditTime: 2020-04-03 19:59:58
  * @LastEditors: Xuannan
  -->
 <template>
@@ -14,10 +14,10 @@
     <Header :currentCategory="['home']"/>
     <Banner/>
     <a-layout-content class="content">
-      <a-row>
-        <a-col :span = "24" v-for="(cate,index) in category" :key="cate.id" :style="index%2===0?'':'background-color:rgb(209, 210, 211,.3)'">
-          <div class="main"  v-if="content[cate.id]">
-            <a-divider>{{cate.name}}</a-divider>
+      <a-row class="main">
+        <a-col :xs='24' :sm='24' :md='16' :lg='16' :xl='18' v-for="(cate) in category" :key="cate.id" style="padding-right:2rem">
+          <div  v-if="content[cate.id]">
+            <category-bar :category="cate"/>
             <product-list
             :data="content[cate.id]"
             :topCategory="cate"
@@ -39,6 +39,9 @@
           
           </div>
         </a-col>
+        <a-col :xs='0' :sm='0' :md='8' :lg='8' :xl='6'>
+          <Tags/>
+        </a-col>
       </a-row>
       <a-row>
         <Footer/>
@@ -56,12 +59,13 @@
   import Info from '@/components/list/Info';
   import Contact from '@/components/list/Contact';
   import RightContact from '@/components/common/RightContact';
+  import CategoryBar from '@/components/common/CategoryBar';
   import {siteInfo}  from "@/config";
  
 
   export default {
     scrollToTop: true,
-    components:{Header,Footer,Banner,ArticleList,Tags,ProductList,Info,RightContact,Contact},
+    components:{Header,Footer,Banner,ArticleList,Tags,ProductList,Info,RightContact,Contact,CategoryBar},
     data () {
       return {
         webconfig: this.$store.state.webconfig,

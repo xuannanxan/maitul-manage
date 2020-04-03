@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-30 08:55:15
- * @LastEditTime: 2020-03-31 15:20:58
+ * @LastEditTime: 2020-04-03 19:47:34
  * @LastEditors: Xuannan
  */
 
@@ -11,7 +11,7 @@ export const lang = {
     siteName:"QZ-Info",
     home: "home",
     banner:siteInfo.enBanner,
-    more:"Learn More",
+    more:"More",
     relatedProduct:"Related Product...",
     inquiry:"Inquiry",
     newest:"Newest...",
