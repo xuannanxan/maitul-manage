@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-31 14:29:49
+ * @LastEditTime: 2020-04-04 22:45:15
  * @LastEditors: Xuannan
  -->
 <template>
@@ -26,6 +26,9 @@
                         <a-icon :type="data.category_icon?data.category_icon:'folder'" /> {{data.category_name}}
                     </nuxt-link>
                     <span><a-icon type="fire" /> {{data.click}}</span>
+                    <a v-if="data.source" :href="data.source_url"  class="list-link">
+                        <a-icon type="link" /> {{data.source}}
+                    </a>
                 </div>
             </a-divider>
             <div class="detail-tag" v-if="data.tags_name">

@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-31 14:19:22
+ * @LastEditTime: 2020-04-04 20:31:43
  * @LastEditors: Xuannan
  -->
 <template>
@@ -29,11 +29,18 @@
             <a-col :span='24'><a-divider/></a-col>
         </a-row>
         <a-row v-if="Object.keys(topCategory).length>0 &&  !tag && !search">
-            <div v-if="topCategory.children.length>0" v-for="item in topCategory.children" :key="item.id" class="sub-category">
-                <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.id}">
-                    <a-icon v-if="item.icon" :type="item.icon" /> {{item.name}}
-                </nuxt-link>
-            </div>
+            <a-menu
+              mode="horizontal"
+              :defaultSelectedKeys="[category.id]"
+              class="sub-category"
+              :selectedKeys="[category.id]"
+            >
+            <template v-if="topCategory.children.length>0" v-for="item in topCategory.children" >
+              <a-menu-item :key="item.id">
+                <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.id}"><a-icon v-if="item.icon" :type="item.icon" />{{item.name}}</nuxt-link>
+              </a-menu-item>
+            </template>
+            </a-menu>
         </a-row>
         <a-row>
             <div style="margin:.5rem .8rem" v-if="Object.keys(topCategory).length>0">
@@ -154,22 +161,10 @@
         } 
     }
     .sub-category{
-        float:left;
-        padding:.5rem .8rem;
+        line-height: 2rem;
         font-size: 1rem;
         font-weight: 500;
-        a{
-            padding: .3rem 0;
-            color: rgba(0, 0, 0, 0.65);
-        }
-        a:hover{
-            color: #00cccc;
-            border-bottom: 2px solid #00cccc;
-        }
-        .nuxt-link-active{
-            color: #00cccc;
-            border-bottom: 2px solid #00cccc;
-        }
+      
     }
     .product{
         padding: .8rem;
