@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-27 19:41:11
- * @LastEditTime: 2020-04-03 19:47:24
+ * @LastEditTime: 2020-04-05 19:42:43
  * @LastEditors: Xuannan
  */
 import {siteInfo}  from "@/config"
@@ -14,6 +14,7 @@ export const lang = {
   relatedProduct:"关联产品...",
   inquiry:"留言",
   newest:"最新...",
+  topic:"话题",
   message:{
     email:"邮箱地址",
     noEmail:"邮箱不能为空...",

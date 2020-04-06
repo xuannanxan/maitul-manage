@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-03 19:59:58
+ * @LastEditTime: 2020-04-05 20:03:02
  * @LastEditors: Xuannan
  -->
 <template>
@@ -15,8 +15,8 @@
     <Banner/>
     <a-layout-content class="content">
       <a-row class="main">
-        <a-col :xs='24' :sm='24' :md='16' :lg='16' :xl='18' v-for="(cate) in category" :key="cate.id" style="padding-right:2rem">
-          <div  v-if="content[cate.id]">
+        <a-col :xs='24' :sm='24' :md='16' :lg='16' :xl='18' style="padding-right:2rem">
+          <div v-for="(cate) in category" :key="cate.id"  v-if="content[cate.id]">
             <category-bar :category="cate"/>
             <product-list
             :data="content[cate.id]"
@@ -40,7 +40,11 @@
           </div>
         </a-col>
         <a-col :xs='0' :sm='0' :md='8' :lg='8' :xl='6'>
-          <Tags/>
+          <a-col>
+            <a-affix :offsetTop="65">
+              <Topic/>
+            </a-affix>
+          </a-col>
         </a-col>
       </a-row>
       <a-row>
@@ -53,7 +57,7 @@
   import Header from '@/components/common/Header';
   import Footer from '@/components/common/Footer';
   import Banner from '@/components/common/Banner';
-  import Tags from '@/components/common/Tags';
+  import Topic from '@/components/common/Topic';
   import ArticleList from '@/components/list/ArticleList';
   import ProductList from '@/components/list/ProductList';
   import Info from '@/components/list/Info';
@@ -65,7 +69,7 @@
 
   export default {
     scrollToTop: true,
-    components:{Header,Footer,Banner,ArticleList,Tags,ProductList,Info,RightContact,Contact,CategoryBar},
+    components:{Header,Footer,Banner,ArticleList,Topic,ProductList,Info,RightContact,Contact,CategoryBar},
     data () {
       return {
         webconfig: this.$store.state.webconfig,

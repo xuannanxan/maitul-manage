@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-30 08:55:15
- * @LastEditTime: 2020-04-03 19:47:34
+ * @LastEditTime: 2020-04-05 19:42:05
  * @LastEditors: Xuannan
  */
 
@@ -15,6 +15,7 @@ export const lang = {
     relatedProduct:"Related Product...",
     inquiry:"Inquiry",
     newest:"Newest...",
+    topic:"Topic",
     message:{
         email:"Please input your email",
         noEmail:"Please input your email!",
