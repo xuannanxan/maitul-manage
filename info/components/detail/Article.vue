@@ -26,6 +26,9 @@
                         <a-icon :type="data.category_icon?data.category_icon:'folder'" /> {{data.category_name}}
                     </nuxt-link>
                     <span><a-icon type="fire" /> {{data.click}}</span>
+                    <a v-if="data.source" :href="data.source_url"  class="list-link">
+                        <a-icon type="link" /> {{data.source}}
+                    </a>
                 </div>
             </a-divider>
             <div class="detail-tag" v-if="data.tags_name">
