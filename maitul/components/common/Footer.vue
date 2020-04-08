@@ -18,10 +18,12 @@
                 <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.id}">
                   <a-icon v-if="item.icon" :type="item.icon"/> {{item.name}}
                 </nuxt-link>
-                <div v-if="item.children.length>0" v-for="child in item.children" :key='child.id' class="child-nav">
-                  <nuxt-link :to="{path:'/'+locale+'/'+child.module+'/'+child.id}">
-                    <a-icon v-if="child.icon" :type="child.icon"/> {{child.name}}
-                  </nuxt-link>
+                <div v-if="item.children.length">
+                  <div  v-for="child in item.children" :key='child.id' class="child-nav">
+                    <nuxt-link :to="{path:'/'+locale+'/'+child.module+'/'+child.id}">
+                      <a-icon v-if="child.icon" :type="child.icon"/> {{child.name}}
+                    </nuxt-link>
+                  </div>
                 </div>
               </div>
         </a-col>
