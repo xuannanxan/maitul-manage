@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-01 09:56:57
+ * @LastEditTime: 2020-04-08 14:50:13
  * @LastEditors: Xuannan
  -->
 <template>
@@ -82,7 +82,6 @@
         const  [article]  = await Promise.all([store.dispatch('_content',{
             paginate:siteInfo.articlePageSize,
             category_id:params.id,
-            category:params.id?'':siteInfo.news,
             page:query.page,
             search:query.search,
             tag:query.tag,

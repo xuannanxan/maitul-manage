@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-04-04 20:31:43
+ * @LastEditTime: 2020-04-08 13:25:10
  * @LastEditors: Xuannan
  -->
 <template>
@@ -30,15 +30,16 @@
         </a-row>
         <a-row v-if="Object.keys(topCategory).length>0 &&  !tag && !search">
             <a-menu
+              v-if="topCategory.children.length" 
               mode="horizontal"
-              :defaultSelectedKeys="[category.id]"
+              :defaultSelectedKeys="Object.keys(category).length?[category.id]:[]"
               class="sub-category"
-              :selectedKeys="[category.id]"
+              :selectedKeys="Object.keys(category).length?[category.id]:[]"
             >
-            <template v-if="topCategory.children.length>0" v-for="item in topCategory.children" >
-              <a-menu-item :key="item.id">
-                <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.id}"><a-icon v-if="item.icon" :type="item.icon" />{{item.name}}</nuxt-link>
-              </a-menu-item>
+            <template  v-for="item in topCategory.children" >
+                <a-menu-item :key="item.id">
+                    <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.id}"><a-icon v-if="item.icon" :type="item.icon" />{{item.name}}</nuxt-link>
+                </a-menu-item>
             </template>
             </a-menu>
         </a-row>
@@ -164,7 +165,6 @@
         line-height: 2rem;
         font-size: 1rem;
         font-weight: 500;
-      
     }
     .product{
         padding: .8rem;

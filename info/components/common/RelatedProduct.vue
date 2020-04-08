@@ -89,10 +89,4 @@
         text-align: center;
         margin-bottom: 1rem;
     }
-    .ant-skeleton{
-        margin: 1rem;
-        ul{
-            padding: 0
-        }
-    }
 </style>

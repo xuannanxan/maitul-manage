@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-31 14:29:49
+ * @LastEditTime: 2020-04-08 14:10:42
  * @LastEditors: Xuannan
  -->
 <template>
@@ -35,16 +35,16 @@
             </div>
             <div class="detail-content" v-html="data.content">{{data.content}}</div>
             <div>
-                <RelatedProduct/>
+               <related-article/>
             </div>
         </div> 
     </div>
 </template>
 <script>
-    import RelatedProduct from '../common/RelatedProduct.vue'
+    import RelatedArticle from '../common/RelatedArticle.vue'
     export default {
         name: 'Article',
-        components:{RelatedProduct},
+        components:{RelatedArticle},
         data() {
             return {
                 tagColor:['magenta','red','volcano','orange','gold','lime','green','cyan','blue','geekblue','purple'],
@@ -87,10 +87,9 @@
             }
         }
     }
-    .ant-skeleton{
-        padding:  1rem;
-        ul{
-            padding: 0
-        }
+    .sub-category{
+        line-height: 2rem;
+        font-size: 1rem;
+        font-weight: 500;
     }
 </style>

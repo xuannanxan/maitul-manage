@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-31 17:14:46
+ * @LastEditTime: 2020-04-08 14:06:11
  * @LastEditors: Xuannan
  -->
 <template>
@@ -45,11 +45,26 @@
             <div v-else>{{$t("lang.newest")}}</div>
             <a-col :span='24'><a-divider/></a-col>
         </a-row>
+        <a-row v-if="Object.keys(topCategory).length>0 &&  !tag && !search">
+            <a-menu
+              v-if="topCategory.children.length" 
+              mode="horizontal"
+              :defaultSelectedKeys="Object.keys(category).length?[category.id]:[]"
+              class="sub-category"
+              :selectedKeys="Object.keys(category).length?[category.id]:[]"
+            >
+            <template  v-for="item in topCategory.children" >
+                <a-menu-item :key="item.id">
+                    <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.id}"><a-icon v-if="item.icon" :type="item.icon" />{{item.name}}</nuxt-link>
+                </a-menu-item>
+            </template>
+            </a-menu>
+        </a-row>
         <a-list 
         itemLayout="horizontal" 
         :dataSource="data"
         >         
-            <a-list-item slot="renderItem" slot-scope="item, index">
+            <a-list-item slot="renderItem" slot-scope="item">
                 <a-list-item-meta>
                     <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+'detail/'+item.id}" slot="title" class= "list-title">
                     {{item.title}}
@@ -70,7 +85,6 @@
                         <div class="description">{{item.description}}</div>
                     </div>
                 </a-list-item-meta>
-                </a-skeleton>
             </a-list-item>
         </a-list>
         <a-pagination 
@@ -83,11 +97,12 @@
     </div>
 </template>
 <script>
+    import CategoryBar from '@/components/common/CategoryBar';
     import Tags from '@/components/common/Tags';
     import {i18n}  from "@/config"
     export default {
         name: 'ArticleList',
-        components:{Tags},
+        components:{Tags,CategoryBar},
         data () {
             return {
                 locale:this.$i18n.locale,

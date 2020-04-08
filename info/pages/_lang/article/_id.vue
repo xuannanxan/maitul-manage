@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-01 09:56:57
+ * @LastEditTime: 2020-04-08 14:49:46
  * @LastEditors: Xuannan
  -->
 <template>
@@ -41,7 +41,7 @@
     import {mapState} from 'vuex';
     import {siteInfo}  from "@/config";
     import {findNodes} from '@/utils/treeNodes'
- 
+    import CategoryBar from '@/components/common/CategoryBar';
   const articleData =  {
         data:[],
         paginate:{},
@@ -54,7 +54,7 @@
   export default {
     watchQuery: ['page','tag','search'],
     scrollToTop: true,
-    components:{Header,Footer,ArticleList,RightContact},
+    components:{Header,Footer,ArticleList,RightContact,CategoryBar},
     computed:mapState(["webconfig"]),
     head () {
         const search = this.$route.query.search?'|'+this.$route.query.search:'';
@@ -82,7 +82,6 @@
         const  [article]  = await Promise.all([store.dispatch('_content',{
             paginate:siteInfo.articlePageSize,
             category_id:params.id,
-            category:params.id?'':siteInfo.news,
             page:query.page,
             search:query.search,
             tag:query.tag,
@@ -90,6 +89,7 @@
         if(article.status === 200) {
             articleData.data = article.data
             articleData.paginate = article.paginate
+            store.commit('setRelatedList',article.data)
         }else{
             articleData.data = []
             articleData.paginate = {}

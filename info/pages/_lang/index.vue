@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-05 20:03:02
+ * @LastEditTime: 2020-04-08 13:53:45
  * @LastEditors: Xuannan
  -->
 <template>
@@ -16,27 +16,28 @@
     <a-layout-content class="content">
       <a-row class="main">
         <a-col :xs='24' :sm='24' :md='16' :lg='16' :xl='18' style="padding-right:2rem">
-          <div v-for="(cate) in category" :key="cate.id"  v-if="content[cate.id]">
-            <category-bar :category="cate"/>
-            <product-list
-            :data="content[cate.id]"
-            :topCategory="cate"
-            v-if="cate.module==='product'"
-            />
-            <article-list
-            :data="content[cate.id]"
-            v-if="cate.module==='article'"
-            />
+          <div v-for="(cate) in category" :key="cate.id"  >
+            <div v-if="content[cate.id]">
+              <category-bar :category="cate"/>
+              <product-list
+              :data="content[cate.id]"
+              :topCategory="cate"
+              v-if="cate.module==='product'"
+              />
+              <article-list
+              :data="content[cate.id]"
+              v-if="cate.module==='article'"
+              />
 
-            <Info
-            :data="content[cate.id]"
-            v-if="cate.module==='info'"
-            />
-            <Contact
-            :data="content[cate.id]"
-            v-if="cate.module==='contact'"
-            />
-          
+              <Info
+              :data="content[cate.id]"
+              v-if="cate.module==='info'"
+              />
+              <Contact
+              :data="content[cate.id]"
+              v-if="cate.module==='contact'"
+              />
+            </div>
           </div>
         </a-col>
         <a-col :xs='0' :sm='0' :md='8' :lg='8' :xl='6'>
@@ -76,6 +77,9 @@
         category: this.$store.state.category,
         content: this.$store.state.content,
       }
+    },
+    mounted(){
+      console.log(this.content)
     },
     head () {
       return {

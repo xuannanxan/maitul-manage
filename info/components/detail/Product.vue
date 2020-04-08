@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-31 15:15:41
+ * @LastEditTime: 2020-04-08 10:28:27
  * @LastEditors: Xuannan
  -->
 <template>
@@ -60,7 +60,7 @@
                 <div class="detail-content" v-html="data.content"></div>
             </a-col>
             <a-col :span='24'>
-                <RelatedProduct/>
+                <related-product/>
             </a-col>
         </a-row>
     </div>

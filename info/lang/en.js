@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-30 08:55:15
- * @LastEditTime: 2020-04-05 19:42:05
+ * @LastEditTime: 2020-04-08 10:30:13
  * @LastEditors: Xuannan
  */
 
@@ -12,7 +12,8 @@ export const lang = {
     home: "home",
     banner:siteInfo.enBanner,
     more:"More",
-    relatedProduct:"Related Product...",
+    relatedProduct:"Recommend...",
+    relatedArticle:"Recommend...",
     inquiry:"Inquiry",
     newest:"Newest...",
     topic:"Topic",
