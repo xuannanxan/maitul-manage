@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-04-08 13:25:10
+ * @LastEditTime: 2020-04-09 17:10:39
  * @LastEditors: Xuannan
  -->
 <template>
@@ -28,7 +28,7 @@
             </a-col>
             <a-col :span='24'><a-divider/></a-col>
         </a-row>
-        <a-row v-if="Object.keys(topCategory).length>0 &&  !tag && !search">
+        <a-row v-if="Object.keys(topCategory).length>0 &&  !tag && !search" style="margin-bottom:.8rem">
             <a-menu
               v-if="topCategory.children.length" 
               mode="horizontal"
