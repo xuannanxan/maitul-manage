@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-19 22:41:43
+ * @LastEditTime: 2020-04-08 14:49:46
  * @LastEditors: Xuannan
  -->
 <template>
@@ -37,12 +37,11 @@
     import Header from '@/components/common/Header';
     import Footer from '@/components/common/Footer';
     import ArticleList from '@/components/list/ArticleList';
-    import Contact from '@/components/common/Contact';
     import RightContact from '@/components/common/RightContact';
     import {mapState} from 'vuex';
     import {siteInfo}  from "@/config";
     import {findNodes} from '@/utils/treeNodes'
- 
+    import CategoryBar from '@/components/common/CategoryBar';
   const articleData =  {
         data:[],
         paginate:{},
@@ -55,35 +54,34 @@
   export default {
     watchQuery: ['page','tag','search'],
     scrollToTop: true,
-    components:{Header,Footer,ArticleList,Contact,RightContact},
+    components:{Header,Footer,ArticleList,RightContact,CategoryBar},
     computed:mapState(["webconfig"]),
     head () {
         const search = this.$route.query.search?'|'+this.$route.query.search:'';
         const tag = this.$route.query.tag?'|'+this.$route.query.tag:'';
-        const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com')
+        const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:this.$t('lang.siteName'))
         const pageTitle = articleData.category.name?'|'+articleData.category.name:''
         return {
             title: siteTitle+pageTitle+search+tag,
             meta: [
-            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul')+(articleData.category.keywords?','+articleData.category.keywords:'') },
-            { hid: 'description', name: 'description', content: articleData.category.description?articleData.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul'  }
+            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:this.$t('lang.siteName'))+(articleData.category.keywords?','+articleData.category.keywords:'') },
+            { hid: 'description', name: 'description', content: articleData.category.description?articleData.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:this.$t('lang.siteName')}
             ]
         }
     },
-    async asyncData({ store,params,query, error }){
-      if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-        const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
-        if(siteData.status === 200) {
-            store.commit('setWebConfig',siteData.data.webconfig)
-            store.commit('setCategory',siteData.data.category)
-            store.commit('setTags',siteData.data.tags)
-            store.commit('setAdspace',(siteData.data.adspace))
+    async asyncData({ store,params,query, error ,app}){
+      const locale = params.lang || app.i18n.fallbackLocale
+      if(store.state.siteData && Object.keys(store.state.siteData).length===0){
+          const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
+          if(siteData.status === 200) {
+            store.commit('initData',({data:siteData.data,locale:locale}))
           }
+      }else{
+            store.commit('initData',({data:store.state.siteData,locale:locale}))
       }
         const  [article]  = await Promise.all([store.dispatch('_content',{
-            paginate:siteInfo.productPageSize,
+            paginate:siteInfo.articlePageSize,
             category_id:params.id,
-            category:params.id?'':siteInfo.news,
             page:query.page,
             search:query.search,
             tag:query.tag,
@@ -91,6 +89,7 @@
         if(article.status === 200) {
             articleData.data = article.data
             articleData.paginate = article.paginate
+            store.commit('setRelatedList',article.data)
         }else{
             articleData.data = []
             articleData.paginate = {}

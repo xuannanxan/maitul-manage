@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-18 09:57:31
- * @LastEditTime: 2020-03-22 20:27:20
+ * @LastEditTime: 2020-03-26 15:35:25
  * @LastEditors: Xuannan
  -->
 <template>
@@ -11,8 +11,8 @@
       <span slot="description" style="color:#ccc">{{error.statusCode?error.statusCode:500}}</span>
     </a-empty>
     <div  class="error">
-      <h1 v-if="error.statusCode === 404">Sorry! Page Not Found</h1>
-      <h2 v-else>Sorry! Server Connection Failed</h2>
+      <h1 v-if="error.statusCode === 404">{{error.message?error.message:'Sorry! Page Not Found'}}</h1>
+      <h1 v-else>{{error.message?error.message:'Sorry! Server Connection Failed'}}</h1>
       <p>Please contact us at <a href="mailto:admin@maitul.com">admin@maitul.com</a></p>
       <p><nuxt-link to="/">Go Home</nuxt-link></p>
     </div>

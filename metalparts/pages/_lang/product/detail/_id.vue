@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-07 10:25:27
+ * @LastEditTime: 2020-03-30 23:03:49
  * @LastEditors: Xuannan
  -->
 <template>
@@ -33,7 +33,6 @@
     import Footer from '@/components/common/Footer';
     import Tags from '@/components/common/Tags';
     import Product from '@/components/detail/Product';
-    import Contact from '@/components/common/Contact';
     import RightContact from '@/components/common/RightContact';
     import {mapState} from 'vuex';
     import {siteInfo}  from "@/config";
@@ -44,41 +43,37 @@
       };
   export default {
     scrollToTop: true,
-    components:{Header,Footer,Tags,Product,Contact,RightContact},
+    components:{Header,Footer,Tags,Product,RightContact},
     computed:mapState(["webconfig"]),
     head () {
-        const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com');
+        const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:this.$t('lang.siteName'));
         const pageTitle = productData.data.title?'|'+productData.data.title:'';
         return {
             title: siteTitle+pageTitle,
             meta: [
-            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul')+(productData.data.keywords?','+productData.data.keywords:'') },
-            { hid: 'description', name: 'description', content: productData.data.description?productData.data.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul'  }
+            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:this.$t('lang.siteName'))+(productData.data.keywords?','+productData.data.keywords:'') },
+            { hid: 'description', name: 'description', content: productData.data.description?productData.data.description:this.webconfig.siteDescription?this.webconfig.siteDescription:this.$t('lang.siteName') }
             ]
         }
     },
-    async asyncData({ store,params,query, error }){
-      if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-        const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
-        if(siteData.status === 200) {
-            store.commit('setWebConfig',siteData.data.webconfig)
-            store.commit('setCategory',siteData.data.category)
-            store.commit('setTags',siteData.data.tags)
-            store.commit('setAdspace',(siteData.data.adspace))
+    async asyncData({ store,params,query, error ,app}){
+      const locale = params.lang || app.i18n.fallbackLocale
+      if(store.state.siteData && Object.keys(store.state.siteData).length===0){
+          const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
+          if(siteData.status === 200) {
+            store.commit('initData',({data:siteData.data,locale:locale}))
           }
+      }else{
+            store.commit('initData',({data:store.state.siteData,locale:locale}))
       }
-        if(store.state.productList && store.state.productList.length===0){
-            const  [productList]  = await Promise.all([store.dispatch('_content',{
-              paginate:siteInfo.productPageSize,
-              category:siteInfo.products,
-            })])
-            if(productList.status === 200) store.commit('setProductList',productList.data)
-        }
         const  [product]  = await Promise.all([store.dispatch('_content',{
             id:params.id,
             })])
         if(product.status === 200) {
             productData.data = product.data
+            if((store.state.relatedList).length===0){
+              store.commit('setRelatedList',(store.state.content[product.data.pid===0?product.data.category_id:product.data.pid]))
+            }
         }else{
             productData.data = {}
         }

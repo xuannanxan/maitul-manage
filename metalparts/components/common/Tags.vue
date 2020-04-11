@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-03-04 21:27:34
+ * @LastEditTime: 2020-03-29 10:13:40
  * @LastEditors: Xuannan
  -->
 <template>
@@ -10,10 +10,10 @@
             <a-tag 
             style="margin: 0 0.5rem 0.5rem 0"
             v-for="tag in tags" 
-            :key="tag.id" 
+            :key="tag" 
             :color="tagColor[Math.floor((Math.random()*tagColor.length))]"
             >
-                <nuxt-link :to="{path:url+'?tag='+tag.name}">{{tag.name}}</nuxt-link>
+                <nuxt-link :to="{path:url+'?tag='+tag}">{{tag}}</nuxt-link>
             </a-tag>
         </div>
 </template>

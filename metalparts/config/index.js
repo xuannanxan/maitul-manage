@@ -2,30 +2,27 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-22 19:51:35
- * @LastEditTime: 2020-03-22 19:51:35
+ * @LastEditTime: 2020-04-11 20:22:44
  * @LastEditors: Xuannan
  */
 
 // 语言配置
 export const i18n = {
-    locales: ['en', 'zh'],
-    locale: 'zh'
+    locales: ['zh','en'],
+    locale: 'en'
 }
 
 // 站点信息配置
 export const siteInfo = {
-    banner:'maitulBanner',
-    about:'about',
-    products:'products',
-    news:'news',
+    enBanner:'metalpartsEnBanner',
+    zhBanner:'metalpartsZhBanner',
     site:'metalparts',
     articlePageSize:8,
     productPageSize:12,
-    contentPageSize:1000,
 }
 //api地址
 export const api = {
-    contentUrl:`/api/cms/${siteInfo.site}/content`,//内容
+    contentUrl:`/api/${siteInfo.site}/content`,//内容
     messageUrl:'/api/message',//留言
     siteDataUrl:`/api/${siteInfo.site}/data`,//站点数据
 }

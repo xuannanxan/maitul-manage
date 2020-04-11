@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-22 21:35:14
+ * @LastEditTime: 2020-04-11 20:29:44
  * @LastEditors: Xuannan
  -->
 <template>
@@ -12,27 +12,15 @@
         <a-layout-header class="header">
           <a-col :xs='21' :sm='21' :md='8' :lg='6' :xl='4'>
             <div class="logo">
-              <nuxt-link to="/">
-                <img 
-                v-if="webconfig.siteLogo" 
-                :src="webconfig.siteLogo" 
-                :alt="webconfig.siteName?webconfig.siteName:'MT'"
-                :title="webconfig.siteName?webconfig.siteName:'MT'">
-                <img 
-                v-else
-                src="~assets/images/logo.png" 
-                :alt="webconfig.siteName?webconfig.siteName:'MT'"
-                :title="webconfig.siteName?webconfig.siteName:'MT'">
-              </nuxt-link> 
-              <a-divider type="vertical" />
-              <nuxt-link to="/">
+
+              <nuxt-link :to="{path:'/'+locale}">
                 <div class="title">
-                  {{webconfig.siteName?webconfig.siteName:'Maitul'}}
+                  {{webconfig.siteName?webconfig.siteName:$t('lang.siteName')}}
                 </div>
               </nuxt-link> 
             </div>
           </a-col>     
-          <a-col :xs='0' :sm='0' :md='12' :lg='14' :xl='14' style="text-align:right">
+          <a-col :xs='0' :sm='0' :md='9' :lg='11' :xl='13' style="text-align:right">
             <a-menu
               mode="horizontal"
               :defaultSelectedKeys="currentCategory"
@@ -40,20 +28,20 @@
               :selectedKeys="currentCategory"
             >
             <a-menu-item :key="'home'">
-              <nuxt-link to="/" ><a-icon type="home" :style="{ fontSize: '16px'}"/>Home</nuxt-link>
+              <nuxt-link :to="{path:'/'+locale}" ><a-icon type="home" :style="{ fontSize: '16px'}"/>{{$t('lang.home')}}</nuxt-link>
             </a-menu-item>
             <template v-for="item in category">
               <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                <nuxt-link :to="{path:(item.url?item.url:'article/')+item.id}"><a-icon v-if="item.icon" :type="item.icon" :style="{ fontSize: '16px'}"/>{{item.name}}</nuxt-link>
+                <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.id}"><a-icon v-if="item.icon" :type="item.icon" :style="{ fontSize: '16px'}"/>{{item.name}}</nuxt-link>
               </a-menu-item>
-              <sub-menu v-else :menu-info="item" :key="item.id" />
+              <sub-menu v-else :menu-info="item" :locale="locale" :key="item.id" />
             </template>
             </a-menu>
           </a-col>
-          <a-col :xs='0' :sm='0' :md='0' :lg='0' :xl='5' class="search">
+          <a-col :xs='0' :sm='0' :md='0' :lg='0' :xl='4' :offset="1">
             <a-input-search size="large" placeholder="Search..." @search="onSearch" />
           </a-col>
-          <a-col :xs='0' :sm='0' :md='1' :lg='1' :xl='0'>
+          <a-col :xs='0' :sm='0' :md='1' :lg='1' :xl='0' :offset="1">
             <a-popover placement="bottomRight" trigger="click">
               <template slot="content">
                 <a-input-search size="large" placeholder="Search..." @search="onSearch" />
@@ -61,14 +49,20 @@
               <a-button icon="search"></a-button>
             </a-popover>
           </a-col>
-          <a-col :xs='3' :sm='3' :md='0' :lg='0' :xl='0'>
-            <a-button icon="menu" @click="showDrawer"></a-button>
+          <a-col :xs='0' :sm='0' :md='4' :lg='4' :xl='2'>
+            <LangSwitcher/>
+          </a-col>
+          <a-col :xs='3' :sm='3' :md='0' :lg='0' :xl='0' >
+            <div style="float:right;line-height:64px">
+              <a-button icon="menu" @click="showDrawer"></a-button>
+            </div>
             <a-drawer
               placement="right"
               :closable="false"
               @close="onClose"
               :visible="visible"
             >
+              <LangSwitcher style="margin-bottom:1rem"/>
               <a-input-search size="large" placeholder="Search..." @search="onSearch" />
               <a-divider/>
               <a-menu
@@ -77,21 +71,18 @@
               :selectedKeys="currentCategory"
               >
               <a-menu-item :key="'home'">
-                <nuxt-link to="/" ><a-icon type="home" />Home</nuxt-link>
+                <nuxt-link to="/" ><a-icon type="home" />{{$t('lang.home')}}</nuxt-link>
               </a-menu-item>
               <template v-for="item in category">
                 <a-menu-item v-if="Object.keys(item.children).length===0" :key="item.id">
-                  <nuxt-link :to="{path:(item.url?item.url:'article/')+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
+                  <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+item.id}"><a-icon :type="item.icon" />{{item.name}}</nuxt-link>
                 </a-menu-item>
-                <sub-menu v-else :menu-info="item" :key="item.id" />
+                <sub-menu v-else :menu-info="item" :locale="locale" :key="item.id" />
               </template>
               </a-menu>
               <a-divider/>
-              <div style="text-align:center"><Contact/></div>
+              <div style="text-align:center"><contact-btn/></div>
             </a-drawer>
-          </a-col>
-          <a-col :xs='0' :sm='0' :md='1' :lg='1' :xl='1'>
-            <LangSwitcher/>
           </a-col>
         </a-layout-header>
         </a-affix>
@@ -101,20 +92,23 @@
 </template>
 <script>
   import SubMenu from './SubMenu.vue'
-  import Contact from './Contact.vue'
+  import ContactBtn from './ContactBtn.vue'
   import LangSwitcher from './LangSwitcher.vue'
-  import {mapState} from 'vuex'
+  import {i18n}  from "@/config"
   export default {
-    components:{SubMenu,Contact,LangSwitcher},
+    components:{SubMenu,ContactBtn,LangSwitcher},
     name: 'Header',
-    data() {
+    data () {
       return {
         visible: false,
+        locale:this.$i18n.locale,
+        webconfig: this.$store.state.webconfig,
+        category:this.$store.state.category,
       }
     },
     methods: {
         onSearch(value) {
-            this.$router.push('/search?search='+value)    
+            this.$router.push('/'+this.$i18n.locale+'/search?search='+value)    
         },
         showDrawer() {
           this.visible = true;
@@ -122,10 +116,6 @@
         onClose() {
           this.visible = false;
         },
-    },
-    computed:{
-      ...mapState(["webconfig"]),
-      ...mapState(["category"]),
     },
     props:['currentCategory']
   };
@@ -163,9 +153,6 @@
     .menu{
       line-height: 62px;
       font-size: 1.1rem;
-    }
-    .search{
-      padding: 0 1rem;
     }
   }
 

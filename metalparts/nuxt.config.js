@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-22 20:32:35
+ * @LastEditTime: 2020-04-01 15:27:29
  * @LastEditors: Xuannan
  */
 module.exports = {
@@ -10,11 +10,11 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'Maitul.com',
+    title: 'Metalparts',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Maitul.com' }
+      { hid: 'description', name: 'description', content: 'Metalparts,Metalparts.cc' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -88,7 +88,8 @@ module.exports = {
       })
     }
   },
-  plugins: ['@/plugins/i18n.js',
+  plugins: [
+    '@/plugins/i18n.js',
     {
       src: '@/plugins/antd',ssr:true
     }
@@ -122,7 +123,7 @@ module.exports = {
     NODE_ENV: process.env.NODE_ENV
   },
   router: {
-    middleware: 'lang'
+    middleware: ['lang']
   },
 }
 

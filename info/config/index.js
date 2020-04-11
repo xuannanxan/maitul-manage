@@ -2,20 +2,20 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-22 19:51:35
- * @LastEditTime: 2020-04-01 15:36:45
+ * @LastEditTime: 2020-04-11 20:08:23
  * @LastEditors: Xuannan
  */
 
 // 语言配置
 export const i18n = {
-    locales: ['en', 'zh'],
-    locale: 'en'
+    locales: ['zh'],
+    locale: 'zh'
 }
 
 // 站点信息配置
 export const siteInfo = {
-    enBanner:'maitulBanner',
-    zhBanner:'blogRightAd',
+    enBanner:'infoEnBanner',
+    zhBanner:'infoZhBanner',
     site:'info',
     articlePageSize:8,
     productPageSize:12,

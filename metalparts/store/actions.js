@@ -2,10 +2,16 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-13 22:45:12
- * @LastEditTime: 2020-03-22 20:01:33
+ * @LastEditTime: 2020-03-31 11:32:11
  * @LastEditors: Xuannan
  */
-
+/*
+ * @Description: 
+ * @Author: Xuannan
+ * @Date: 2020-02-13 22:45:12
+ * @LastEditTime : 2020-02-14 22:49:33
+ * @LastEditors  : Xuannan
+ */
 import {api,siteInfo}  from "@/config"
 import request from "@/service";
 import cookieparse from '@/utils/cookieparse'
@@ -20,7 +26,6 @@ export const nuxtServerInit=({ commit }, { req })=>{
 
 //内容
 export const _content = async (store, params={})=>{
-  params['site'] = siteInfo.site
   return await request.get(api.contentUrl, { params: params })
 };
 

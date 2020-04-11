@@ -1,4 +1,4 @@
 <script>
-  import ProductList from '~/pages/_lang/product/_id'
-  export default ProductList
+  import Product from '~/pages/_lang/product/_id'
+  export default Product
 </script>

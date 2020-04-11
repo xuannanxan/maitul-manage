@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-27 19:53:46
+ * @LastEditTime: 2020-03-29 20:26:55
  * @LastEditors: Xuannan
  -->
 <template>
@@ -30,11 +30,12 @@
     </div>
 </template>
 <script>
-  import {mapState} from 'vuex'
   export default {
-    name: 'Contact',
-    computed:{
-      ...mapState(["webconfig"]),
+    name: 'ContactBtn',
+    data () {
+        return {
+            webconfig: this.$store.state.webconfig
+        }
     },
     props:{
         shownumber: {

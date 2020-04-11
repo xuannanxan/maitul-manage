@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-22 20:02:58
+ * @LastEditTime: 2020-03-31 13:49:20
  * @LastEditors: Xuannan
  -->
 <template>
@@ -39,7 +39,6 @@
     import Footer from '@/components/common/Footer';
     import Tags from '@/components/common/Tags';
     import Info from '@/components/list/Info';
-    import Contact from '@/components/common/Contact';
     import RightContact from '@/components/common/RightContact';
     import Message from '@/components/common/Message.vue'
     import {mapState} from 'vuex';
@@ -58,28 +57,28 @@
   export default {
     watchQuery: ['page','tag','search'],
     scrollToTop: true,
-    components:{Header,Footer,Info,Contact,RightContact,Message},
+    components:{Header,Footer,Info,RightContact,Message},
     computed:mapState(["webconfig"]),
     head () {
-        const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com')
+        const siteTitle = this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:this.$t('lang.siteName'))
         const pageTitle = articleData.category.name?'|'+articleData.category.name:''
         return {
             title: siteTitle+pageTitle,
             meta: [
-            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul')+(articleData.category.keywords?','+articleData.category.keywords:'') },
-            { hid: 'description', name: 'description', content: articleData.category.description?articleData.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul'  }
+            { hid: 'keywords', name: 'keywords', content: (this.webconfig.siteKeywords?this.webconfig.siteKeywords:this.$t('lang.siteName'))+(articleData.category.keywords?','+articleData.category.keywords:'') },
+            { hid: 'description', name: 'description', content: articleData.category.description?articleData.category.description:this.webconfig.siteDescription?this.webconfig.siteDescription:this.$t('lang.siteName')}
             ]
         }
     },
-    async asyncData({ store,params,query, error }){
-      if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-        const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
-        if(siteData.status === 200) {
-            store.commit('setWebConfig',siteData.data.webconfig)
-            store.commit('setCategory',siteData.data.category)
-            store.commit('setTags',siteData.data.tags)
-            store.commit('setAdspace',(siteData.data.adspace))
+    async asyncData({ store,params,query, error ,app}){
+      const locale = params.lang || app.i18n.fallbackLocale
+      if(store.state.siteData && Object.keys(store.state.siteData).length===0){
+          const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
+          if(siteData.status === 200) {
+            store.commit('initData',({data:siteData.data,locale:locale}))
           }
+      }else{
+            store.commit('initData',({data:store.state.siteData,locale:locale}))
       }
         const  [article]  = await Promise.all([store.dispatch('_content',{
             paginate:siteInfo.productPageSize,

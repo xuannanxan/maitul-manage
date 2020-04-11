@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-03-19 21:46:22
+ * @LastEditTime: 2020-04-08 13:53:45
  * @LastEditors: Xuannan
  -->
 <template>
@@ -14,31 +14,38 @@
     <Header :currentCategory="['home']"/>
     <Banner/>
     <a-layout-content class="content">
-      <a-row>
-        <a-col :span="24">
-          <div class="main">
-            <a-divider>Products</a-divider>
-            <ProductList
-            :data="productData.data"
-            :paginate="productData.paginate"
-            />
+      <a-row class="main">
+        <a-col :xs='24' :sm='24' :md='16' :lg='16' :xl='18' style="padding-right:2rem">
+          <div v-for="(cate) in category" :key="cate.id"  >
+            <div v-if="content[cate.id]">
+              <category-bar :category="cate"/>
+              <product-list
+              :data="content[cate.id]"
+              :topCategory="cate"
+              v-if="cate.module==='product'"
+              />
+              <article-list
+              :data="content[cate.id]"
+              v-if="cate.module==='article'"
+              />
+
+              <Info
+              :data="content[cate.id]"
+              v-if="cate.module==='info'"
+              />
+              <Contact
+              :data="content[cate.id]"
+              v-if="cate.module==='contact'"
+              />
+            </div>
           </div>
         </a-col>
-        <a-col :span="24">
-          <div class="main dark">
-            <Info
-            :data="about"
-            />
-          </div>
-        </a-col>
-        <a-col :span="24">
-          <div class="main">
-            <a-divider>News</a-divider>
-            <ArticleList
-            :data="newsData.data"
-            :paginate="newsData.paginate"
-            />
-          </div>
+        <a-col :xs='0' :sm='0' :md='8' :lg='8' :xl='6'>
+          <a-col>
+            <a-affix :offsetTop="65">
+              <Topic/>
+            </a-affix>
+          </a-col>
         </a-col>
       </a-row>
       <a-row>
@@ -51,71 +58,48 @@
   import Header from '@/components/common/Header';
   import Footer from '@/components/common/Footer';
   import Banner from '@/components/common/Banner';
-  import Tags from '@/components/common/Tags';
+  import Topic from '@/components/common/Topic';
   import ArticleList from '@/components/list/ArticleList';
   import ProductList from '@/components/list/ProductList';
   import Info from '@/components/list/Info';
-  import Contact from '@/components/common/Contact';
+  import Contact from '@/components/list/Contact';
   import RightContact from '@/components/common/RightContact';
-  import {mapState} from 'vuex';
+  import CategoryBar from '@/components/common/CategoryBar';
   import {siteInfo}  from "@/config";
  
-  const listData =  {
-      data:[],
-      paginate:{},
-    };
-  const contenData =  {
-        newsData:{ ...listData },
-        productData:{ ...listData },
-      };
+
   export default {
     scrollToTop: true,
-    components:{Header,Footer,Banner,ArticleList,Tags,ProductList,Info,Contact,RightContact},
-    computed:mapState(["webconfig",'about']),
+    components:{Header,Footer,Banner,ArticleList,Topic,ProductList,Info,RightContact,Contact,CategoryBar},
+    data () {
+      return {
+        webconfig: this.$store.state.webconfig,
+        category: this.$store.state.category,
+        content: this.$store.state.content,
+      }
+    },
+    mounted(){
+      console.log(this.content)
+    },
     head () {
       return {
-        title: this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:'Maitul.com'),
+        title: this.webconfig.siteTitle?this.webconfig.siteTitle:(this.webconfig.siteName?this.webconfig.siteName:this.$t('lang.siteName')),
         meta: [
-          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:'Maitul' },
-          { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:'Maitul' }
+          { hid: 'keywords', name: 'keywords', content: this.webconfig.siteKeywords?this.webconfig.siteKeywords:this.$t('lang.siteName')},
+          { hid: 'description', name: 'description', content: this.webconfig.siteDescription?this.webconfig.siteDescription:this.$t('lang.siteName')}
         ]
       }
     },
-    async asyncData({ store, error }){
-      if(store.state.webconfig && Object.keys(store.state.webconfig).length===0){
-        const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
-        if(siteData.status === 200) {
-            store.commit('setWebConfig',siteData.data.webconfig)
-            store.commit('setCategory',siteData.data.category)
-            store.commit('setTags',siteData.data.tags)
-            store.commit('setAdspace',(siteData.data.adspace))
+    async asyncData({app,params, store, error }){
+      const locale = params.lang || app.i18n.fallbackLocale
+      if(store.state.siteData && Object.keys(store.state.siteData).length===0){
+          const  [siteData]  = await Promise.all([store.dispatch('_siteData')])
+          if(siteData.status === 200) {
+            store.commit('initData',({data:siteData.data,locale:locale}))
           }
+      }else{
+            store.commit('initData',({data:store.state.siteData,locale:locale}))
       }
-      if(store.state.about && store.state.about.length===0){
-        const  [aboutData]  = await Promise.all([store.dispatch('_content',{
-          paginate:siteInfo.articlePageSize,
-          category:siteInfo.about,
-          })])
-        if(aboutData.status === 200) store.commit('setAbout',aboutData.data)
-      }
-      const  [news]  = await Promise.all([store.dispatch('_content',{
-        paginate:siteInfo.articlePageSize,
-        category:siteInfo.news,
-        })])
-      if(news.status === 200) {
-          contenData.newsData.data = news.data
-          contenData.newsData.paginate = news.paginate
-        }
-      const  [product]  = await Promise.all([store.dispatch('_content',{
-        paginate:siteInfo.productPageSize,
-        category:siteInfo.products,
-        })])
-      if(product.status === 200) {
-          contenData.productData.data = product.data
-          contenData.productData.paginate = product.paginate
-          store.commit('setProductList',product.data)
-        }
-      return contenData;
     }
   };
 </script>

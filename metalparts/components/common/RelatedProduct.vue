@@ -2,41 +2,40 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-04 01:19:40
+ * @LastEditTime: 2020-03-31 15:20:00
  * @LastEditors: Xuannan
  -->
 <template>
     <div>
-        <div class="related">
-            <span>Related Product...</span>
-        </div>
-        <a-row  v-if="productList.length">
-            <a-col 
-            :xs='24' :sm='24' :md='12' :lg='6' :xl='6'
-            v-for="item in productList" 
-            :key="item.id"
-            class="product"
-            :title="item.title"
-            >
-            <nuxt-link :to="{path:item.category_url+'detail/'+item.id}">
-                <a-card  hoverable >
-                    <div v-if="item.cover" slot="cover" class="cover" :style="{ backgroundImage: 'url('+item.cover+')'}"></div>
-                    <img
-                    v-else
-                    :alt="item.title"
-                    :title="item.title"
-                    src="~/assets/images/logo.png"
-                    slot="cover"
-                    />
-                    <a-card-meta>
-                        <template slot="title"><span>{{item.title}}</span></template>
-                    </a-card-meta>
-                </a-card>
-            </nuxt-link>
-            </a-col>
-        </a-row>
-             <div v-else :span="24">
-            <a-empty/>
+        <div v-if="relatedList.length">
+            <div class="related">
+                <span>{{$t('lang.relatedProduct')}}</span>
+            </div>
+            <a-row>
+                <a-col 
+                :xs='24' :sm='24' :md='12' :lg='6' :xl='6'
+                v-for="item in relatedList" 
+                :key="item.id"
+                class="product"
+                :title="item.title"
+                >
+                <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/detail/'+item.id}">
+                    <a-card  hoverable >
+                        <div v-if="item.cover" slot="cover" class="cover" :style="{ backgroundImage: 'url('+item.cover+')'}"></div>
+                        <img
+                        v-else
+                        :alt="item.title"
+                        :title="item.title"
+                        src="~/assets/images/logo.png"
+                        slot="cover"
+                        />
+                        <a-card-meta>
+                            <template slot="title"><span>{{item.title}}</span></template>
+                        </a-card-meta>
+                    </a-card>
+                </nuxt-link>
+                </a-col>
+            </a-row>
         </div>
     </div>
 </template>
@@ -44,7 +43,12 @@
     import {mapState} from 'vuex'
     export default {
         name: 'RelatedProduct',
-        computed:mapState(["productList"])
+        computed:mapState(["relatedList"]),
+        data () {
+            return {
+                locale:this.$i18n.locale,
+            }
+        },
     }
 </script>
 <style lang='less' scoped>
@@ -84,11 +88,5 @@
     .center{
         text-align: center;
         margin-bottom: 1rem;
-    }
-    .ant-skeleton{
-        margin: 1rem;
-        ul{
-            padding: 0
-        }
     }
 </style>

@@ -2,20 +2,20 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-17 10:23:14
- * @LastEditTime: 2020-03-20 10:31:02
+ * @LastEditTime: 2020-04-03 13:01:19
  * @LastEditors: Xuannan
  -->
 <template>
     <div>
         <a-row class="crumb" v-if="Object.keys(category).length>0 || tag || search">
             <a-col :xs='24' :sm='24' :md='14' :lg='16' :xl='18'>
-                <div v-if='tag || search'>{{tag?`Tag:${tag}...`:(search?`Search:${search}...`:'Newest...')}}</div>
+                <div v-if='tag || search'>{{tag?`Tag:${tag}...`:(search?`Search:${search}...`:$t("lang.newest"))}}</div>
                     <a-breadcrumb v-else-if='category.id' >
                         <a-breadcrumb-item>
-                            <nuxt-link to="/"><a-icon type="home" /><span> Home</span></nuxt-link>
+                            <nuxt-link :to="{path:'/'+locale}" ><a-icon type="home" /><span> {{$t('lang.home')}}</span></nuxt-link>
                         </a-breadcrumb-item>
                         <a-breadcrumb-item v-if="Object.keys(topCategory).length>0">
-                            <nuxt-link :to="{path:topCategory.url+topCategory.id}">
+                            <nuxt-link :to="{path:'/'+locale+'/'+topCategory.module+'/'+topCategory.id}">
                                 <a-icon v-if="topCategory.icon"  :type="topCategory.icon" />
                                 <span> {{topCategory.name}}</span>
                             </nuxt-link>
@@ -28,16 +28,9 @@
             </a-col>
             <a-col :span='24'><a-divider/></a-col>
         </a-row>
-        <a-row v-if="Object.keys(topCategory).length>0 &&  !tag && !search">
-            <div v-if="topCategory.children.length>0" v-for="item in topCategory.children" :key="item.id" class="sub-category">
-                <nuxt-link :to="{path:item.url+item.id}">
-                    <a-icon v-if="item.icon" :type="item.icon" /> {{item.name}}
-                </nuxt-link>
-            </div>
-        </a-row>
         <a-row>
-            <div style="margin:.5rem .8rem">
-                <Tags/>
+            <div style="margin:.5rem .8rem" v-if="Object.keys(topCategory).length>0">
+                <Tags :url="'/'+locale+'/'+topCategory.module"/>
             </div>
         </a-row>
         <a-row  v-if="data.length">
@@ -48,7 +41,7 @@
             class="product"
             :title="item.title"
             >
-            <nuxt-link :to="{path:item.category_url+'detail/'+item.id}">
+            <nuxt-link :to="{path:'/'+locale+'/'+item.module+'/'+'detail/'+item.id}">
                 <a-card  hoverable >
                     <div v-if="item.cover" slot="cover" class="cover" :style="{ backgroundImage: 'url('+item.cover+')'}"></div>
                     <img
@@ -89,20 +82,26 @@
 </template>
 <script>
     import Tags from '../common/Tags'
+    import {i18n}  from "@/config"
     export default {
         name: 'ArticleList',
         components:{Tags},
+        data () {
+            return {
+                locale:this.$i18n.locale,
+            }
+        },
         methods: {
             onSearch(value) {
                 this.$router.push(this.$route.path+'?search='+value)    
             },
             paginateRender(page, type, originalElement){
                 if (type === "page") {
-                    return <nuxt-link to={(this.category.url?this.category.url:'/product/'+(this.category.id?this.category.id:''))+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
+                    return <nuxt-link to={(this.category.url?this.category.url:'/'+this.locale+'/product/'+(this.category.id?this.category.id:''))+'?page='+page+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}>{page}</nuxt-link>;
                 } else if (type === "prev") {
-                    return <nuxt-link to={(this.category.url?this.category.url:'/product/'+(this.category.id?this.category.id:''))+'?page='+(this.paginate.page===1?1:this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="left" /></nuxt-link>;
+                    return <nuxt-link to={(this.category.url?this.category.url:'/'+this.locale+'/product/'+(this.category.id?this.category.id:''))+'?page='+(this.paginate.page===1?1:this.paginate.page-1)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="left" /></nuxt-link>;
                 } else if (type === "next") {
-                    return <nuxt-link to={(this.category.url?this.category.url:'/product/'+(this.category.id?this.category.id:''))+'?page='+(page<(this.paginate.total/this.paginate.per_page)?this.paginate.page+1:page)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="right" /></nuxt-link>;
+                    return <nuxt-link to={(this.category.url?this.category.url:'/'+this.locale+'/product/'+(this.category.id?this.category.id:''))+'?page='+(page<(this.paginate.total/this.paginate.per_page)?this.paginate.page+1:page)+(this.search?('&search='+this.search):'')+(this.tag?('&tag='+this.tag):'')}><a-icon type="right" /></nuxt-link>;
                 }
                 return originalElement;
             },
@@ -147,24 +146,7 @@
             line-height: 3rem;
         } 
     }
-    .sub-category{
-        float:left;
-        padding:.5rem .8rem;
-        font-size: 1rem;
-        font-weight: 500;
-        a{
-            padding: .3rem 0;
-            color: rgba(0, 0, 0, 0.65);
-        }
-        a:hover{
-            color: #00cccc;
-            border-bottom: 2px solid #00cccc;
-        }
-        .nuxt-link-active{
-            color: #00cccc;
-            border-bottom: 2px solid #00cccc;
-        }
-    }
+    
     .product{
         padding: .8rem;
         .description{

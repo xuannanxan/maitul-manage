@@ -1,8 +1,8 @@
 {
   "name": "metalparts",
   "version": "1.0.0",
-  "description": "My splendid Nuxt.js project",
-  "author": "xuannan",
+  "description": "Nuxt.js project",
+  "author": "xuannanxan <382933169@qq.com>",
   "private": true,
   "scripts": {
     "dev": "cross-env BASE_URL=http://127.0.0.1:5000/ NODE_ENV='development' nuxt",
@@ -18,7 +18,7 @@
     "ant-design-vue": "^1.4.10",
     "babel-plugin-import": "^1.13.0",
     "nuxt": "^2.0.0",
-    "vue-i18n": "^8.15.5"
+    "vue-i18n": "^8.15.7"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
@@ -33,7 +33,7 @@
   "config": {
     "nuxt": {
       "host": "127.0.0.1",
-      "port": "8082"
+      "port": "8083"
     }
   }
 }
