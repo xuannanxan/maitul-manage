@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-11 20:29:44
+ * @LastEditTime: 2020-04-11 20:52:45
  * @LastEditors: Xuannan
  -->
 <template>
@@ -49,7 +49,7 @@
               <a-button icon="search"></a-button>
             </a-popover>
           </a-col>
-          <a-col :xs='0' :sm='0' :md='4' :lg='4' :xl='2'>
+          <a-col :xs='0' :sm='0' :md='4' :lg='4' :xl='2' v-if="webconfig.i18n==='开启'">
             <LangSwitcher/>
           </a-col>
           <a-col :xs='3' :sm='3' :md='0' :lg='0' :xl='0' >
@@ -62,7 +62,7 @@
               @close="onClose"
               :visible="visible"
             >
-              <LangSwitcher style="margin-bottom:1rem"/>
+              <LangSwitcher style="margin-bottom:1rem" v-if="webconfig.i18n==='开启'"/>
               <a-input-search size="large" placeholder="Search..." @search="onSearch" />
               <a-divider/>
               <a-menu

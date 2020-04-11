@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-03 19:13:07
+ * @LastEditTime: 2020-04-11 20:58:31
  * @LastEditors: Xuannan
  -->
 <template>
@@ -16,7 +16,7 @@
             <a-col :xs='0' :sm='0' :md='12' :lg='10' :xl='10'>
               <contact-btn :shownumber="true"/>
             </a-col>
-            <a-col :xs='0' :sm='0' :md='4' :lg='4' :xl='2'>
+            <a-col :xs='0' :sm='0' :md='4' :lg='4' :xl='2' v-if="webconfig.i18n==='开启'">
               <LangSwitcher/>
             </a-col>
           </div>
@@ -86,7 +86,7 @@
               @close="onClose"
               :visible="visible"
             >       
-              <LangSwitcher style="margin-bottom:1rem"/>
+              <LangSwitcher style="margin-bottom:1rem" v-if="webconfig.i18n==='开启'"/>
               <a-input-search size="large" placeholder="Search..." @search="onSearch" />
               <a-divider/>
               <a-menu

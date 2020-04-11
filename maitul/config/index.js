@@ -2,13 +2,13 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-03-22 19:51:35
- * @LastEditTime: 2020-04-11 20:07:24
+ * @LastEditTime: 2020-04-11 20:40:56
  * @LastEditors: Xuannan
  */
 
 // 语言配置
 export const i18n = {
-    locales: ['en'],
+    locales: ['en','zh'],
     locale: 'en'
 }
 
