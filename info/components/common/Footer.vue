@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-11 23:35:29
- * @LastEditTime: 2020-04-05 20:09:52
+ * @LastEditTime: 2020-04-11 19:41:38
  * @LastEditors: Xuannan
  -->
 <template>
@@ -67,6 +67,7 @@
   .footer{
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.65) 58%, rgba(0, 0, 0, 0.70) 40%);
     padding: 1rem 5rem .5rem 5rem;
+    line-height: 40px;
     .logo{
       margin-left: 4rem;
       img{
