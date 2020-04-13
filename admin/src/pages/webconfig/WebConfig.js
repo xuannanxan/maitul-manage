@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-01-22 19:25:04
- * @LastEditTime: 2020-03-27 16:56:14
+ * @LastEditTime: 2020-04-13 22:04:19
  * @LastEditors: Xuannan
  */
 
@@ -48,7 +48,7 @@ const WebConfigForm = (props)=>{
             for (var i in res.data.data) {
                 res.data.data[i].forEach(item=>{
                     if(item.fieldType === 'ImgUpload'){
-                        obj[item.site+'|'+item.ename] = item.value
+                        obj[item.site+'|'+item.lang+'|'+item.ename] = item.value
                     }
                 })
             }
