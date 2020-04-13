@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: Xuannan
  * @Date: 2020-02-16 10:31:22
- * @LastEditTime: 2020-03-29 10:13:40
+ * @LastEditTime: 2020-04-13 23:54:24
  * @LastEditors: Xuannan
  -->
 <template>
@@ -30,7 +30,7 @@
         props:{
             url: {
                 type: String,
-                default: '/product'
+                default: '/article'
             },
         }
     };

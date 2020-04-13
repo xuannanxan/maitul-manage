@@ -30,7 +30,7 @@
         props:{
             url: {
                 type: String,
-                default: '/product'
+                default: '/article'
             },
         }
     };
